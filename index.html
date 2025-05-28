@@ -3,398 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0d0221" id="themeColorMeta">
+    <meta name="theme-color" content="#FFFFFF" id="themeColorMeta">
     <title>🧠 NeuroChan: Tableros de la Mente</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js" defer></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap'); /* Se mantiene por si alguna parte específica la necesita, pero Inter será la principal */
 
         :root {
-            --neon-cyan: #0ff0fc;
-            --neon-magenta: #ff00ff;
-            --electric-blue: #0453fa;
-            --glitch-pink: #ff2a6d;
-            --dark-matter: #0d0221;
-            --acid-green: #00ff9d;
-            --deep-purple: #6a00f4;
-            --light-bg: #f0f4f8;
-            --light-text: #1a1a1a;
-            --border-color: #0ff0fc;
-            --text-primary: #0ff0fc;
-            --bg-primary: #0d0221;
+            --app-bg: #F0F2F5; 
+            --card-bg: #FFFFFF;
+            --text-primary-color: #050505; 
+            --text-secondary-color: #65676B; 
+            --text-tertiary-color: #8A8D91; 
+            --border-color-light: #CED0D4; 
+            --border-color-strong: #BCC0C4;
+            --divider-color: #E4E6EB;
+            --primary-accent-color: #1877F2; 
+            --primary-accent-hover-color: #166FE5;
+            --danger-color: #E02C4A; 
+            --success-color: #31A24C; 
+            --icon-color: #606770;
+            --icon-bg-hover: #E4E6EB;
+            --button-secondary-bg: #E4E6EB;
+            --button-secondary-text: #050505;
+            --button-secondary-hover-bg: #D8DADF;
+            --link-color: var(--primary-accent-color);
+
+            /* Variables para tema oscuro (se podrían activar con una clase en body) */
+            --dark-app-bg: #18191A;
+            --dark-card-bg: #242526;
+            --dark-text-primary-color: #E4E6EB;
+            --dark-text-secondary-color: #B0B3B8;
+            --dark-text-tertiary-color: #A0A3A7;
+            --dark-border-color-light: #3E4042;
+            --dark-border-color-strong: #4E4F50;
+            --dark-divider-color: #3A3B3C;
+            --dark-icon-color: #B0B3B8;
+            --dark-icon-bg-hover: #3A3B3C;
+            --dark-button-secondary-bg: #3A3B3C;
+            --dark-button-secondary-text: #E4E6EB;
+            --dark-button-secondary-hover-bg: #4E5052;
         }
 
-        body.pink-theme {
-            --neon-cyan: #FF00FF;      
-            --neon-magenta: #FF69B4;   
-            --electric-blue: #C71585;  
-            --glitch-pink: #FF1493;    
-            --text-primary: #FF00FF;   
-            --bg-primary: #3D001D;     
-            --border-color: #FF00FF;   
+        body.dark-theme {
+            --app-bg: var(--dark-app-bg);
+            --card-bg: var(--dark-card-bg);
+            --text-primary-color: var(--dark-text-primary-color);
+            --text-secondary-color: var(--dark-text-secondary-color);
+            --text-tertiary-color: var(--dark-text-tertiary-color);
+            --border-color-light: var(--dark-border-color-light);
+            --border-color-strong: var(--dark-border-color-strong);
+            --divider-color: var(--dark-divider-color);
+            --icon-color: var(--dark-icon-color);
+            --icon-bg-hover: var(--dark-icon-bg-hover);
+            --button-secondary-bg: var(--dark-button-secondary-bg);
+            --button-secondary-text: var(--dark-button-secondary-text);
+            --button-secondary-hover-bg: var(--dark-button-secondary-hover-bg);
+            --link-color: var(--primary-accent-color); 
         }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            background-image: 
-                linear-gradient(rgba(9, 1, 31, 0.8), rgba(9, 1, 31, 0.8)),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="10" height="10" x="0" y="0" fill="%230ff0fc" opacity="0.1"/></svg>');
-            background-size: 20px 20px;
-            animation: scanlines 0.5s linear infinite;
-            transition: background-color 0.5s, color 0.5s;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: url('https://images.unsplash.com/photo-1549921296-3ec74c52753f?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            opacity: .25;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .post-content {
             font-family: 'Inter', sans-serif;
-            max-width: 65ch;
-            word-wrap: break-word; 
+            background-color: var(--app-bg);
+            color: var(--text-primary-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        @keyframes scanlines {
-            from { background-position: 0 0; }
-            to { background-position: 0 20px; }
-        }
-
-        .glitch {
-            position: relative;
-        }
-
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
+        .app-header {
+            background-color: var(--card-bg);
+            padding: 0.75rem 1rem; /* 12px 16px */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem; /* 24px */
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            z-index: 100;
         }
 
-        .glitch::before {
-            color: var(--glitch-pink);
-            animation: glitch-effect 3s infinite;
-            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        .app-header h1 {
+            font-size: 1.75rem; /* 28px */
+            font-weight: 700;
+            color: var(--primary-accent-color);
+        }
+        
+        .app-header #boardTitle {
+            font-size: 1rem; /* 16px */
+            color: var(--text-secondary-color);
         }
 
-        .glitch::after {
-            color: var(--electric-blue);
-            animation: glitch-effect 2s infinite reverse;
-            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-        }
-
-        @keyframes glitch-effect {
-            0% { transform: translate(0); }
-            20% { transform: translate(-3px, 3px); }
-            40% { transform: translate(-3px, -3px); }
-            60% { transform: translate(3px, 3px); }
-            80% { transform: translate(3px, -3px); }
-            100% { transform: translate(0); }
-        }
-
-        .neon-text {
-            color: var(--text-primary); 
-            text-shadow: 
-                0 0 5px var(--neon-cyan),
-                0 0 10px var(--neon-cyan),
-                0 0 20px var(--neon-cyan);
-        }
-        /* Reducción del neón para títulos de posts */
-        .post .neon-text-title { 
-            color: var(--text-primary);
-            text-shadow: 
-                0 0 3px var(--neon-cyan), /* Reducido */
-                0 0 7px var(--neon-cyan),  /* Reducido */
-                0 0 15px var(--neon-cyan); /* Reducido */
-        }
-
-
-        .neon-border {
-            border: 1px solid var(--border-color); 
-            box-shadow: 
-                0 0 5px var(--neon-cyan),
-                0 0 10px var(--neon-cyan),
-                inset 0 0 5px var(--neon-cyan),
-                inset 0 0 10px var(--neon-cyan);
-        }
-
-        .neon-button {
-            transition: all 0.3s;
-        }
-
-        .neon-button:hover {
-            box-shadow: 
-                0 0 10px var(--neon-magenta),
-                0 0 20px var(--neon-magenta),
-                inset 0 0 10px var(--neon-magenta);
-            transform: scale(1.05);
-        }
-
-        .post {
-            animation: fadeIn 0.5s ease-out, float 15s ease-in-out infinite;
-            transition: all 0.5s;
-            transform-origin: top center;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(-1deg); }
-            50% { transform: translateY(-10px) rotate(1deg); }
-        }
-
-        .avatar {
-            filter: 
-                sepia(100%)
-                hue-rotate(180deg)
-                saturate(500%)
-                contrast(1.5)
-                drop-shadow(0 0 5px var(--neon-magenta));
-        }
-
-        .fractal-bg {
-            background: 
-                radial-gradient(circle at 20% 30%, var(--electric-blue), transparent 50%),
-                radial-gradient(circle at 80% 70%, var(--glitch-pink), transparent 50%),
-                linear-gradient(45deg, var(--dark-matter), #1a0538);
-            background-size: 200% 200%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-
-        .typing-effect::after {
-            content: "|";
-            animation: blink 1s step-end infinite;
-        }
-
-        @keyframes blink {
-            from, to { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .crt-effect {
-            position: relative;
-        }
-
-        .crt-effect::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-
-        .dream-glow {
-            animation: dreamPulse 3s infinite alternate;
-        }
-
-        @keyframes dreamPulse {
-            0% { box-shadow: 0 0 5px var(--acid-green); }
-            100% { box-shadow: 0 0 20px var(--acid-green); }
-        }
-
-        .tech-glow {
-            animation: techPulse 3s infinite alternate;
-        }
-
-        @keyframes techPulse {
-            0% { box-shadow: 0 0 5px var(--electric-blue); }
-            100% { box-shadow: 0 0 20px var(--electric-blue); }
-        }
-
-        .dimension-glow {
-            animation: dimensionPulse 3s infinite alternate;
-        }
-
-        @keyframes dimensionPulse {
-            0% { box-shadow: 0 0 5px var(--deep-purple); }
-            100% { box-shadow: 0 0 20px var(--deep-purple); }
-        }
-
-        .transmission-effect {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .transmission-effect::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            animation: transmissionScan 2s linear; 
-        }
-
-        @keyframes transmissionScan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+        .board-selectors-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 0.5rem; /* 8px */
+            margin-bottom: 1.5rem; /* 24px */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .board-selector {
-            transition: all 0.3s;
+            font-weight: 500;
+            padding: 0.625rem 1rem; /* 10px 16px */
+            border-radius: 6px;
+            border: 1px solid transparent;
+            color: var(--text-secondary-color);
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
 
         .board-selector:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+            background-color: var(--button-secondary-hover-bg);
+            color: var(--text-primary-color);
         }
 
         .board-selector.active {
-            background-color: rgba(0, 255, 255, 0.2);
-            box-shadow: 0 0 10px var(--neon-cyan);
+            background-color: var(--primary-accent-color);
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        .board-selector.active:hover {
+            background-color: var(--primary-accent-hover-color);
         }
 
-        .reaction-button {
-            transition: all 0.3s;
+        #boardInfo {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 1rem; /* 16px */
+            margin-bottom: 1.5rem; /* 24px */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        #boardInfo h2 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
+        }
+        #boardInfo p {
+            color: var(--text-secondary-color);
+            font-size: 0.9rem; /* 14.4px */
+            line-height: 1.4;
         }
 
-        .reaction-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 10px var(--neon-magenta);
+        #postFormContainer {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 1.5rem; /* 24px */
+            margin-bottom: 1.5rem; /* 24px */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
-        .reaction-button.active {
-            color: var(--neon-magenta);
-            text-shadow: 0 0 5px var(--neon-magenta);
-        }
-        .file-upload-label {
-            transition: all 0.3s;
-        }
-
-        .file-upload-label:hover {
-            box-shadow: 0 0 10px var(--acid-green);
-            border-color: var(--acid-green);
-        }
-
-        .theme-toggle {
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            box-shadow: 0 0 10px var(--neon-magenta);
-        }
-
-        [aria-hidden="true"] {
-            visibility: hidden;
-        }
-
-        button:focus, input:focus, textarea:focus {
-            outline: 2px solid var(--acid-green);
-            outline-offset: 2px;
-        }
-
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            z-index: 50;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 0.5rem;
-        }
-
-        .emoji-picker.active {
-            display: grid;
-        }
-
-        .emoji-option {
-            font-size: 1.5rem;
-            cursor: pointer;
-            text-align: center;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-        }
-
-        .emoji-option:hover {
-            background-color: rgba(0, 255, 255, 0.2);
-        }
-
-        .reply-indicator {
-            border-left: 2px solid var(--neon-cyan);
-            padding-left: 1rem;
-            margin-left: 1rem;
-        }
-
-        .reply-link {
-            color: var(--neon-cyan);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .reply-link:hover {
-            color: var(--neon-magenta);
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            text-align: center;
+        #postFormContainer input[type="text"],
+        #postFormContainer input[type="password"],
+        #postFormContainer textarea {
+            background-color: var(--app-bg); 
+            border: 1px solid var(--border-color-light);
+            color: var(--text-primary-color);
             border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            padding: 0.75rem; /* 12px */
+            width: 100%;
+            font-size: 0.95rem; /* 15.2px */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #postFormContainer input[type="text"]::placeholder,
+        #postFormContainer input[type="password"]::placeholder,
+        #postFormContainer textarea::placeholder {
+            color: var(--text-secondary-color);
+        }
+        #postFormContainer input[type="text"]:focus,
+        #postFormContainer input[type="password"]:focus,
+        #postFormContainer textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent-color);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); 
+        }
+        
+        #emojiToggle {
+            color: var(--icon-color);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        #emojiToggle:hover {
+            background-color: var(--icon-bg-hover);
         }
 
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.625rem 1rem; /* 10px 16px */
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            border: 1px solid var(--border-color-light);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .file-upload-label:hover {
+            background-color: var(--button-secondary-hover-bg);
+            border-color: var(--border-color-strong);
+        }
+        .file-upload-label svg { 
+            margin-right: 0.5rem;
         }
 
+        /* Botones principales */
+        .primary-button {
+            background-color: var(--primary-accent-color);
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem; /* 12px 24px */
+            border-radius: 6px;
+            border: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .primary-button:hover {
+            background-color: var(--primary-accent-hover-color);
+        }
+        .primary-button svg {
+            margin-right: 0.5rem;
+        }
+
+        .secondary-button {
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color-light);
+            transition: background-color 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        .secondary-button:hover {
+            background-color: var(--button-secondary-hover-bg);
+            border-color: var(--border-color-strong);
+        }
+
+        /* Estilo para los posts (tarjetas) */
+        .post {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            margin-bottom: 1rem; /* 16px */
+            padding: 1rem; /* 16px */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+            animation: fadeIn 0.5s ease-out; 
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem; /* 12px */
+        }
+        .post-avatar { 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem; /* 12px */
+            object-fit: cover;
+            background-color: var(--app-bg); 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem; /* Tamaño del emoji avatar */
+            color: var(--text-primary-color); /* Color del emoji avatar */
+        }
+        .post-userinfo {
+            display: flex;
+            flex-direction: column;
+        }
+        .post-username {
+            font-weight: 600;
+            color: var(--text-primary-color);
+            font-size: 0.95rem; /* 15.2px */
+        }
+        .post-timestamp {
+            font-size: 0.8rem; /* 12.8px */
+            color: var(--text-secondary-color);
+        }
+
+        .post .post-title.neon-text-title { /* Título del post */
+            font-size: 1.2rem; /* 19.2px */
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem; /* 8px */
+            text-shadow: none; /* Quitar sombra neón */
+        }
+
+
+        .post-content { 
+            font-family: 'Inter', sans-serif; 
+            color: var(--text-primary-color);
+            font-size: 0.95rem; /* 15.2px */
+            line-height: 1.5;
+            word-wrap: break-word;
+            margin-bottom: 0.75rem; /* 12px */
+        }
+        .post-content img { 
+            max-width: 100%;
+            border-radius: 6px;
+            margin-top: 0.75rem; /* 12px */
+            border: 1px solid var(--border-color-light);
+        }
+        .post-image-container { 
+            margin: 0.75rem 0; /* 12px */
+        }
+        .post-image-container img {
+            max-width: 100%;
+            max-height: 500px; 
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color-light);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            padding-top: 0.75rem; /* 12px */
+            border-top: 1px solid var(--divider-color);
+            margin-top: 1rem; /* 16px */
+        }
+        .reaction-button {
+            background: none;
+            border: none;
+            color: var(--icon-color);
+            padding: 0.5rem; /* 8px */
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem; /* 14.4px */
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .reaction-button svg { /* Si se usan SVGs para iconos de reacción */
+            width: 18px;
+            height: 18px;
+            margin-right: 0.375rem; /* 6px */
+        }
+        .reaction-button:hover {
+            background-color: var(--icon-bg-hover);
+            color: var(--text-primary-color);
+        }
+        .reaction-button.active {
+            color: var(--primary-accent-color);
+            font-weight: 600;
+        }
+        .reaction-button.delete {
+            color: var(--danger-color);
+        }
+         .reaction-button.delete:hover {
+            background-color: rgba(224, 44, 74, 0.1);
+        }
+
+        /* Modales */
         .modal {
             display: none; 
             position: fixed;
@@ -402,127 +374,230 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); 
+            background-color: rgba(0, 0, 0, 0.6); 
             z-index: 1000; 
             justify-content: center;
             align-items: center;
         }
-        
         .modal.flex { 
             display: flex;
         }
-
         .modal-content {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            max-width: 400px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            padding: 1.5rem; /* 24px */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            max-width: 450px;
             width: 90%;
         }
+        .modal-content h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            margin-bottom: 1rem; /* 16px */
+            color: var(--text-primary-color);
+        }
+        .modal-content p {
+            font-size: 0.95rem; /* 15.2px */
+            color: var(--text-secondary-color);
+            margin-bottom: 1rem;
+        }
+        .modal-content input[type="password"],
+        .modal-content input[type="text"],
+        .modal-content textarea {
+             background-color: var(--app-bg);
+             border: 1px solid var(--border-color-light);
+             color: var(--text-primary-color);
+             border-radius: 6px;
+             padding: 0.625rem; /* 10px */
+             margin-bottom: 1rem; /* 16px */
+        }
+        .modal-content input[type="password"]:focus,
+        .modal-content input[type="text"]:focus,
+        .modal-content textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent-color);
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
+        }
+        .modal-content .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem; /* 8px */
+        }
 
+        /* Admin panel y toggles flotantes */
         .admin-panel {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 40;
+            top: 1rem; /* 16px */
+            right: 1rem; /* 16px */
+            z-index: 1001; /* Encima del header sticky */
         }
-
-        .admin-toggle {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 0.5rem;
+        .admin-toggle, #audioToggle {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            color: var(--icon-color);
+            padding: 0.5rem; /* 8px */
             border-radius: 50%;
             cursor: pointer;
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
-
-        .admin-toggle:hover {
-            background-color: rgba(0, 255, 255, 0.2);
+        .admin-toggle:hover, #audioToggle:hover {
+            background-color: var(--icon-bg-hover);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.15);
         }
-
-        .admin-modal {
-            display: none; 
+        #audioToggle { /* Botón específico de audio si es diferente */
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000; 
-            justify-content: center;
-            align-items: center;
+            bottom: 1rem;
+            right: 1rem;
         }
-        .admin-modal.flex { 
-            display: flex;
+         #audioToggle svg {
+            width: 20px; height: 20px;
+            color: var(--icon-color);
+         }
+         .admin-toggle svg, #adminLogoutButton svg {
+             width: 20px; height: 20px;
+         }
+         #adminLogoutButton.admin-toggle {
+             color: var(--danger-color);
+         }
+         #adminLogoutButton.admin-toggle:hover {
+             background-color: rgba(224, 44, 74, 0.1);
+         }
+
+
+        /* Emoji Picker */
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0; /* Alineado a la derecha del botón emoji */
+            width: 280px; /* Ancho fijo para el picker */
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 0.75rem; /* 12px */
+            z-index: 50;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); /* Columnas responsivas */
+            gap: 0.25rem; /* 4px */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .emoji-picker.active {
+            display: grid;
+        }
+        .emoji-option {
+            font-size: 1.5rem; /* 24px */
+            cursor: pointer;
+            text-align: center;
+            padding: 0.25rem; /* 4px */
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .emoji-option:hover {
+            background-color: var(--icon-bg-hover);
         }
 
-        .admin-modal-content {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            max-width: 400px;
-            width: 90%;
+        /* Reply indicator & link */
+        .reply-indicator {
+            border-left: 3px solid var(--primary-accent-color);
+            padding-left: 1rem; /* 16px */
+            margin-left: 0; 
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(24, 119, 242, 0.05); 
+            border-radius: 0 4px 4px 0;
+        }
+        .reply-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .reply-link:hover {
+            text-decoration: underline;
+            color: var(--primary-accent-hover-color);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        /* Tooltip */
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: #333; 
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 0.8rem; /* 12.8px */
+            white-space: nowrap;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
 
-        .pulse {
-            animation: pulse 0.5s ease;
-        }
-
+        /* Loading Message */
         #loadingMessage {
             text-align: center;
-            font-size: 1.2rem;
-            padding: 2rem;
-            color: var(--neon-cyan);
+            font-size: 1rem; /* 16px */
+            padding: 2rem; /* 32px */
+            color: var(--text-secondary-color);
         }
 
-        /* Estilos para el juego de Tarot */
+        /* Estilos para el juego de Tarot (modernizado) */
         #tarotGameContainer {
-            /* Estilos para el contenedor principal del juego si son necesarios */
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 1.5rem; /* 24px */
+            margin-top: 1.5rem; /* 24px */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        #tarotGameContainer h2 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600;
+            color: var(--text-primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
         #tarotSpreadContainer {
-            display: flex; /* Usar flex para centrar las filas */
-            flex-direction: column; /* Apilar filas verticalmente */
-            align-items: center; /* Centrar filas horizontalmente */
-            gap: 0.5rem; /* Espacio entre filas */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem; /* 12px */
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
         .tarot-row {
             display: flex;
             justify-content: center;
-            gap: 0.5rem; /* Espacio entre cartas en una fila */
+            gap: 0.75rem; /* 12px */
         }
         .tarot-card {
-            width: 80px; /* Ancho de la carta */
-            height: 120px; /* Alto de la carta */
-            background-color: var(--deep-purple); /* Color de dorso */
-            border: 2px solid var(--neon-cyan);
+            width: 80px;
+            height: 120px;
+            background-color: var(--app-bg); 
+            border: 1px solid var(--border-color-strong);
             border-radius: 8px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.5s, box-shadow 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
             perspective: 1000px;
-            position: relative; /* Para el contenido superpuesto */
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .tarot-card:hover {
-            box-shadow: 0 0 15px var(--neon-magenta);
-            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
         }
         .tarot-card .card-face {
             position: absolute;
@@ -533,17 +608,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 6px; /* Para que coincida con el borde de la carta */
-            overflow: hidden; /* Para que el contenido no se salga */
+            border-radius: 7px; 
+            overflow: hidden;
         }
         .tarot-card .card-back {
-            background-color: var(--deep-purple); /* Color del dorso */
-            /* Podrías añadir un patrón o icono al dorso aquí */
-            color: var(--neon-cyan);
+            background-color: var(--app-bg); 
+            color: var(--text-secondary-color);
             font-size: 2rem;
         }
         .tarot-card .card-front {
-            background-color: var(--bg-primary); /* Fondo cuando está volteada */
+            background-color: var(--card-bg); 
             transform: rotateY(180deg);
             padding: 5px;
             box-sizing: border-box;
@@ -553,83 +627,233 @@
         }
         .tarot-card img.tarot-image-display {
             max-width: 90%;
-            max-height: 60%; /* Ajusta según necesites espacio para el texto */
+            max-height: 60%;
             object-fit: contain;
             border-radius: 4px;
         }
         .tarot-card .tarot-info-overlay {
-            font-size: 0.6rem; /* Tamaño pequeño para que quepa */
-            color: var(--text-primary);
+            font-size: 0.55rem; 
+            color: var(--text-primary-color);
             text-align: center;
-            overflow-y: auto; /* Scroll si el texto es muy largo */
-            max-height: 35%; /* Espacio restante para el texto */
+            overflow-y: auto;
+            max-height: 35%;
             width: 100%;
             padding: 2px;
             box-sizing: border-box;
         }
-         .tarot-card .tarot-info-overlay p {
+        .tarot-card .tarot-info-overlay p {
             margin: 1px 0;
         }
 
-        #tarotCardInfoDisplay { /* Contenedor para mostrar info de la carta seleccionada fuera del spread */
-            background-color: rgba(0,0,0,0.7);
-            border: 1px solid var(--neon-cyan);
-            padding: 1rem;
-            border-radius: 0.5rem;
+        #tarotCardInfoDisplay {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            padding: 1.5rem; /* 24px */
+            border-radius: 8px;
             max-width: 500px;
-            margin: 1rem auto;
+            margin: 1.5rem auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        #tarotCardInfoDisplay h3 { font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center;}
-        #tarotCardInfoDisplay img { max-height: 200px; display:block; margin: 0.5rem auto;}
-        #tarotCardInfoDisplay p { font-size: 0.8rem; margin-bottom: 0.3rem; }
+        #tarotCardInfoDisplay h3 { 
+            font-size: 1.3rem; /* 20.8px */
+            margin-bottom: 0.75rem;
+            text-align: center;
+            color: var(--text-primary-color);
+        }
+        #tarotCardInfoDisplay img { 
+            max-height: 200px; 
+            display:block; 
+            margin: 0.75rem auto;
+            border-radius: 6px;
+            border: 1px solid var(--border-color-light);
+        }
+        #tarotCardInfoDisplay p { 
+            font-size: 0.9rem; /* 14.4px */
+            margin-bottom: 0.5rem; 
+            color: var(--text-secondary-color);
+            line-height: 1.4;
+        }
+         #tarotCardInfoDisplay p strong {
+            color: var(--text-primary-color);
+         }
+
+
+        /* Clases de utilidad y limpieza de estilos "neon" y "glitch" */
+        .glitch, .neon-text, .neon-border, .neon-button, .crt-effect, .fractal-bg,
+        .dream-glow, .tech-glow, .dimension-glow, .transmission-effect {
+            animation: none !important;
+            text-shadow: none !important;
+            box-shadow: none !important;
+            /* border-color: var(--border-color-light) !important;  No sobreescribir todos los bordes aquí, manejar por especificidad */
+        }
+        
+        .neon-border {
+            border: 1px solid var(--border-color-light) !important;
+        }
+        .neon-text { /* Para el header principal, mantenemos un toque del color de acento */
+            color: var(--primary-accent-color) !important;
+        }
+        /* Los botones que eran .neon-button ahora deben usar .primary-button o .secondary-button */
+        /* Por ejemplo, #submitPost y #themeToggle ya tienen clases de Tailwind, se adaptarán o se les puede añadir .primary-button / .secondary-button */
+        #submitPost.neon-button { /* Neutralizar si la clase neon-button persiste */
+            background-color: var(--primary-accent-color);
+            color: white;
+            border: none;
+            box-shadow: none;
+        }
+         #submitPost.neon-button:hover {
+             background-color: var(--primary-accent-hover-color);
+         }
+
+        #themeToggle.neon-button { /* Asumimos que es un botón secundario */
+             background-color: var(--button-secondary-bg);
+             color: var(--button-secondary-text);
+             border: 1px solid var(--border-color-light);
+             box-shadow: none;
+        }
+         #themeToggle.neon-button:hover {
+             background-color: var(--button-secondary-hover-bg);
+             border-color: var(--border-color-strong);
+         }
+
+
+        /* Ajuste para el tema oscuro en elementos específicos si no se heredan bien */
+        body.dark-theme .post,
+        body.dark-theme #postFormContainer,
+        body.dark-theme #boardInfo,
+        body.dark-theme .modal-content,
+        body.dark-theme .admin-toggle,
+        body.dark-theme #audioToggle,
+        body.dark-theme .app-header,
+        body.dark-theme .board-selectors-container,
+        body.dark-theme #tarotGameContainer,
+        body.dark-theme #tarotCardInfoDisplay {
+            border-color: var(--dark-border-color-light);
+        }
+        body.dark-theme #postFormContainer input[type="text"],
+        body.dark-theme #postFormContainer input[type="password"],
+        body.dark-theme #postFormContainer textarea,
+        body.dark-theme .modal-content input[type="password"],
+        body.dark-theme .modal-content input[type="text"],
+        body.dark-theme .modal-content textarea {
+             background-color: var(--dark-app-bg);
+             border-color: var(--dark-border-color-strong);
+        }
+        body.dark-theme .board-selector:not(.active) {
+            color: var(--dark-text-secondary-color);
+        }
+        body.dark-theme .board-selector:not(.active):hover {
+             background-color: var(--dark-button-secondary-hover-bg);
+             color: var(--dark-text-primary-color);
+        }
+         body.dark-theme .file-upload-label {
+             background-color: var(--dark-button-secondary-bg);
+             color: var(--dark-button-secondary-text);
+             border-color: var(--dark-border-color-strong);
+         }
+         body.dark-theme .file-upload-label:hover {
+             background-color: var(--dark-button-secondary-hover-bg);
+         }
+
+        /* Foco visible para accesibilidad */
+        button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible:not([tabindex="-1"]) {
+            outline: 2px solid var(--primary-accent-color);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.3); /* Sombra de foco global */
+        }
+        /* Para elementos ya con un box-shadow de foco específico */
+        #postFormContainer input:focus-visible, 
+        #postFormContainer textarea:focus-visible,
+        .modal-content input:focus-visible,
+        .modal-content textarea:focus-visible {
+            outline: none; /* Ya tienen un box-shadow de foco */
+        }
+
+        /* Eliminar estilos de avatar que no se usarán o se redifinirán */
+        .avatar { /* Ahora es un div para el emoji */
+            filter: none; 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem; /* Ajustar tamaño del emoji */
+            background-color: var(--app-bg); /* Fondo sutil para el avatar */
+            color: var(--text-primary-color);
+        }
+        
+        /* Typing preview (opcional, pero se estiliza si se mantiene) */
+        #typingPreview {
+            background-color: var(--app-bg);
+            border: 1px solid var(--border-color-light);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+        #typingText {
+            color: var(--text-secondary-color);
+            font-style: italic;
+        }
+        .typing-effect::after { /* Cursor de escritura */
+            content: "|";
+            animation: blink 1s step-end infinite;
+            color: var(--text-secondary-color);
+        }
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        [aria-hidden="true"] { 
+            /* Tailwind ya puede manejar esto con 'hidden' class */
+        }
 
     </style>
 </head>
-<body class="min-h-screen crt-effect">
-    <div class="container mx-auto px-4 py-8 fractal-bg">
-        <header class="text-center mb-10 relative z-10"> <h1 class="glitch text-6xl md:text-8xl font-bold mb-4 neon-text" data-text="🧠 NeuroChan">
-                🧠 NeuroChan
-            </h1>
-            <p class="text-xl md:text-2xl neon-text" id="boardTitle">/meta/ Tableros de la Mente</p>
-            <div class="h-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 my-4 opacity-50"></div>
-        </header>
+<body class="min-h-screen"> 
+    <header class="app-header text-center">
+        <h1 data-text="🧠 NeuroChan">🧠 NeuroChan</h1>
+        <p id="boardTitle">/meta/ Tableros de la Mente</p>
+    </header>
 
-        <div class="flex flex-wrap gap-2 mb-6 justify-center">
-            <button class="board-selector active px-4 py-2 rounded border border-cyan-500 text-cyan-400" data-board="meta" aria-label="Tablero meta">
+    <div class="container mx-auto px-4 py-2 md:py-4"> 
+        <div class="board-selectors-container flex flex-wrap gap-2 mb-6 justify-center">
+            <button class="board-selector active" data-board="meta" aria-label="Tablero meta">
                 /meta/
             </button>
-            <button class="board-selector px-4 py-2 rounded border border-purple-500 text-purple-400" data-board="dreams" aria-label="Tablero sueños">
+            <button class="board-selector" data-board="dreams" aria-label="Tablero sueños">
                 /sueños/
             </button>
-            <button class="board-selector px-4 py-2 rounded border border-pink-500 text-pink-400" data-board="techno" aria-label="Tablero tecnosoma">
+            <button class="board-selector" data-board="techno" aria-label="Tablero tecnosoma">
                 /tecnosoma/
             </button>
-            <button class="board-selector px-4 py-2 rounded border border-green-500 text-green-400" data-board="retro" aria-label="Tablero retro anime">
+            <button class="board-selector" data-board="retro" aria-label="Tablero retro anime">
                 /retro-anime/
             </button>
-            <button class="board-selector px-4 py-2 rounded border border-yellow-500 text-yellow-400" data-board="tarot" aria-label="Tablero tarot">
+            <button class="board-selector" data-board="tarot" aria-label="Tablero tarot">
                 /tarot/
             </button>
         </div>
 
-        <div class="neon-border p-4 mb-8 bg-black bg-opacity-70" id="boardInfo">
-            <h2 class="text-2xl mb-2 neon-text">/meta/ - Metaprogramación y Viaje Dimensional</h2>
+        <div id="boardInfo" class="mb-8"> 
+            <h2 class="text-2xl mb-2">/meta/ - Metaprogramación y Viaje Dimensional</h2> 
             <p class="mb-2">Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime</p>
             <p>Todos los posts son persistentes y se sincronizan en tiempo real.</p>
         </div>
 
-        <div class="neon-border p-4 mb-8 bg-black bg-opacity-70 relative" id="postFormContainer">
+        <div id="postFormContainer" class="mb-8 relative"> 
             <div class="mb-4">
                 <input 
                     id="postName"
-                    class="w-full p-2 mb-2 bg-black bg-opacity-50 text-green-400 border border-purple-500 focus:border-pink-500 focus:outline-none"
+                    class="w-full p-2 mb-3" 
                     placeholder="Nombre (opcional)"
                     maxlength="30"
                     aria-label="Nombre del usuario">
 
                 <input 
                     id="postTitle"
-                    class="w-full p-2 mb-2 bg-black bg-opacity-50 text-yellow-400 border border-purple-500 focus:border-pink-500 focus:outline-none"
+                    class="w-full p-2 mb-3"
                     placeholder="Título del Post (opcional)"
                     maxlength="100"
                     aria-label="Título del post">
@@ -640,7 +864,7 @@
                         </div>
                     <textarea
                         id="postContent"
-                        class="w-full p-3 bg-black bg-opacity-50 text-green-400 border border-cyan-500 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        class="w-full p-3 mb-3" 
                         rows="4"
                         placeholder="Transmite tus pensamientos... (soporta texto, imágenes por URL)"
                         aria-label="Contenido del post"></textarea>
@@ -648,57 +872,53 @@
 
                 <input
                     id="postPassword"
-                    class="w-full p-2 mb-2 bg-black bg-opacity-50 text-green-400 border border-purple-500 focus:border-pink-500 focus:outline-none"
+                    class="w-full p-2 mb-3"
                     placeholder="Contraseña para borrado (opcional)"
                     type="password"
                     aria-label="Contraseña para borrado">
 
                 <div class="flex items-center mt-2">
-                    <label for="fileUpload" class="file-upload-label px-4 py-2 bg-black bg-opacity-50 border border-cyan-500 text-cyan-400 cursor-pointer rounded mr-2">
-                        📁 Subir Imagen
+                    <label for="fileUpload" class="file-upload-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
+                        Subir Imagen
                     </label>
                     <input type="file" id="fileUpload" class="hidden" accept="image/*" aria-hidden="true">
-                    <span id="fileName" class="text-xs text-gray-400 ml-2"></span>
+                    <span id="fileName" class="text-xs text-gray-500 ml-2"></span>
                 </div>
             </div>
             <div class="flex flex-wrap gap-4">
-                <button
-                    id="submitPost"
-                    class="neon-button px-6 py-2 bg-black bg-opacity-70 border border-cyan-500 text-cyan-400 font-bold hover:border-pink-500 hover:text-pink-400"
-                    aria-label="Enviar post">
-                    🚀 ENVIAR
+                <button id="submitPost" class="primary-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    ENVIAR
                 </button>
-                <button
-                    id="themeToggle"
-                    class="theme-toggle px-4 py-2 bg-black bg-opacity-70 border border-pink-500 text-pink-400 font-bold"
-                    aria-label="Cambiar tema claro/oscuro">
+                <button id="themeToggle" class="secondary-button">
                     🌓 CAMBIAR TEMA
                 </button>
             </div>
-            <div id="typingPreview" class="mt-4 p-3 bg-black bg-opacity-30 border border-gray-700 hidden">
-                <p id="typingText" class="typing-effect text-green-400"></p>
+            <div id="typingPreview" class="mt-4 p-3 hidden">
+                <p id="typingText" class="typing-effect"></p>
             </div>
         </div>
         
         <div id="loadingMessage" class="hidden">Cargando transmisiones...</div>
 
-        <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             </div>
 
         <div id="threadContainer" class="hidden mt-8">
             </div>
         
-        <div id="tarotGameContainer" class="hidden flex flex-col items-center p-4 neon-border bg-black bg-opacity-70">
-            <h2 class="text-3xl mb-6 neon-text">Lectura de Tarot Piramidal</h2>
+        <div id="tarotGameContainer" class="hidden flex flex-col items-center p-4">
+            <h2 class="text-2xl font-semibold mb-6">Lectura de Tarot Piramidal</h2>
             <div class="mb-6 flex gap-4">
-                <button id="shuffleTarotButton" class="neon-button px-6 py-3 bg-purple-700 hover:bg-purple-600 border-purple-500 text-white font-bold">Barajar y Tirar Cartas</button>
-                <button id="resetTarotButton" class="neon-button px-6 py-3 bg-red-700 hover:bg-red-600 border-red-500 text-white font-bold">Resetear Tirada</button>
+                <button id="shuffleTarotButton" class="primary-button">Barajar y Tirar Cartas</button>
+                <button id="resetTarotButton" class="secondary-button" style="background-color: var(--danger-color); color: white;">Resetear Tirada</button>
             </div>
             <div id="tarotSpreadContainer" class="grid gap-2 justify-items-center w-full">
                 </div>
-            <div id="tarotCardInfoDisplay" class="hidden mt-6 p-6 neon-border bg-black bg-opacity-80 w-full md:max-w-2xl rounded-lg">
-                <h3 id="tarotCardNameInfo" class="text-2xl neon-text-title text-center mb-3"></h3>
-                <img id="tarotCardImageInfo" src="#" alt="Carta del Tarot Seleccionada" class="mx-auto my-3 max-h-80 border-2 border-acid-green rounded"/>
+            <div id="tarotCardInfoDisplay" class="hidden mt-6 p-6 w-full md:max-w-2xl rounded-lg">
+                <h3 id="tarotCardNameInfo" class="text-xl font-semibold text-center mb-3"></h3>
+                <img id="tarotCardImageInfo" src="#" alt="Carta del Tarot Seleccionada" class="mx-auto my-3 max-h-60 rounded"/>
                 <div class="text-sm space-y-2">
                     <p><strong>Significado (Derecha):</strong> <span id="tarotMeaningUpInfo"></span></p>
                     <p><strong>Significado (Invertida):</strong> <span id="tarotMeaningRevInfo"></span></p>
@@ -710,12 +930,12 @@
 
         <div class="admin-panel flex items-center gap-2">
             <button id="adminToggle" class="admin-toggle" aria-label="Panel de administrador">
-                ⚙️
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.566.379-1.566 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.54.886.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.566 2.6 1.566 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.566-.379 1.566-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.54-.886-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>
             </button>
             <button id="infoToggle" class="admin-toggle" aria-label="Información del sitio">
-                ❓
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
             </button>
-            <button id="adminLogoutButton" class="admin-toggle text-red-500 hover:text-red-400" style="display: none;" aria-label="Cerrar sesión de administrador">
+            <button id="adminLogoutButton" class="admin-toggle" style="display: none;" aria-label="Cerrar sesión de administrador">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
@@ -723,8 +943,8 @@
         </div>
 
         <div class="fixed bottom-4 right-4">
-            <button id="audioToggle" class="neon-button w-12 h-12 rounded-full bg-black bg-opacity-70 border border-cyan-500 flex items-center justify-center" aria-label="Alternar audio">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button id="audioToggle" aria-label="Alternar audio">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 0115.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 0115.657-2.343" />
                 </svg>
             </button>
@@ -739,46 +959,47 @@
         <div class="modal-content">
             <h3 class="text-xl mb-4">Confirmar borrado</h3>
             <p class="mb-4">Introduce la contraseña para borrar este post:</p>
-            <input type="password" id="deletePasswordInput" class="w-full p-2 mb-4 bg-black bg-opacity-50 text-green-400 border border-purple-500"> <div class="flex justify-end gap-2">
-                <button id="cancelDelete" class="px-4 py-2 border border-gray-500">Cancelar</button>
-                <button id="confirmDelete" class="px-4 py-2 bg-red-500 text-white">Borrar</button>
+            <input type="password" id="deletePasswordInput" class="w-full p-2 mb-4"> 
+            <div class="modal-actions">
+                <button id="cancelDelete" class="secondary-button">Cancelar</button>
+                <button id="confirmDelete" class="primary-button" style="background-color: var(--danger-color);">Borrar</button>
             </div>
         </div>
     </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content max-w-md">
-            <h3 class="text-xl mb-4 neon-text">Editar Transmisión</h3>
+            <h3 class="text-xl mb-4">Editar Transmisión</h3>
             
             <div id="editPasswordPromptContainer" class="mb-4" style="display: none;">
                 <label for="editPostPasswordPrompt" class="block mb-1 text-sm">Contraseña del Post (para editar):</label>
-                <input type="password" id="editPostPasswordPrompt" class="w-full p-2 bg-black bg-opacity-50 text-green-400 border border-purple-500">
+                <input type="password" id="editPostPasswordPrompt" class="w-full p-2">
             </div>
 
             <label for="editPostName" class="block mb-1 text-sm">Nombre:</label>
-            <input id="editPostName" class="w-full p-2 mb-2 bg-black bg-opacity-50 text-green-400 border border-purple-500" maxlength="30">
+            <input id="editPostName" class="w-full p-2 mb-2" maxlength="30">
 
             <label for="editPostTitle" class="block mb-1 text-sm">Título:</label>
-            <input id="editPostTitle" class="w-full p-2 mb-2 bg-black bg-opacity-50 text-yellow-400 border border-purple-500" maxlength="100">
+            <input id="editPostTitle" class="w-full p-2 mb-2" maxlength="100">
 
             <label for="editPostContent" class="block mb-1 text-sm">Contenido:</label>
-            <textarea id="editPostContent" class="w-full p-3 mb-2 bg-black bg-opacity-50 text-green-400 border border-cyan-500" rows="4"></textarea>
+            <textarea id="editPostContent" class="w-full p-3 mb-2" rows="4"></textarea>
 
             <div class="mb-2">
-                <img id="editImagePreview" src="#" alt="Previsualización de imagen" class="max-h-40 mb-2 neon-border" style="display:none;">
-                <label for="editFileUpload" class="file-upload-label px-3 py-1 text-xs bg-black bg-opacity-50 border border-cyan-500 text-cyan-400 cursor-pointer rounded mr-2">
+                <img id="editImagePreview" src="#" alt="Previsualización de imagen" class="max-h-40 mb-2" style="display:none; border: 1px solid var(--border-color-light); border-radius: 6px;">
+                <label for="editFileUpload" class="file-upload-label px-3 py-1 text-xs cursor-pointer rounded mr-2">
                     Cambiar Imagen
                 </label>
                 <input type="file" id="editFileUpload" class="hidden" accept="image/*">
-                <span id="editFileName" class="text-xs text-gray-400"></span>
+                <span id="editFileName" class="text-xs text-gray-500"></span>
                 <label class="ml-2 text-xs"><input type="checkbox" id="removeCurrentImage"> Remover Imagen Actual</label>
             </div>
 
             <label for="editNewPostPassword" class="block mb-1 text-sm">Nueva Contraseña (opcional, dejar en blanco para no cambiar):</label>
-            <input type="password" id="editNewPostPassword" class="w-full p-2 mb-4 bg-black bg-opacity-50 text-green-400 border border-purple-500">
-            <div class="flex justify-end gap-2">
-                <button id="cancelEdit" class="px-4 py-2 border border-gray-500">Cancelar</button>
-                <button id="confirmEdit" class="px-4 py-2 bg-green-500 text-white">Guardar Cambios</button>
+            <input type="password" id="editNewPostPassword" class="w-full p-2 mb-4">
+            <div class="modal-actions">
+                <button id="cancelEdit" class="secondary-button">Cancelar</button>
+                <button id="confirmEdit" class="primary-button" style="background-color: var(--success-color);">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -787,9 +1008,10 @@
         <div class="admin-modal-content">
             <h3 class="text-xl mb-4">Acceso de Administrador</h3>
             <p class="mb-4">Introduce la contraseña maestra:</p>
-            <input type="password" id="adminPasswordInput" class="w-full p-2 mb-4 bg-black bg-opacity-50 text-green-400 border border-purple-500"> <div class="flex justify-end gap-2">
-                <button id="cancelAdmin" class="px-4 py-2 border border-gray-500">Cancelar</button>
-                <button id="confirmAdmin" class="px-4 py-2 bg-green-500 text-white">Acceder</button>
+            <input type="password" id="adminPasswordInput" class="w-full p-2 mb-4"> 
+            <div class="modal-actions">
+                <button id="cancelAdmin" class="secondary-button">Cancelar</button>
+                <button id="confirmAdmin" class="primary-button" style="background-color: var(--success-color);">Acceder</button>
             </div>
         </div>
     </div>
@@ -797,8 +1019,8 @@
     <div id="infoModal" class="modal">
         <div class="modal-content max-w-lg">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl neon-text">Acerca de NeuroChan</h3>
-                <button id="closeInfoModal" class="text-xl">&times;</button>
+                <h3 class="text-xl">Acerca de NeuroChan</h3>
+                <button id="closeInfoModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
             </div>
             <p class="mb-4 text-sm">
                 NeuroChan es un espacio para la comunidad espiritual de los "Fungis": aquellos que exploran la conciencia, 
@@ -808,7 +1030,7 @@
                 Aquí puedes compartir tus experiencias con "inochis" (seres o energías), encuentros con entidades inorgánicas, 
                 la naturaleza del ego, despertares de conciencia y cualquier tema relacionado con la expansión de la mente y el espíritu.
             </p>
-            <h4 class="text-lg mb-2 neon-text">Reglas del Sitio (Guías Espirituales):</h4>
+            <h4 class="text-lg mb-2 font-semibold">Reglas del Sitio (Guías Espirituales):</h4>
             <ul class="list-disc list-inside text-sm space-y-1 mb-4">
                 <li>Respeta todas las perspectivas y experiencias. El camino espiritual es único para cada ser.</li>
                 <li>No se tolera el proselitismo ni la imposición de creencias. Comparte, no conviertas.</li>
@@ -816,16 +1038,16 @@
                 <li>Este es un espacio para la exploración y el aprendizaje mutuo. Sé abierto y curioso.</li>
                 <li>La información compartida es para reflexión personal y no sustituye el consejo profesional (médico, psicológico, etc.) cuando sea necesario.</li>
             </ul>
-            <p class="text-xs text-gray-400">Recuerda: la verdadera sabiduría reside en el corazón y en la experiencia directa.</p>
+            <p class="text-xs text-gray-500">Recuerda: la verdadera sabiduría reside en el corazón y en la experiencia directa.</p>
         </div>
     </div>
 
     <div id="genericModal" class="modal">
         <div class="modal-content">
-            <h3 id="genericModalTitle" class="text-xl mb-4 neon-text">Mensaje</h3>
+            <h3 id="genericModalTitle" class="text-xl mb-4">Mensaje</h3>
             <p id="genericModalMessage" class="mb-4">Este es un mensaje de ejemplo.</p>
-            <div id="genericModalButtons" class="flex justify-end gap-2">
-                <button class="px-4 py-2 border border-gray-500 generic-modal-close-button">Cerrar</button>
+            <div id="genericModalButtons" class="modal-actions">
+                <button class="secondary-button generic-modal-close-button">Cerrar</button>
             </div>
         </div>
     </div>
@@ -866,7 +1088,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const postsCollectionRef = collection(db, "Posts");
-        const tarotCollectionRef = collection(db, "TarotCards"); // Para el futuro, si se usa Firestore para tarot
 
         (function() {
             const MAX_IMAGE_SIZE = 2 * 1024 * 1024; 
@@ -876,48 +1097,37 @@
             
             let state = {
                 currentBoard: 'meta',
-                currentTheme: localStorage.getItem('neurochan_theme') || 'dark', 
+                currentTheme: localStorage.getItem('neurochan_theme') || 'light', // Default to light
                 audioEnabled: false,
                 isAdmin: localStorage.getItem('neurochan_admin') === 'true',
                 replyTo: null, 
                 currentDeletePostId: null,
-                allPostsData: {}, // Almacena todos los posts cargados (OPs y respuestas) por ID para fácil acceso
-                currentBoardOPs: [], // Almacena solo los OPs del tablero actual
+                allPostsData: {}, 
+                currentBoardOPs: [], 
                 currentEditPostId: null, 
                 currentEditPostData: null, 
                 viewingThreadId: null,
-                tarotDeck: [], // Para las cartas del tarot del juego
-                tarotSpread: [], // Para las cartas actualmente en la tirada
-                tarotCardInfoVisible: false, // Para el estado de la info de la carta de tarot
+                tarotDeck: [], 
+                tarotSpread: [], 
+                tarotCardInfoVisible: false, 
             };
 
-            const avatars = [
+            const avatars = [ // Usaremos estos como emojis en el div .post-avatar
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
                 '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
-            const postColors = [
-                'bg-gradient-to-br from-cyan-900 to-blue-900',
-                'bg-gradient-to-br from-purple-900 to-pink-900',
-                'bg-gradient-to-br from-blue-900 to-indigo-900',
-                'bg-gradient-to-br from-pink-900 to-red-900',
-                'bg-gradient-to-br from-green-900 to-teal-900',
-                'bg-gradient-to-br from-yellow-900 to-orange-900'
-            ];
+            // Los colores de los posts se eliminan, ya que el diseño es más uniforme
+            // const postColors = [ ... ]; 
 
             const boards = {
-                meta: {
-                    title: "/meta/ - Metaprogramación y Viaje Dimensional",
-                    description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime",
-                    footer: "Todos los posts son persistentes y se sincronizan en tiempo real."
-                },
+                meta: { title: "/meta/ - Metaprogramación y Viaje Dimensional", description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime", footer: "Todos los posts son persistentes y se sincronizan en tiempo real." },
                 dreams: { title: "/sueños/ - Exploración Lúcida y Oneironáutica", description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados." },
                 techno: { title: "/tecnosoma/ - Conciencia Cibernética", description: "Temas: Aumento Neural, Tecnología Cyberpunk, Interfaces Mente-Máquina", footer: "La carne es débil. La máquina está dispuesta. La mente es eterna." },
                 retro: { title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos." },
                 tarot: { title: "/tarot/ - Arcanos y Sincronicidad", description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", footer: "Las cartas revelan los ecos del alma y los susurros del destino." }
             };
             
-            // Datos del Tarot (Arcanos Mayores)
             const tarotDeckData = [
                 { cartnumber: 0, namecart: "The Fool", significado1cart: "Inicio, potencial ilimitado, fe en el camino", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 1, namecart: "The Magician", significado1cart: "Voluntad consciente, capacidad de manifestar", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/1.BOTA_Tarot_The-Magician.jpg" },
@@ -943,13 +1153,12 @@
                 { cartnumber: 21, namecart: "The World", significado1cart: "Plenitud, cierre de ciclo, maestría", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/21-bota_tarot_the-world.jpg" }
             ];
 
-
             let unsubscribePosts = null; 
 
             document.addEventListener('DOMContentLoaded', function() {
                 setupEventListeners();
                 setupEmojiPicker();
-                updateTheme(); 
+                applyInitialTheme(); // Aplicar tema al cargar
                 if (state.isAdmin) setupAdminPanel();
 
                 onAuthStateChanged(auth, (user) => {
@@ -974,15 +1183,27 @@
                         });
                     }
                 });
-
                 window.addEventListener('hashchange', handleHashChange);
             });
+
+            function applyInitialTheme() {
+                // Si el tema guardado es 'dark', añade la clase. Si no, se asume 'light' (sin clase).
+                if (localStorage.getItem('neurochan_theme') === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
+                } else {
+                    document.body.classList.remove('dark-theme'); // Asegurar que no esté si es light
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
+                }
+                // Actualizar el texto del botón de tema
+                updateThemeButtonText();
+            }
             
             function handleHashChange() {
                 const hash = window.location.hash.substring(1); 
                 const params = new URLSearchParams(hash);
                 const postIdFromUrl = params.get('post');
-                const boardFromUrl = params.get('board') || state.currentBoard; // Mantener tablero si no se especifica
+                const boardFromUrl = params.get('board') || state.currentBoard;
 
                 let boardActuallyChanged = false;
                 if (boardFromUrl && boardFromUrl !== state.currentBoard) {
@@ -993,27 +1214,21 @@
                     });
                     const boardData = boards[state.currentBoard] || boards.meta;
                     document.getElementById('boardInfo').innerHTML = `
-                        <h2 class="text-2xl mb-2 neon-text">${boardData.title}</h2>
-                        <p class="mb-2">${boardData.description}</p>
-                        <p>${boardData.footer}</p>`;
+                        <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
+                        <p class="text-sm mb-1">${boardData.description}</p>
+                        <p class="text-xs">${boardData.footer}</p>`;
                     document.getElementById('boardTitle').textContent = state.currentBoard === 'meta' ? 
-                        "/meta/ Tableros de la Mente" : 
-                        `/${state.currentBoard}/ ${state.currentBoard.charAt(0).toUpperCase() + state.currentBoard.slice(1).replace('-', ' ')}`;
+                        "NeuroChan" : // Título más genérico para el header
+                        `${boardData.title.split(' - ')[0]}`; // Solo el /nombre/ del tablero
                 }
                 
                 const previousViewingThreadId = state.viewingThreadId;
                 state.viewingThreadId = postIdFromUrl || null;
                 
-                // Determinar si es necesario recargar el contenido.
-                // Se recarga si:
-                // 1. El tablero realmente cambió.
-                // 2. El ID del hilo que se está viendo cambió (entrar/salir de un hilo).
-                // 3. Es la primera carga (unsubscribePosts es null).
-                // 4. Se especificó un tablero en la URL (incluso si es el mismo, para forzar recarga si es necesario).
                 if (boardActuallyChanged || state.viewingThreadId !== previousViewingThreadId || !unsubscribePosts || (boardFromUrl && boardFromUrl !== 'tarot') || (boardFromUrl === 'tarot' && state.currentBoard === 'tarot') ) {
                     loadContentForBoard();
                 }
-                updateUiForView(); // Llamar siempre para asegurar que la UI refleje el estado actual
+                updateUiForView(); 
             }
 
             function loadContentForBoard() {
@@ -1048,7 +1263,6 @@
                 document.getElementById('confirmEdit').addEventListener('click', () => confirmEdit()); 
                 document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
 
-                // Event listeners para el Tarot
                 document.getElementById('shuffleTarotButton').addEventListener('click', shuffleAndDealTarot);
                 document.getElementById('resetTarotButton').addEventListener('click', resetTarotSpread);
             }
@@ -1105,24 +1319,18 @@
                     return;
                 }
 
-                // Lógica de replyTo:
-                // Si estamos viendo un hilo, todas las respuestas van a ese hilo OP.
-                // Si estamos en el tablero principal Y state.replyTo (del click en "responder" a un OP) está seteado,
-                // entonces es una respuesta a ese OP.
-                // Si no, es un nuevo hilo (replyTo = null).
                 let actualReplyTo = null;
-                if (state.viewingThreadId) {
+                if (state.viewingThreadId) { 
                     actualReplyTo = state.viewingThreadId;
-                } else if (state.replyTo) { // Click en "Responder" en el tablero principal
+                } else if (state.replyTo) { 
                     actualReplyTo = state.replyTo;
                 }
-
 
                 const newPostData = {
                     authorUID: auth.currentUser.uid, 
                     avatar: avatars[Math.floor(Math.random() * avatars.length)],
                     board: state.currentBoard,
-                    color: postColors[Math.floor(Math.random() * postColors.length)],
+                    // color: postColors[Math.floor(Math.random() * postColors.length)], // Color ya no se usa
                     text: DOMPurify.sanitize(contentInput),
                     title: title ? DOMPurify.sanitize(title) : null, 
                     image: null,
@@ -1133,10 +1341,8 @@
                     angryCount: 0,
                     reactedBy: {}, 
                     timestamp: serverTimestamp(), 
-                    replyTo: actualReplyTo, // Usar la lógica determinada arriba
+                    replyTo: actualReplyTo, 
                 };
-                
-                document.getElementById('postContent').placeholder = "Transmite tus pensamientos... (soporta texto, imágenes por URL)";
                 
                 const submitButton = document.getElementById('submitPost');
                 submitButton.disabled = true;
@@ -1188,12 +1394,7 @@
                         ? `Respondiendo al hilo... >>${state.viewingThreadId.slice(-4)}` 
                         : "Transmite tus pensamientos...";
 
-                    const button = document.getElementById('submitPost');
-                    button.classList.add('bg-pink-500', 'text-white');
-                    setTimeout(() => {
-                        button.classList.remove('bg-pink-500', 'text-white');
-                    }, 300);
-
+                    // No es necesario re-renderizar, onSnapshot lo hará.
                 } catch (error) {
                     console.error("Error guardando post en Firestore:", error);
                     showGenericModal("Error de Guardado", "No se pudo guardar el post en la base de datos. Intenta de nuevo.", [{ text: 'OK', action: closeGenericModal }]);
@@ -1231,16 +1432,16 @@
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.add('hidden');
                     if (postFormContainer) postFormContainer.classList.add('hidden');
-                    if (boardInfoSection) boardInfoSection.classList.remove('hidden'); // Mantener info del tablero tarot
+                    if (boardInfoSection) boardInfoSection.classList.remove('hidden'); 
                     tarotGameContainer.classList.remove('hidden');
                 } else if (state.viewingThreadId) {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.remove('hidden');
-                    if (postFormContainer) postFormContainer.classList.remove('hidden'); // Mostrar form para responder
+                    if (postFormContainer) postFormContainer.classList.remove('hidden'); 
                     if (boardInfoSection) boardInfoSection.classList.add('hidden');
                     tarotGameContainer.classList.add('hidden');
                     document.getElementById('postContent').placeholder = `Respondiendo al hilo... >>${state.viewingThreadId.slice(-4)}`;
-                } else { // Vista de tablero general (no tarot)
+                } else { 
                     postsContainer.classList.remove('hidden');
                     threadContainer.classList.add('hidden');
                     threadContainer.innerHTML = ''; 
@@ -1274,7 +1475,7 @@
                 
                 updateUiForView(); 
 
-                const postsContainer = document.getElementById('postsContainer'); // Mover aquí para acceso general
+                const postsContainer = document.getElementById('postsContainer'); 
                 if (state.viewingThreadId) {
                     const docRef = doc(db, "Posts", state.viewingThreadId);
                     unsubscribePosts = onSnapshot(docRef, (docSnap) => {
@@ -1283,14 +1484,13 @@
 
                         if (docSnap.exists()) {
                             const postData = { id: docSnap.id, ...docSnap.data() };
-                            state.allPostsData[postData.id] = postData; // Actualizar caché global
-                            const postElement = createPostElement(postData, true, 0); // replyCount 0 para OP en vista de hilo
+                            state.allPostsData[postData.id] = postData; 
+                            const postElement = createPostElement(postData, true, 0); 
                             threadContainer.appendChild(postElement);
                             applyPostEffects(postData, postElement);
                             loadAndRenderReplies(postData.id, threadContainer); 
                         } else {
                             threadContainer.innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
-                            console.warn(`Post con ID ${state.viewingThreadId} no encontrado.`);
                         }
                         if (loadingMessage) loadingMessage.classList.add('hidden');
                     }, (error) => {
@@ -1301,56 +1501,42 @@
                         }
                     });
                 } else {
-                    // Consulta para OPs del tablero actual
-                    const q = query(postsCollectionRef, 
-                                    where("board", "==", state.currentBoard), 
-                                    where("replyTo", "==", null) 
-                                    // No se puede añadir orderBy("timestamp", "desc") aquí sin un índice compuesto.
-                                    // La ordenación se hará en el cliente.
-                                  );
+                    const q = query(postsCollectionRef, where("board", "==", state.currentBoard));
                     unsubscribePosts = onSnapshot(q, (querySnapshot) => {
-                        // postsContainer ya está definido arriba
-                        let fetchedOPs = [];
+                        let allBoardPosts = [];
                         querySnapshot.forEach(docSnap => {
-                            const opData = { id: docSnap.id, ...docSnap.data() };
-                            fetchedOPs.push(opData);
-                            state.allPostsData[opData.id] = opData; // Actualizar caché global
+                            allBoardPosts.push({ id: docSnap.id, ...docSnap.data() });
                         });
 
-                        // Ordenar OPs en el cliente
-                        fetchedOPs.sort((a, b) => {
-                            const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : new Date(a.timestamp).getTime();
-                            const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : new Date(b.timestamp).getTime();
+                        const ops = [];
+                        const repliesByParent = {};
+                        allBoardPosts.forEach(p => {
+                            state.allPostsData[p.id] = p; 
+                            if (p.replyTo === null) {
+                                ops.push(p);
+                            } else {
+                                if (!repliesByParent[p.replyTo]) repliesByParent[p.replyTo] = [];
+                                repliesByParent[p.replyTo].push(p);
+                            }
+                        });
+
+                        ops.sort((a, b) => {
+                            const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
+                            const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
                             return timeB - timeA; 
                         });
                         
-                        state.currentBoardOPs = fetchedOPs; // Guardar OPs para el tablero actual
+                        state.currentBoardOPs = ops; 
 
-                        postsContainer.innerHTML = ''; // Asegurar limpieza para vista de tablero
-                        if (fetchedOPs.length === 0) {
-                            postsContainer.innerHTML = '<p class="text-center col-span-full neon-text">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
+                        postsContainer.innerHTML = ''; 
+                        if (ops.length === 0) {
+                            postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
                         } else {
-                            // Cargar todas las respuestas para calcular conteos
-                            const allRepliesQuery = query(postsCollectionRef, where("board", "==", state.currentBoard), where("replyTo", "!=", null));
-                            getDocs(allRepliesQuery).then(repliesSnapshot => {
-                                const replyCounts = {};
-                                repliesSnapshot.forEach(replyDoc => {
-                                    const replyData = replyDoc.data();
-                                    if (replyData.replyTo) {
-                                        replyCounts[replyData.replyTo] = (replyCounts[replyData.replyTo] || 0) + 1;
-                                        state.allPostsData[replyDoc.id] = {id: replyDoc.id, ...replyData}; // Cachear respuestas también
-                                    }
-                                });
-
-                                postsContainer.innerHTML = ''; // Limpiar por si acaso
-                                fetchedOPs.forEach(opData => {
-                                    const postElement = createPostElement(opData, false, replyCounts[opData.id] || 0);
-                                    postsContainer.appendChild(postElement);
-                                    applyPostEffects(opData, postElement);
-                                });
-                                if (fetchedOPs.length === 0 && postsContainer.innerHTML === '') { // Doble chequeo por si la promesa tarda
-                                     postsContainer.innerHTML = '<p class="text-center col-span-full neon-text">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
-                                }
+                            ops.forEach(opData => {
+                                const count = repliesByParent[opData.id] ? repliesByParent[opData.id].length : 0;
+                                const postElement = createPostElement(opData, false, count);
+                                postsContainer.appendChild(postElement);
+                                applyPostEffects(opData, postElement);
                             });
                         }
                         
@@ -1358,15 +1544,15 @@
                     }, (error) => {
                         console.error("Error obteniendo posts del tablero:", error);
                         if (loadingMessage) {
-                            loadingMessage.textContent = 'Error al cargar posts. Firestore podría requerir un índice para `board` y `replyTo`. Revisa la consola.';
+                            loadingMessage.textContent = 'Error al cargar posts. Revisa la consola.';
                             loadingMessage.classList.remove('hidden');
                         }
                     });
                 }
             }
 
-            async function loadAndRenderReplies(postId, threadContainerElement) {
-                const repliesQuery = query(postsCollectionRef, where("replyTo", "==", postId));
+            async function loadAndRenderReplies(parentPostId, threadContainerElement) {
+                const repliesQuery = query(postsCollectionRef, where("replyTo", "==", parentPostId));
                 
                 const oldRepliesContainer = threadContainerElement.querySelector('.replies-container');
                 if (oldRepliesContainer) {
@@ -1374,7 +1560,8 @@
                 }
 
                 const repliesContainer = document.createElement('div');
-                repliesContainer.className = 'replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 border-cyan-700 pl-4';
+                repliesContainer.className = 'replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4';
+                repliesContainer.style.borderColor = 'var(--divider-color)';
                 
                 try {
                     const querySnapshot = await getDocs(repliesQuery);
@@ -1383,7 +1570,7 @@
                     querySnapshot.forEach(function(doc) { 
                         const replyData = { id: doc.id, ...doc.data() };
                         repliesData.push(replyData);
-                        state.allPostsData[replyData.id] = replyData; // Cachear respuesta
+                        state.allPostsData[replyData.id] = replyData; 
                     });
 
                     repliesData.sort((a,b) => {
@@ -1393,105 +1580,95 @@
                     });
 
                     repliesData.forEach(replyData => {
-                        const replyElement = createPostElement(replyData, false, 0); // Las respuestas no muestran conteo de sub-respuestas
+                        const replyElement = createPostElement(replyData, false, 0); 
                         repliesContainer.appendChild(replyElement);
                         applyPostEffects(replyData, replyElement);
                     });
                     
-                    // Actualizar contador de respuestas en el OP del hilo
-                    const opElementInThread = threadContainerElement.querySelector(`.post[data-id="${postId}"] .reply-count-display`);
+                    const opElementInThread = threadContainerElement.querySelector(`.post[data-id="${parentPostId}"] .reply-count-display`);
                     if (opElementInThread) {
                         opElementInThread.textContent = repliesData.length;
                     }
-
 
                     if (repliesData.length > 0) {
                          threadContainerElement.appendChild(repliesContainer);
                     } else {
                         const noRepliesMessage = document.createElement('p');
-                        noRepliesMessage.className = 'text-sm text-gray-400 pl-4 mt-2';
+                        noRepliesMessage.className = 'text-sm pl-4 mt-2';
+                        noRepliesMessage.style.color = 'var(--text-secondary-color)';
                         noRepliesMessage.textContent = 'Aún no hay respuestas en este hilo.';
                         repliesContainer.appendChild(noRepliesMessage);
                         threadContainerElement.appendChild(repliesContainer); 
                     }
                 } catch (e) {
                     console.error("Error cargando respuestas: ", e);
-                    repliesContainer.innerHTML = '<p class="text-red-400">Error al cargar respuestas.</p>';
+                    repliesContainer.innerHTML = '<p class="text-red-500">Error al cargar respuestas.</p>';
                     threadContainerElement.appendChild(repliesContainer);
                 }
             }
 
             function applyPostEffects(post, element) {
-                const content = ((post.text ?? '')).toLowerCase();
-                if (content.includes('sueño') || content.includes('dream')) element.classList.add('dream-glow');
-                if (content.includes('tecno') || content.includes('tech') || content.includes('ciber')) element.classList.add('tech-glow');
-                if (content.includes('dimensión') || content.includes('realidad')) element.classList.add('dimension-glow');
+                // No hay efectos de brillo en el nuevo tema
             }
 
             function createPostElement(post, isThreadParent = false, replyCount = 0) {
                 const postElement = document.createElement('div');
-                postElement.className = `post ${post.color} p-4 rounded-lg bg-opacity-20 backdrop-blur-sm neon-border hover:bg-opacity-30 transition-all duration-300`;
+                // No se usa post.color, el fondo es --card-bg
+                postElement.className = `post p-4 rounded-lg mb-4`; 
                 postElement.dataset.id = post.id; 
 
                 if (isThreadParent) {
-                    postElement.classList.add('mb-6', 'border-2', 'border-acid-green'); 
+                    postElement.classList.add('mb-6'); 
+                    postElement.style.borderWidth = '2px';
+                    postElement.style.borderColor = 'var(--primary-accent-color)';
                 }
 
                 const postTimestamp = post.timestamp?.toDate ? post.timestamp.toDate() : new Date(post.timestamp);
                 const timeString = postTimestamp.toLocaleTimeString ? postTimestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
                 const contentHtml = getPostContentHtml(post);
                 
-                // El indicador de respuesta >>ID se maneja en getPostContentHtml
-                // const replyIndicator = post.replyTo && !isThreadParent ? ... (eliminado)
-
-                // Usar neon-text-title para el título del post
-                const titleHtml = post.title ? `<h4 class="text-lg font-bold mb-1 neon-text-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
+                const titleHtml = post.title ? `<h4 class="post-title neon-text-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
-                // Botón "Ver Hilo" solo para OPs en la vista de tablero.
-                // No mostrar "Volver al tablero".
                 const threadViewButtonHtml = !state.viewingThreadId && !post.replyTo ? 
-                    `<button class="view-thread-button text-xs px-2 py-1 border border-purple-500 text-purple-400" aria-label="Ver hilo">Ver Hilo</button>` :
-                    ''; 
+                    `<button class="view-thread-button reaction-button" aria-label="Ver hilo" style="color: var(--primary-accent-color);">Ver Hilo (${replyCount})</button>` : ''; 
                 
-                // Mostrar contador de respuestas para OPs
-                const replyCountHtml = !post.replyTo ? // Solo para OPs
-                    `<span class="text-xs text-gray-400 ml-2">Respuestas: <span class="reply-count-display">${replyCount}</span></span>` : '';
-
+                const replyCountHtml = !post.replyTo && !state.viewingThreadId ? // Solo en vista de tablero para OPs
+                    `<span class="text-xs ml-2" style="color: var(--text-secondary-color);">Respuestas: <span class="reply-count-display">${replyCount}</span></span>` : '';
 
                 postElement.innerHTML = `
-                    <div class="flex items-start mb-2">
-                        <span class="avatar text-3xl mr-3">${post.avatar}</span>
-                        <div>
-                            <span class="text-xs text-gray-400">${DOMPurify.sanitize(post.name)}</span>
-                            <span class="text-xs text-gray-400 ml-2">${timeString}</span>
-                            ${post.authorUID === auth.currentUser?.uid ? '<span class="text-xs text-acid-green ml-2">(Tú)</span>' : ''}
-                            ${replyCountHtml}
+                    <div class="post-header">
+                        <div class="post-avatar">${post.avatar}</div>
+                        <div class="post-userinfo">
+                            <span class="post-username">${DOMPurify.sanitize(post.name)}</span>
+                            <span class="post-timestamp">${timeString} ${post.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''} ${replyCountHtml}</span>
                         </div>
                     </div>
                     ${titleHtml}
                     <div class="post-content text-sm mb-2 mt-1">${contentHtml}</div> 
-                    <div class="flex justify-between items-center">
+                    <div class="post-actions">
                         <div class="flex gap-1 items-center flex-wrap"> 
-                            <button class="reaction-button heart-reaction-button text-xs px-2 py-1 border border-pink-500 text-pink-400 flex items-center gap-1" aria-label="Reaccionar con Corazón">
-                                ❤️ <span class="count">${post.heartCount || 0}</span>
+                            <button class="reaction-button heart-reaction-button flex items-center gap-1" aria-label="Reaccionar con Corazón">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg>
+                                <span class="count">${post.heartCount || 0}</span>
                             </button>
-                            <button class="reaction-button funny-reaction-button text-xs px-2 py-1 border border-yellow-500 text-yellow-400 flex items-center gap-1" aria-label="Reaccionar con Me Diverte">
+                            <button class="reaction-button funny-reaction-button flex items-center gap-1" aria-label="Reaccionar con Me Diverte">
                                 😂 <span class="count">${post.funnyCount || 0}</span>
                             </button>
-                            <button class="reaction-button angry-reaction-button text-xs px-2 py-1 border border-red-500 text-red-400 flex items-center gap-1" aria-label="Reaccionar con Me Enoja">
+                            <button class="reaction-button angry-reaction-button flex items-center gap-1" aria-label="Reaccionar con Me Enoja">
                                 😠 <span class="count">${post.angryCount || 0}</span>
                             </button>
-                            <button class="reply-button text-xs px-2 py-1 border border-cyan-500 text-cyan-400" aria-label="Responder a este post">
-                                ↩ Responder
+                            <button class="reply-button reaction-button" aria-label="Responder a este post">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                Responder
                             </button>
                             ${threadViewButtonHtml}
                         </div>
                         <div class="flex items-center">
-                            ${state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid) ? '<button class="delete-button text-xs px-1" aria-label="Eliminar post">🗑️</button>' : ''}
-                            ${canShowEditButton ? `<button class="edit-button text-xs px-1 ml-1" aria-label="Editar post">✏️</button>` : ''}
-                            <span class="text-xs text-gray-500 ml-2">ID: ${post.id.slice(-4)}</span>
+                            ${state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid) ? '<button class="delete-button reaction-button delete" aria-label="Eliminar post"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>' : ''}
+                            ${canShowEditButton ? `<button class="edit-button reaction-button" aria-label="Editar post"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg></button>` : ''}
+                            <span class="text-xs ml-2" style="color: var(--text-tertiary-color);">ID: ${post.id.slice(-4)}</span>
                         </div>
                     </div>
                 `;
@@ -1517,7 +1694,7 @@
                     link.addEventListener('mouseenter', () => showReplyPreview(link.dataset.postId, link));
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        viewThread(link.dataset.postId); // El postId aquí es el ID del OP del hilo al que se hace referencia
+                        viewThread(link.dataset.postId); 
                     });
                 });
 
@@ -1529,9 +1706,9 @@
             }
 
             function showReplyPreview(postId, element) {
-                const post = state.allPostsData[postId]; // Buscar en el caché global
+                const post = state.allPostsData[postId]; 
                 if (!post) {
-                    console.warn(`Post ${postId} no encontrado para preview.`);
+                    console.warn(`Post ${postId} no encontrado en caché para preview.`);
                     return;
                 }
                 let tooltip = element.querySelector('.tooltip-text');
@@ -1542,8 +1719,8 @@
                     if (previewContent.length > 100) previewContent = previewContent.substring(0, 100) + '...';
                     tooltip.innerHTML = `
                         <div class="flex items-center mb-1">
-                            <span class="text-xs mr-2">${post.avatar}</span>
-                            <span class="text-xs">${DOMPurify.sanitize(post.name)}</span>
+                            <span class="post-avatar text-base mr-1">${post.avatar}</span>
+                            <span class="text-xs font-semibold">${DOMPurify.sanitize(post.name)}</span>
                         </div>
                         <div class="text-xs">${DOMPurify.sanitize(previewContent)}</div>`;
                     element.appendChild(tooltip);
@@ -1551,8 +1728,6 @@
             }
 
             function replyToPost(postId) {
-                // postId es el ID del post al que se hizo clic "Responder"
-                // Esto es para el feedback visual (>>ID)
                 state.replyTo = postId; 
                 document.getElementById('postContent').placeholder = `Respondiendo a >>${postId.slice(-4)}... `;
                 document.getElementById('postContent').focus();
@@ -1562,82 +1737,28 @@
                 window.location.hash = `board=${state.currentBoard}&post=${postId}`;
             }
 
-            function updatePostElementDOM(postElement, postData) {
-                postElement.querySelector('.heart-reaction-button .count').textContent = postData.heartCount || 0;
-                postElement.querySelector('.funny-reaction-button .count').textContent = postData.funnyCount || 0;
-                postElement.querySelector('.angry-reaction-button .count').textContent = postData.angryCount || 0;
-
-                const currentUserUID = auth.currentUser ? auth.currentUser.uid : null;
-                const userReactions = (currentUserUID && postData.reactedBy && postData.reactedBy[currentUserUID]) ? postData.reactedBy[currentUserUID] : [];
-
-                const heartButton = postElement.querySelector('.heart-reaction-button');
-                const funnyButton = postElement.querySelector('.funny-reaction-button');
-                const angryButton = postElement.querySelector('.angry-reaction-button');
-
-                if (heartButton) heartButton.classList.toggle('active', userReactions.includes('corazón'));
-                if (funnyButton) funnyButton.classList.toggle('active', userReactions.includes('me diverte'));
-                if (angryButton) angryButton.classList.toggle('active', userReactions.includes('me enoja'));
-                
-                const nameSpan = postElement.querySelector('.flex.items-start.mb-2 > div > span:first-child');
-                if (nameSpan && nameSpan.textContent !== DOMPurify.sanitize(postData.name)) {
-                    nameSpan.textContent = DOMPurify.sanitize(postData.name);
-                }
-                const contentDiv = postElement.querySelector('.post-content');
-                if (contentDiv) contentDiv.innerHTML = getPostContentHtml(postData);
-
-                let titleElement = postElement.querySelector('h4.neon-text-title');
-                if (postData.title) {
-                    if (!titleElement) { 
-                        titleElement = document.createElement('h4');
-                        titleElement.className = 'text-lg font-bold mb-1 neon-text-title';
-                        if (contentDiv && contentDiv.parentNode) { 
-                           contentDiv.parentNode.insertBefore(titleElement, contentDiv);
-                        } else if (postElement.querySelector('.flex.items-start.mb-2').nextSibling) { 
-                           postElement.querySelector('.flex.items-start.mb-2').parentNode.insertBefore(titleElement, postElement.querySelector('.flex.items-start.mb-2').nextSibling);
-                        }
-                    }
-                    titleElement.innerHTML = DOMPurify.sanitize(postData.title);
-                } else if (titleElement) { 
-                    titleElement.remove();
-                }
-            }
-
             function getPostContentHtml(post) {
                 let html = '';
                 if (post.image) {
-                    html += `<img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="w-full h-auto max-h-64 object-contain rounded mb-2 neon-border" onerror="this.parentNode.innerHTML='<p class=\\'text-red-400\\'>Error al cargar imagen</p>'">`;
+                    html += `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post"></div>`;
                 }
                 
                 const textContent = typeof post.text === 'string' ? post.text : '';
                 let sanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
                 
-                // Convertir >>ID a links que apuntan al hilo del post referenciado
                 sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
-                    // Intentar encontrar el post completo para obtener su 'board' y 'replyTo' (si es una respuesta) o su propio 'id' (si es un OP)
-                    // Esta parte es compleja porque necesitaríamos saber si referencedPostIdSuffix es un OP o una respuesta
-                    // y a qué hilo pertenece para construir el enlace correctamente.
-                    // Por simplicidad, si el referencedPostIdSuffix es un OP, el enlace es directo.
-                    // Si es una respuesta, idealmente el enlace debería ir al hilo del OP de esa respuesta.
-                    // Para esta versión, enlazaremos directamente al post si lo encontramos, o al sufijo.
-                    // La navegación real al hilo se maneja al hacer clic.
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
                     const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
-                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard; // Asumir tablero actual si no se encuentra
-                    
-                    // El enlace debe apuntar al hilo del post al que se hace referencia.
-                    // Si el post referenciado es un OP, targetPostId es el ID del hilo.
-                    // Si el post referenciado es una respuesta, su campo replyTo es el ID del hilo.
+                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard; 
                     const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
-
-                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link text-cyan-400" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
+                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
                 });
-
 
                 if (post.text) { 
                     html += `<p>${sanitizedText}</p>`;
                 }
                 
-                return html || (post.image ? '' : '[sin contenido]'); 
+                return html || (post.image ? '' : '<p style="color: var(--text-tertiary-color);">[sin contenido textual]</p>'); 
             }
    
             function updateTypingEffect(text) {
@@ -1659,10 +1780,12 @@
                     state.audioEnabled = !state.audioEnabled;
                     if (state.audioEnabled) {
                         audio.play().catch(e => console.log("Error al reproducir audio:", e));
-                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14a2 2 0 100-4 2 2 0 000 4z" /></svg>`;
+                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a1 1 0 000 2H4v2a1 1 0 102 0V6h3a1 1 0 100-2H7zM6 8a2 2 0 11-4 0 2 2 0 014 0zM13 4a1 1 0 100 2h3v2a1 1 0 102 0V6h-3a1 1 0 100-2h-3zM14 8a2 2 0 11-4 0 2 2 0 014 0zM4 12a1 1 0 100 2h12a1 1 0 100-2H4z" /></svg>`; // Icono de sonido ON
+                        toggleButton.style.color = 'var(--primary-accent-color)';
                     } else {
                         audio.pause();
-                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 0115.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 0115.657-2.343" /></svg>`;
+                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`; // Icono de sonido OFF
+                        toggleButton.style.color = 'var(--icon-color)';
                     }
                 });
             }
@@ -1700,18 +1823,18 @@
                 const boardData = boards[board] || boards.meta; 
                 const boardInfoEl = document.getElementById('boardInfo');
                 boardInfoEl.innerHTML = `
-                    <h2 class="text-2xl mb-2 neon-text">${boardData.title}</h2>
-                    <p class="mb-2">${boardData.description}</p>
-                    <p>${boardData.footer}</p>`;
+                    <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
+                    <p class="text-sm mb-1">${boardData.description}</p>
+                    <p class="text-xs">${boardData.footer}</p>`;
                 document.getElementById('boardTitle').textContent = board === 'meta' ? 
-                    "/meta/ Tableros de la Mente" : 
-                    `/${board}/ ${board.charAt(0).toUpperCase() + board.slice(1).replace('-', ' ')}`;
+                    "NeuroChan" : 
+                    `${boardData.title.split(' - ')[0]}`;
                 
                 if (updateHash) { 
                     state.viewingThreadId = null; 
                     window.location.hash = `board=${board}`;
                 } else {
-                    loadContentForBoard(); // Cargar contenido específico del tablero (posts o tarot)
+                    loadContentForBoard(); 
                 }
             }
 
@@ -1720,19 +1843,13 @@
                 localStorage.removeItem('neurochan_admin');
                 showGenericModal("Sesión Cerrada", "Has cerrado la sesión de administrador.", [{ text: 'OK', action: closeGenericModal }]);
                 document.getElementById('adminLogoutButton').style.display = 'none';
-                document.getElementById('adminToggle')?.classList.remove('text-pink-400');
+                document.getElementById('adminToggle')?.classList.remove('text-pink-400'); // Asumiendo que pink-400 era el indicador de admin
                 setupAdminPanel(); 
-                if (state.viewingThreadId) {
-                    loadAndRenderPostsRealtime(); 
-                } else {
-                    // Re-render OPs del tablero, el contador de respuestas se recalculará
-                    loadAndRenderPostsRealtime();
-                }
+                loadContentForBoard(); 
             }
 
-            async function reactWith(postId, reactionType, reactionField, buttonClass) {
+            async function reactWith(postId, reactionType, reactionField) {
                 if (!auth.currentUser) {
-                    console.warn(`Intento de reaccionar (${reactionType}) sin usuario autenticado.`);
                     showGenericModal("Error de Autenticación", "Debes estar conectado para reaccionar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
                     return;
                 }
@@ -1766,38 +1883,47 @@
                 }
             }
 
-            function reaccionarCorazon(postId) { reactWith(postId, 'corazón', 'heartCount', 'heart-reaction-button'); }
-            function reaccionarMeDiverte(postId) { reactWith(postId, 'me diverte', 'funnyCount', 'funny-reaction-button'); }
-            function reaccionarMeEnoja(postId) { reactWith(postId, 'me enoja', 'angryCount', 'angry-reaction-button'); }
+            function reaccionarCorazon(postId) { reactWith(postId, 'corazón', 'heartCount'); }
+            function reaccionarMeDiverte(postId) { reactWith(postId, 'me diverte', 'funnyCount'); }
+            function reaccionarMeEnoja(postId) { reactWith(postId, 'me enoja', 'angryCount'); }
 
             function toggleTheme() {
-                if (state.currentTheme === 'dark') {
-                    state.currentTheme = 'pink'; 
+                if (document.body.classList.contains('dark-theme')) {
+                    state.currentTheme = 'light'; 
                 } else { 
                     state.currentTheme = 'dark';  
                 }
-                updateTheme();
+                applyCurrentTheme();
                 saveThemePreference();
+            }
+
+            function updateThemeButtonText() {
+                const themeToggle = document.getElementById('themeToggle');
+                if (document.body.classList.contains('dark-theme')) {
+                    themeToggle.innerHTML = '☀️ Cambiar a Tema Claro';
+                } else {
+                    themeToggle.innerHTML = '🌙 Cambiar a Tema Oscuro';
+                }
             }
             
             function saveThemePreference() {
                 localStorage.setItem('neurochan_theme', state.currentTheme);
             }
             
-            function updateTheme() {
-                document.body.classList.remove('pink-theme', 'light'); 
-
-                if (state.currentTheme === 'pink') { 
-                    document.body.classList.add('pink-theme');
-                    document.getElementById('themeColorMeta').setAttribute('content', '#3D001D'); 
-                } else { 
-                    document.getElementById('themeColorMeta').setAttribute('content', '#0d0221');
+            function applyCurrentTheme() {
+                if (state.currentTheme === 'dark') {
+                    document.body.classList.add('dark-theme');
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
+                } else {
+                    document.body.classList.remove('dark-theme');
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
                 }
+                updateThemeButtonText();
             }
+
 
             async function deletePostFirestore(postId) {
                  if (!auth.currentUser) {
-                    console.warn("Intento de borrar sin usuario autenticado.");
                     showGenericModal("Error de Autenticación", "Debes estar conectado para borrar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
                     return;
                 }
@@ -1806,8 +1932,8 @@
                     "Confirmar Borrado",
                     "¿Seguro que quieres borrar este post permanentemente? Esta acción también borrará todas sus respuestas y no se puede deshacer.",
                     [
-                        { text: 'Cancelar', class: 'border-gray-500', action: closeGenericModal },
-                        { text: 'Borrar Definitivamente', class: 'bg-red-500 text-white', action: async () => {
+                        { text: 'Cancelar', class: 'secondary-button', action: closeGenericModal },
+                        { text: 'Borrar Definitivamente', class: 'primary-button', style: 'background-color: var(--danger-color);', action: async () => {
                             try { 
                                 const repliesQuery = query(postsCollectionRef, where("replyTo", "==", postId));
                                 const repliesSnapshot = await getDocs(repliesQuery);
@@ -1850,7 +1976,6 @@
 
             async function deletePostWithPassword() {
                 if (!auth.currentUser) {
-                    console.warn("Intento de borrar con contraseña sin usuario autenticado.");
                     showGenericModal("Error de Autenticación", "Debes estar conectado para borrar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
                     closeDeleteModal();
                     return;
@@ -1878,17 +2003,18 @@
                 const adminToggleBtn = document.getElementById('adminToggle');
 
                 if(state.isAdmin) {
-                    if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-block';
-                    if (adminToggleBtn) adminToggleBtn.classList.add('text-pink-400'); 
+                    if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-flex'; // Usar inline-flex para botones con SVG
+                    if (adminToggleBtn) adminToggleBtn.style.color = 'var(--primary-accent-color)'; 
                 } else {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
-                    if (adminToggleBtn) adminToggleBtn.classList.remove('text-pink-400'); 
+                    if (adminToggleBtn) adminToggleBtn.style.color = 'var(--icon-color)';
                 }
-                // Después de cambiar el estado de isAdmin, es necesario re-renderizar los posts
-                // para que los botones de editar/borrar se muestren u oculten correctamente.
-                // Solo hacerlo si no estamos en el tablero de tarot.
                 if (state.currentBoard !== 'tarot') {
-                    loadAndRenderPostsRealtime();
+                    // No llamar a loadAndRenderPostsRealtime aquí directamente para evitar bucles.
+                    // El cambio de visibilidad de botones de admin se reflejará en el próximo renderizado
+                    // que ocurra por onSnapshot o por cambio de vista.
+                    // Si es crítico, se podría forzar un re-renderizado de los posts existentes
+                    // actualizando sus elementos DOM individualmente.
                 }
             }
             function toggleAdminModal() {
@@ -1910,6 +2036,7 @@
                     closeAdminModal();
                     setupAdminPanel();
                     showGenericModal("Acceso Concedido", "Has iniciado sesión como administrador.", [{ text: 'OK', action: closeGenericModal }]);
+                    loadContentForBoard(); // Recargar contenido para mostrar botones de admin
                 } else {
                     showGenericModal("Acceso Denegado", "La contraseña de administrador es incorrecta.", [{ text: 'Intentar de Nuevo', action: () => { document.getElementById('adminPasswordInput').focus(); document.getElementById('adminPasswordInput').value = ''; } }, { text: 'Cancelar', action: closeAdminModal }]);
                 }
@@ -1926,7 +2053,21 @@
                 buttons.forEach(btnConfig => {
                     const button = document.createElement('button');
                     button.textContent = btnConfig.text;
-                    button.className = `px-4 py-2 rounded ${btnConfig.class || 'border border-gray-500'}`;
+                    // Aplicar clases de botón primario/secundario según la configuración o por defecto
+                    let baseClass = 'secondary-button';
+                    if (btnConfig.class && btnConfig.class.includes('primary-button')) {
+                        baseClass = 'primary-button';
+                    } else if (btnConfig.class && btnConfig.class.includes('bg-red-500')) { // Para botones de borrado
+                        baseClass = 'primary-button'; // Usar primary como base para que tome padding, etc.
+                        button.style.backgroundColor = 'var(--danger-color)'; // Aplicar color de peligro
+                        if (btnConfig.class.includes('text-white')) button.style.color = 'white';
+                    }
+                    
+                    button.className = `${baseClass} ${btnConfig.class || ''}`;
+                    if (btnConfig.style) { // Aplicar estilos en línea si se proporcionan
+                        Object.assign(button.style, btnConfig.style);
+                    }
+
                     button.addEventListener('click', () => {
                         if (btnConfig.action) btnConfig.action();
                     });
@@ -1954,7 +2095,7 @@
             function closeGenericModal() { document.getElementById('genericModal').classList.remove('flex'); }
 
             function openEditModal(postId) {
-                const postToEdit = state.allPostsData[postId]; // Buscar en el caché global
+                const postToEdit = state.allPostsData[postId]; 
                 if (!postToEdit) { showGenericModal("Error", "Post no encontrado para editar.", [{ text: 'OK', action: closeGenericModal }]); return; }
 
                 if (!state.isAdmin && !(postToEdit.passwordHash && postToEdit.authorUID === auth.currentUser?.uid)) {
@@ -2099,12 +2240,12 @@
             // --- Funciones del Juego de Tarot ---
             function setupTarotGame() {
                 console.log("Configurando juego de Tarot...");
-                updateUiForView(); // Asegura que se muestre el contenedor correcto
-                state.tarotDeck = [...tarotDeckData]; // Copia fresca del mazo
-                shuffleAndDealTarot(); // Barajar y repartir al entrar al tablero
+                updateUiForView(); 
+                state.tarotDeck = [...tarotDeckData]; 
+                shuffleAndDealTarot(); 
             }
 
-            function shuffleArray(array) { // Algoritmo Fisher-Yates
+            function shuffleArray(array) { 
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [array[i], array[j]] = [array[j], array[i]];
@@ -2117,9 +2258,8 @@
                 spreadContainer.innerHTML = '';
                 if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
 
-
                 shuffleArray(state.tarotDeck);
-                state.tarotSpread = state.tarotDeck.slice(0, 15); // 5 + 4 + 3 + 2 + 1 = 15 cartas
+                state.tarotSpread = state.tarotDeck.slice(0, 15); 
 
                 let cardIndex = 0;
                 const rows = [5, 4, 3, 2, 1];
@@ -2131,7 +2271,7 @@
                             const cardData = state.tarotSpread[cardIndex];
                             const cardElement = document.createElement('div');
                             cardElement.className = 'tarot-card';
-                            cardElement.dataset.cardIndex = cardIndex; // Guardar el índice en la tirada actual
+                            cardElement.dataset.cardIndex = cardIndex; 
                             
                             cardElement.innerHTML = `
                                 <div class="card-face card-back">🔮</div>
@@ -2156,25 +2296,21 @@
                 const cardInfoDisplay = document.getElementById('tarotCardInfoDisplay');
 
                 if (isFlipped) {
-                    // Mostrar información detallada en el contenedor separado
                     document.getElementById('tarotCardNameInfo').textContent = cardData.namecart;
                     document.getElementById('tarotCardImageInfo').src = cardData.urlcart;
                     document.getElementById('tarotCardImageInfo').alt = cardData.namecart;
                     document.getElementById('tarotMeaningUpInfo').textContent = cardData.significado1cart;
-                    document.getElementById('tarotMeaningRevInfo').textContent = cardData.significado2cart; // Asumiendo que sig2 es invertida
-                    document.getElementById('tarotQuestionInfo').textContent = cardData.significado3cart; // Asumiendo que sig3 es pregunta
+                    document.getElementById('tarotMeaningRevInfo').textContent = cardData.significado2cart; 
+                    document.getElementById('tarotQuestionInfo').textContent = cardData.significado3cart; 
                     
                     if (cardInfoDisplay) cardInfoDisplay.classList.remove('hidden');
                     
-                    // Des-seleccionar otras cartas si alguna estaba seleccionada
                     document.querySelectorAll('.tarot-card.selected-for-info').forEach(c => {
                         if (c !== cardElement) c.classList.remove('selected-for-info');
                     });
                     cardElement.classList.add('selected-for-info');
 
-
                 } else {
-                    // Si se vuelve a hacer clic para ocultar, o si se hace clic en otra carta
                     if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
                     cardElement.classList.remove('selected-for-info');
                 }
@@ -2185,8 +2321,8 @@
                     "Resetear Tirada",
                     "Si vas a resetear espera media hora pues la fluctuación cuántica podría mentirte. ¿Estás seguro?",
                     [
-                        { text: 'Cancelar', action: closeGenericModal },
-                        { text: 'Sí, Resetear', class: 'bg-red-500 text-white', action: () => {
+                        { text: 'Cancelar', class: 'secondary-button', action: closeGenericModal },
+                        { text: 'Sí, Resetear', class: 'primary-button', style: {backgroundColor: 'var(--danger-color)'}, action: () => {
                             shuffleAndDealTarot();
                             closeGenericModal();
                         }}
