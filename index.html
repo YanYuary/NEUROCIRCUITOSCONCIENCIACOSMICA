@@ -207,7 +207,8 @@
             line-height: 1.3;
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-            padding-right: 48px; /* Make space for the button */
+            /* Adjusted padding-right for button alignment */
+            padding-right: calc(1rem + 36px + 0.5rem); /* 1rem default padding, 36px button width, 0.5rem space */
         }
         .post-input-area textarea::placeholder {
             color: var(--text-secondary-color);
@@ -265,6 +266,8 @@
         .icon-button.submit-button {
             background-color: var(--primary-accent-color);
             color: #FFFFFF;
+            /* Adjusted right for button alignment */
+            right: 0.5rem; /* Align to the right edge of the parent, which is the textarea's container */
         }
         .icon-button.submit-button:hover {
             background-color: var(--primary-accent-hover-color);
@@ -1137,14 +1140,16 @@
 
         #imageViewerReplyFormContainer {
             width: 100%;
-            padding: 1rem;
-            background-color: var(--app-bg); /* Use app-bg for reply form background */
-            border: 1px solid var(--border-color-light);
-            border-radius: 8px;
-            box-shadow: none; /* No extra shadow */
+            /* Apply post-form-card styles for consistency */
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border-color-light); 
+            border-radius: 12px; 
+            padding: 1.5rem; /* Use post-form-card padding */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            margin-top: 1rem; /* Add some margin from the image */
         }
         body.dark-theme #imageViewerReplyFormContainer {
-            background-color: var(--dark-app-bg);
+            background-color: var(--dark-card-bg); /* Use dark-card-bg for consistency */
             border-color: var(--dark-border-color-strong);
         }
     </style>
@@ -1191,7 +1196,7 @@
                         placeholder="¿Qué estás pensando...?"
                         aria-label="Contenido del post"></textarea>
                     <div id="emojiPicker" class="emoji-picker"></div>
-                    <button id="submitPost" class="icon-button submit-button absolute bottom-2 right-2" aria-label="Enviar post">
+                    <button id="submitPost" class="icon-button submit-button absolute bottom-2" aria-label="Enviar post">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                     </button>
                 </div>
@@ -1434,7 +1439,7 @@
         <div class="modal-content image-viewer-content">
             <button id="closeImageViewerModal" class="close-button">&times;</button>
             <img id="enlargedImage" src="" alt="Enlarged Post Image" class="w-full h-auto max-h-[70vh] object-contain rounded-lg mb-4"/>
-            <div id="imageViewerReplyFormContainer" class="post-form-card p-4">
+            <div id="imageViewerReplyFormContainer" class="post-form-card">
                 <div class="post-input-area mb-2">
                     <div class="avatar reply-avatar"></div>
                     <div class="relative flex-grow">
@@ -1444,7 +1449,7 @@
                             placeholder="Escribe una respuesta..."
                             aria-label="Contenido de la respuesta"></textarea>
                         <div class="emoji-picker reply-emoji-picker"></div>
-                        <button class="submit-reply icon-button submit-button absolute bottom-2 right-2" aria-label="Enviar respuesta">
+                        <button class="submit-reply icon-button submit-button absolute bottom-2" aria-label="Enviar respuesta">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                         </button>
                     </div>
@@ -2375,12 +2380,12 @@
                         console.log(`Adding new image container for post ${newPostData.id}.`);
                         const newImageDiv = document.createElement('div');
                         newImageDiv.className = 'post-image-container';
-                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="max-w-full h-auto w-full cursor-zoom-in"/>`; /* Added w-full */
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="max-w-full h-auto w-full cursor-zoom-in"/>`; /* Added w-full */
                         postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
                         img = newImageDiv.querySelector('img');
                     }
                     if (img) {
-                        img.onclick = () => openImageViewerModal(newPostData.id);
+                        img.onclick = () => openImageViewerModal(post.id);
                     }
                 } else if (imageContainer) {
                     console.log(`Removing image container for post ${newPostData.id}.`);
@@ -2594,7 +2599,7 @@
                                     placeholder="Escribe una respuesta..."
                                     aria-label="Contenido de la respuesta"></textarea>
                                 <div class="emoji-picker reply-emoji-picker"></div>
-                                <button class="submit-reply icon-button submit-button absolute bottom-2 right-2" aria-label="Enviar respuesta">
+                                <button class="submit-reply icon-button submit-button absolute bottom-2" aria-label="Enviar respuesta">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                                 </button>
                             </div>
