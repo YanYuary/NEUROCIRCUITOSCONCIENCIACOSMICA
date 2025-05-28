@@ -292,15 +292,11 @@
             color: var(--text-secondary-color);
         }
 
-        .post .post-title.neon-text-title { 
+        .post .post-title { /* Ya no se necesita .neon-text-title específicamente para el shadow */
             font-size: 1.15rem; /* Ligeramente más pequeño que antes */
             font-weight: 600;
             color: var(--text-primary-color);
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 2px var(--primary-accent-color), 0 0 5px var(--primary-accent-color); /* Neón sutil con el color de acento */
-        }
-        body.dark-theme .post .post-title.neon-text-title {
-             text-shadow: 0 0 3px var(--primary-accent-color), 0 0 8px var(--primary-accent-color); /* Ajuste para tema oscuro si es necesario */
         }
 
 
@@ -899,12 +895,14 @@
                     maxlength="30"
                     aria-label="Nombre del usuario">
 
-                <input 
-                    id="postTitle"
-                    class="w-full p-2 mb-3"
-                    placeholder="Título del Post (opcional)"
-                    maxlength="100"
-                    aria-label="Título del post">
+                <div id="postTitleContainer" class="mb-3">
+                    <input 
+                        id="postTitle"
+                        class="w-full p-2"
+                        placeholder="Título del Post (opcional)"
+                        maxlength="100"
+                        aria-label="Título del post">
+                </div>
 
                 <div class="relative">
                     <button id="emojiToggle" class="absolute right-2 top-2 text-xl" aria-label="Abrir selector de emojis">😊</button>
@@ -1007,9 +1005,25 @@
                 <h3 class="text-xl font-semibold">Configuración</h3>
                 <button id="closeSettingsModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
             </div>
-            <div class="space-y-4">
+            <div class="space-y-4" id="settingsModalContent">
                 <button id="themeToggleModalButton" class="secondary-button w-full">Cambiar Tema</button>
-                <button id="adminLoginModalButton" class="secondary-button w-full">Iniciar Sesión como Administrador</button>
+
+                <!-- Admin Login/Logout Toggle Area -->
+                <div id="adminControlAreaSettings">
+                    <button id="adminLoginModalButton" class="secondary-button w-full">Iniciar Sesión como Administrador</button>
+                    <button id="adminLogoutFromSettingsButton" class="secondary-button w-full" style="display: none; background-color: var(--danger-color); color: white;">Cerrar Sesión de Administrador</button>
+                </div>
+
+                <!-- Admin Password Input Area (hidden by default) -->
+                <div id="adminPasswordInputAreaSettings" class="mt-4 pt-4 border-t border-[var(--divider-color)]" style="display: none;">
+                    <h4 class="text-md font-semibold mb-2">Acceso de Administrador</h4>
+                    <label for="adminPasswordSettingsInput" class="block text-sm mb-1">Contraseña Maestra:</label>
+                    <input type="password" id="adminPasswordSettingsInput" class="w-full p-2 mb-3 modal-input">
+                    <div class="flex gap-2 mt-2">
+                        <button id="cancelAdminLoginSettings" class="secondary-button flex-1">Cancelar</button>
+                        <button id="confirmAdminLoginSettings" class="primary-button flex-1" style="background-color: var(--success-color);">Acceder</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1060,18 +1074,6 @@
             <div class="modal-actions">
                 <button id="cancelEdit" class="secondary-button">Cancelar</button>
                 <button id="confirmEdit" class="primary-button" style="background-color: var(--success-color);">Guardar Cambios</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="adminModal" class="admin-modal">
-        <div class="admin-modal-content">
-            <h3 class="text-xl mb-4">Acceso de Administrador</h3>
-            <p class="mb-4">Introduce la contraseña maestra:</p>
-            <input type="password" id="adminPasswordInput" class="w-full p-2 mb-4"> 
-            <div class="modal-actions">
-                <button id="cancelAdmin" class="secondary-button">Cancelar</button>
-                <button id="confirmAdmin" class="primary-button" style="background-color: var(--success-color);">Acceder</button>
             </div>
         </div>
     </div>
@@ -1251,6 +1253,42 @@
                 window.addEventListener('hashchange', handleHashChange);
             });
 
+            // --- Funciones para el modal de Configuración y Login de Admin ---
+            function showAdminLoginInSettings() {
+                document.getElementById('adminLoginModalButton').style.display = 'none';
+                document.getElementById('adminLogoutFromSettingsButton').style.display = 'none'; // Ocultar también el de logout por si acaso
+                document.getElementById('adminPasswordInputAreaSettings').style.display = 'block';
+                document.getElementById('adminPasswordSettingsInput').focus();
+            }
+
+            function hideAdminLoginInSettings() {
+                document.getElementById('adminPasswordInputAreaSettings').style.display = 'none';
+                document.getElementById('adminPasswordSettingsInput').value = '';
+                // Restaurar visibilidad del botón de login/logout según estado
+                if (state.isAdmin) {
+                    document.getElementById('adminLoginModalButton').style.display = 'none';
+                    document.getElementById('adminLogoutFromSettingsButton').style.display = 'block';
+                } else {
+                    document.getElementById('adminLoginModalButton').style.display = 'block';
+                    document.getElementById('adminLogoutFromSettingsButton').style.display = 'none';
+                }
+            }
+
+            function handleAdminLogoutFromSettings() {
+                adminLogout(); // Llama a la función de logout existente
+                // Actualiza los botones dentro del modal de configuración
+                document.getElementById('adminLoginModalButton').style.display = 'block';
+                document.getElementById('adminLogoutFromSettingsButton').style.display = 'none';
+                closeSettingsModal(); // Opcional: cerrar el modal después del logout
+            }
+
+            function verifyAdminPasswordFromSettings() { 
+                const password = document.getElementById('adminPasswordSettingsInput').value; 
+                // La lógica de verifyAdminPassword se moverá aquí o se llamará desde aquí
+                // (ver siguiente cambio en verifyAdminPassword)
+            }
+            // --- Fin Funciones Modal Configuración ---
+
             function applyInitialTheme() {
                 if (localStorage.getItem('neurochan_theme') === 'dark') {
                     document.body.classList.add('dark-theme');
@@ -1318,9 +1356,6 @@
 
                 document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
                 document.getElementById('confirmDelete').addEventListener('click', deletePostWithPassword);
-                // document.getElementById('adminToggle').addEventListener('click', toggleAdminModal); // Movido al modal
-                document.getElementById('cancelAdmin').addEventListener('click', closeAdminModal);
-                document.getElementById('confirmAdmin').addEventListener('click', verifyAdminPassword);
                 document.getElementById('infoToggle').addEventListener('click', openInfoModal);
                 document.getElementById('closeInfoModal').addEventListener('click', closeInfoModal);
                 document.getElementById('confirmEdit').addEventListener('click', () => confirmEdit()); 
@@ -1330,12 +1365,10 @@
                 document.getElementById('settingsToggle').addEventListener('click', openSettingsModal);
                 document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
                 document.getElementById('themeToggleModalButton').addEventListener('click', toggleTheme);
-                document.getElementById('adminLoginModalButton').addEventListener('click', () => {
-                    closeSettingsModal(); // Cerrar modal de config
-                    toggleAdminModal();   // Abrir modal de login admin
-                });
-
-
+                document.getElementById('adminLoginModalButton').addEventListener('click', showAdminLoginInSettings);
+                document.getElementById('adminLogoutFromSettingsButton').addEventListener('click', handleAdminLogoutFromSettings);
+                document.getElementById('confirmAdminLoginSettings').addEventListener('click', verifyAdminPasswordFromSettings);
+                document.getElementById('cancelAdminLoginSettings').addEventListener('click', hideAdminLoginInSettings);
                 document.getElementById('shuffleTarotButton').addEventListener('click', shuffleAndDealTarot);
                 // document.getElementById('resetTarotButton').addEventListener('click', resetTarotSpread); // Botón eliminado
             }
@@ -1497,6 +1530,7 @@
                 const threadContainer = document.getElementById('threadContainer');
                 const postFormContainer = document.getElementById('postFormContainer');
                 const boardInfoSection = document.getElementById('boardInfo');
+                const postTitleContainer = document.getElementById('postTitleContainer');
                 const tarotGameContainer = document.getElementById('tarotGameContainer');
 
                 if (state.currentBoard === 'tarot') {
@@ -1505,12 +1539,15 @@
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden'); 
                     tarotGameContainer.classList.remove('hidden');
+                    if (postTitleContainer) postTitleContainer.style.display = 'block'; // Asegurar que esté visible si se cambia desde un hilo
                 } else if (state.viewingThreadId) {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.remove('hidden');
                     if (postFormContainer) postFormContainer.classList.remove('hidden'); 
                     if (boardInfoSection) boardInfoSection.classList.add('hidden');
                     tarotGameContainer.classList.add('hidden');
+                    if (postTitleContainer) postTitleContainer.style.display = 'none'; // Ocultar título en hilos
+                    document.getElementById('postTitle').value = ''; // Limpiar el valor por si acaso
                     document.getElementById('postContent').placeholder = `Respondiendo al hilo... >>${state.viewingThreadId.slice(-4)}`;
                 } else { 
                     postsContainer.classList.remove('hidden');
@@ -1519,6 +1556,7 @@
                     if (postFormContainer) postFormContainer.classList.remove('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden');
                     tarotGameContainer.classList.add('hidden');
+                    if (postTitleContainer) postTitleContainer.style.display = 'block'; // Mostrar título en vista de tablero
                     document.getElementById('postContent').placeholder = "Transmite tus pensamientos...";
                 }
             }
@@ -1696,8 +1734,7 @@
                 const postTimestamp = post.timestamp?.toDate ? post.timestamp.toDate() : new Date(post.timestamp);
                 const timeString = postTimestamp.toLocaleTimeString ? postTimestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
                 const contentHtml = getPostContentHtml(post);
-                
-                const titleHtml = post.title ? `<h4 class="post-title neon-text-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
+                const titleHtml = post.title ? `<h4 class="post-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
@@ -2067,10 +2104,34 @@
 
             function openInfoModal() { document.getElementById('infoModal').classList.add('flex'); }
             function closeInfoModal() { document.getElementById('infoModal').classList.remove('flex'); }
-            function openSettingsModal() { document.getElementById('settingsModal').classList.add('flex'); }
-            function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('flex'); }
+            
+            function openSettingsModal() {
+                const adminLoginBtn = document.getElementById('adminLoginModalButton');
+                const adminLogoutBtn = document.getElementById('adminLogoutFromSettingsButton');
+                const adminPasswordArea = document.getElementById('adminPasswordInputAreaSettings');
+
+                if (state.isAdmin) {
+                    adminLoginBtn.style.display = 'none';
+                    adminLogoutBtn.style.display = 'block';
+                } else {
+                    adminLoginBtn.style.display = 'block';
+                    adminLogoutBtn.style.display = 'none';
+                }
+                adminPasswordArea.style.display = 'none'; // Siempre ocultar al abrir
+                document.getElementById('adminPasswordSettingsInput').value = ''; // Limpiar input
+                document.getElementById('settingsModal').classList.add('flex');
+            }
+            function closeSettingsModal() { 
+                document.getElementById('settingsModal').classList.remove('flex'); 
+                // Asegurarse de que el área de contraseña esté oculta al cerrar
+                const adminPasswordArea = document.getElementById('adminPasswordInputAreaSettings');
+                if (adminPasswordArea) adminPasswordArea.style.display = 'none';
+                const adminLoginBtn = document.getElementById('adminLoginModalButton');
+                if (adminLoginBtn && !state.isAdmin) adminLoginBtn.style.display = 'block';
+            }
             
             function setupAdminPanel() {
+                // Este panel es el de la esquina superior derecha, solo para el botón de logout rápido
                 const adminLogoutBtn = document.getElementById('adminLogoutButton');
                 const adminToggleBtn = document.getElementById('adminToggle'); // El que abre el modal de login admin
 
