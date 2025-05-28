@@ -99,18 +99,16 @@
         }
 
         .board-selectors-container {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 0.5rem;
+            /* Removed background, border-radius, padding, box-shadow */
             margin-bottom: 1.5rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
         .board-selector {
             font-weight: 500;
             padding: 0.625rem 1rem;
             border-radius: 6px;
-            border: 1px solid transparent;
+            border: 1px solid var(--border-color-light); /* Added border */
+            background-color: var(--card-bg); /* Added background */
             color: var(--text-secondary-color);
             transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
@@ -124,9 +122,11 @@
             background-color: var(--primary-accent-color);
             color: #FFFFFF;
             font-weight: 600;
+            border-color: var(--primary-accent-color); /* Active border */
         }
         .board-selector.active:hover {
             background-color: var(--primary-accent-hover-color);
+            border-color: var(--primary-accent-hover-color); /* Active hover border */
         }
 
         #boardInfo {
@@ -863,7 +863,7 @@
         body.dark-theme .admin-toggle,
         body.dark-theme #audioToggle,
         body.dark-theme .app-header,
-        body.dark-theme .board-selectors-container,
+        body.dark-theme .board-selector, /* Apply dark theme to individual selectors */
         body.dark-theme #tarotGameContainer,
         body.dark-theme #tarotCardInfoDisplay {
             border-color: var(--dark-border-color-light);
@@ -882,6 +882,7 @@
 
         body.dark-theme .board-selector:not(.active) {
             color: var(--dark-text-secondary-color);
+            background-color: var(--dark-card-bg); /* Dark theme for individual selectors */
         }
         body.dark-theme .board-selector:not(.active):hover {
              background-color: var(--dark-button-secondary-hover-bg);
@@ -979,19 +980,6 @@
         </div>
 
         <div id="postFormContainer" class="post-form-card relative"> 
-            <input 
-                id="postName"
-                class="input-field mb-2" 
-                placeholder="Nombre (opcional)"
-                maxlength="30"
-                aria-label="Nombre del usuario">
-            <input 
-                id="postTitle"
-                class="input-field mb-3"
-                placeholder="Título del Post (opcional)"
-                maxlength="100"
-                aria-label="Título del post">
-
             <div class="post-input-area mb-2">
                 <div id="mainPostAvatar" class="avatar"></div>
                 <div class="relative flex-grow">
@@ -1116,9 +1104,11 @@
                 <button id="closePostPasswordModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
             </div>
             <p id="postPasswordModalMessage" class="mb-4 text-sm">Establece una contraseña para poder editar o borrar este post en el futuro.</p>
-            <div id="postPasswordModalNameField" class="mb-3" style="display: none;">
+            <div id="postPasswordModalNameTitleFields" class="mb-3">
                 <label for="postPasswordModalNameInput" class="block text-sm mb-1">Tu Nombre (opcional):</label>
-                <input type="text" id="postPasswordModalNameInput" class="w-full p-2" maxlength="30" placeholder="Anónimo">
+                <input type="text" id="postPasswordModalNameInput" class="w-full p-2 mb-3" maxlength="30" placeholder="Anónimo">
+                <label for="postPasswordModalTitleInput" class="block text-sm mb-1">Título del Post (opcional):</label>
+                <input type="text" id="postPasswordModalTitleInput" class="w-full p-2 mb-3" maxlength="100" placeholder="Título">
             </div>
             <label for="postPasswordModalInput" class="block text-sm mb-1">Contraseña (opcional):</label>
             <input type="password" id="postPasswordModalInput" class="w-full p-2 mb-4">
@@ -1269,8 +1259,8 @@
         const postsCollectionRef = collection(db, "Posts");
 
         (function() {
-            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; 
-            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vYcnVe'; 
+            const MAX_IMAGE_SIZE = 5 * 1024 * 1024; 
+            const ADMIN_HASH = '$2a$12$WOw1y6eWAuHGhRJp7Q/P.uuE4mnnkscCmCAWTQig6/FijJlJ5EhYm; 
 
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             
@@ -1292,6 +1282,7 @@
                 tarotInitialCardFlipped: false, 
                 tempPostPassword: null, 
                 tempPostName: null,    
+                tempPostTitle: null, // Nuevo: para el título del post principal
                 currentPostAvatar: null, 
                 profileEmojiPickerTarget: null,
                 scrollAfterReply: null,
@@ -1318,7 +1309,7 @@
                 { cartnumber: 3, namecart: "The Empress", significado1cart: "Creatividad, fertilidad, abundancia", significado2cart: "Circuit 4 – Socio‑sexual: pertenencia e identidad", significado3cart: "Comparte tu interpretación con alguien cercano y observa la resonancia mutua.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/3.BOTA_Tarot_The-Empress.jpg" },
                 { cartnumber: 4, namecart: "The Emperor", significado1cart: "Estructura, autoridad, disciplina", significado2cart: "Circuit 5 – Neuro‑somático: éxtasis corporal, bienestar", significado3cart: "Haz respiración consciente moviendo el cuerpo con la imagen presente ante ti.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/4-bota_tarot_the-emperor.jpg" },
                 { cartnumber: 5, namecart: "The Hierophant", significado1cart: "Tradición, guía espiritual, aprendizaje", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/5.BOTA_Tarot_The-Hierophant.jpg" },
-                { cartnumber: 6, namecart: "The Lovers", significado1cart: "Integración de opuestos, elección consciente", significado2cart: "Circuit 7 – Neuro‑genético: consciencia arquetípica", significado3cart: "Antes de dormir, coloca la carta bajo la almohada y anota sueños al despertar.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/6.BOTA_Tarot_The-Lovers.jpg" },
+                { cartnumber: 6, namecart: "TThe Lovers", significado1cart: "Integración de opuestos, elección consciente", significado2cart: "Circuit 7 – Neuro‑genético: consciencia arquetípica", significado3cart: "Antes de dormir, coloca la carta bajo la almohada y anota sueños al despertar.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/6.BOTA_Tarot_The-Lovers.jpg" },
                 { cartnumber: 7, namecart: "The Chariot", significado1cart: "Dominio de fuerzas, autodirección", significado2cart: "Circuit 8 – Cuántico‑noético: trascendencia, unidad", significado3cart: "Realiza una sesión de meditación profunda (theta) sosteniendo la carta en la mano.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/7-bota_tarot_the-chariot.jpg" },
                 { cartnumber: 8, namecart: "Strength", significado1cart: "Valor, autocontrol emocional, compasión", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 9, namecart: "The Hermit", significado1cart: "Búsqueda interior, introspección, retiro", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/9-bota_tarot_the-hermit.jpg" },
@@ -1613,8 +1604,8 @@
 
             async function createPost() {
                 const contentInput = document.getElementById('postContent').value.trim();
-                const name = document.getElementById('postName').value.trim() || state.tempPostName || "Anónimo";
-                const title = document.getElementById('postTitle').value.trim(); 
+                const name = state.tempPostName || "Anónimo"; // Get name from state
+                const title = state.tempPostTitle || null; // Get title from state
                 const password = state.tempPostPassword; 
                 const fileInput = document.getElementById('fileUpload');
 
@@ -1690,14 +1681,14 @@
                     console.log("Post creado con ID: ", docRef.id);
                     
                     document.getElementById('postContent').value = '';
-                    document.getElementById('postName').value = '';
-                    document.getElementById('postTitle').value = ''; 
+                    // Campos de nombre y título ya no están aquí
                     document.getElementById('fileUpload').value = '';
                     document.getElementById('fileName').textContent = '';
                     document.getElementById('typingPreview').classList.add('hidden');
                     
                     state.tempPostPassword = null; 
-                    state.tempPostName = null;     
+                    state.tempPostName = null;    
+                    state.tempPostTitle = null; // Clear temp title
                     state.replyTo = null; 
                     
                     state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || avatars[Math.floor(Math.random() * avatars.length)];
@@ -1740,8 +1731,6 @@
                 const threadContainer = document.getElementById('threadContainer');
                 const postFormContainer = document.getElementById('postFormContainer');
                 const boardInfoSection = document.getElementById('boardInfo');
-                const postNameInput = document.getElementById('postName');
-                const postTitleInput = document.getElementById('postTitle'); 
                 const tarotGameContainer = document.getElementById('tarotGameContainer');
                 const mainPostContentTextarea = document.getElementById('postContent');
 
@@ -1751,16 +1740,12 @@
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden'); 
                     tarotGameContainer.classList.remove('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'block'; 
-                    if (postNameInput) postNameInput.style.display = 'block'; 
                 } else if (state.viewingThreadId) {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.remove('hidden');
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.add('hidden');
                     tarotGameContainer.classList.add('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'none'; 
-                    if (postNameInput) postNameInput.style.display = 'none'; 
                 } else {
                     postsContainer.classList.remove('hidden');
                     threadContainer.classList.add('hidden');
@@ -1768,8 +1753,6 @@
                     if (postFormContainer) postFormContainer.classList.remove('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden');
                     tarotGameContainer.classList.add('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'block'; 
-                    if (postNameInput) postNameInput.style.display = 'block'; 
                     mainPostContentTextarea.placeholder = "¿Qué estás pensando...?";
                 }
             }
@@ -1839,7 +1822,8 @@
                         }
                     });
                 } else {
-                    const q = query(postsCollectionRef, where("board", "==", state.currentBoard));
+                    // FIX: Filter for only original posts (replyTo === null)
+                    const q = query(postsCollectionRef, where("board", "==", state.currentBoard), where("replyTo", "==", null));
                     unsubscribePosts = onSnapshot(q, (querySnapshot) => {
                         let allBoardPosts = [];
                         querySnapshot.forEach(docSnap => {
@@ -1852,81 +1836,105 @@
 
                         allBoardPosts.forEach(p => {
                             state.allPostsData[p.id] = p;
-                            if (p.replyTo === null) {
-                                ops.push(p);
-                            } else {
-                                if (!repliesByParent[p.replyTo]) repliesByParent[p.replyTo] = [];
-                                repliesByParent[p.replyTo].push(p);
-                                state.directChildrenCounts[p.replyTo] = (state.directChildrenCounts[p.replyTo] || 0) + 1;
-                            }
+                            // Only OPs are fetched by the query now, so all are added to ops
+                            ops.push(p); 
+                            // We still need to populate repliesByParent and directChildrenCounts for potential nested replies if we were to load them here,
+                            // but for the main board, we only care about OPs.
+                            // The directChildrenCounts will be populated when viewing a specific thread.
                         });
 
-                        const totalNestedCounts = {};
-                        function countDescendants(postId) {
-                            let count = 0;
-                            const directReplies = repliesByParent[postId] || [];
-                            count += directReplies.length;
-                            for (const reply of directReplies) {
-                                count += countDescendants(reply.id);
-                            }
-                            return count;
-                        }
+                        // For main board, directChildrenCounts for OPs will be based on their total descendants
+                        const allPostsInBoard = [];
+                        // Temporarily fetch all posts in the board to calculate true descendant counts for OPs
+                        // This is inefficient but necessary if we want accurate reply counts on the main board without a separate query.
+                        // A better approach for large apps would be to store reply counts directly in the OP document.
+                        getDocs(query(postsCollectionRef, where("board", "==", state.currentBoard)))
+                            .then(fullBoardSnapshot => {
+                                fullBoardSnapshot.forEach(docSnap => {
+                                    allPostsInBoard.push({ id: docSnap.id, ...docSnap.data() });
+                                });
 
-                        ops.forEach(op => {
-                            totalNestedCounts[op.id] = countDescendants(op.id);
-                        });
+                                const tempRepliesByParentForCounts = {};
+                                allPostsInBoard.forEach(p => {
+                                    if (p.replyTo) {
+                                        if (!tempRepliesByParentForCounts[p.replyTo]) tempRepliesByParentForCounts[p.replyTo] = [];
+                                        tempRepliesByParentForCounts[p.replyTo].push(p);
+                                    }
+                                });
 
-                        ops.sort((a, b) => {
-                            const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
-                            const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
-                            return timeB - timeA;
-                        });
+                                function countDescendants(postId) {
+                                    let count = 0;
+                                    const directReplies = tempRepliesByParentForCounts[postId] || [];
+                                    count += directReplies.length;
+                                    for (const reply of directReplies) {
+                                        count += countDescendants(reply.id);
+                                    }
+                                    return count;
+                                }
 
-                        // Granular update logic for main board view
-                        const currentOpElements = new Map(); // Map of postId to DOM element
-                        Array.from(postsContainer.children).forEach(child => {
-                            if (child.dataset.id) {
-                                currentOpElements.set(child.dataset.id, child);
-                            }
-                        });
+                                ops.forEach(op => {
+                                    state.directChildrenCounts[op.id] = countDescendants(op.id);
+                                });
 
-                        const newOpIds = new Set(ops.map(op => op.id));
+                                ops.sort((a, b) => {
+                                    const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
+                                    const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
+                                    return timeB - timeA;
+                                });
 
-                        // Remove old posts
-                        for (const [postId, element] of currentOpElements) {
-                            if (!newOpIds.has(postId)) {
-                                element.remove();
-                                currentOpElements.delete(postId);
-                            }
-                        }
+                                // Granular update logic for main board view
+                                const currentOpElements = new Map(); // Map of postId to DOM element
+                                Array.from(postsContainer.children).forEach(child => {
+                                    if (child.dataset.id) {
+                                        currentOpElements.set(child.dataset.id, child);
+                                    }
+                                });
 
-                        // Add/Update posts and re-order
-                        const fragment = document.createDocumentFragment();
-                        ops.forEach(opData => {
-                            let opElement = currentOpElements.get(opData.id);
-                            const totalCount = totalNestedCounts[opData.id] || 0;
+                                const newOpIds = new Set(ops.map(op => op.id));
 
-                            if (opElement) {
-                                // Update existing post
-                                updatePostElement(opElement, opData, 0); // Depth 0 for OPs
-                            } else {
-                                // Create new post
-                                opElement = createPostElement(opData, false, totalCount, 0);
-                                applyPostEffects(opData, opElement);
-                                currentOpElements.set(opData.id, opElement);
-                            }
-                            fragment.appendChild(opElement);
-                        });
-                        
-                        // Clear and append all to ensure correct order
-                        postsContainer.innerHTML = '';
-                        postsContainer.appendChild(fragment);
+                                // Remove old posts
+                                for (const [postId, element] of currentOpElements) {
+                                    if (!newOpIds.has(postId)) {
+                                        element.remove();
+                                        currentOpElements.delete(postId);
+                                    }
+                                }
 
-                        if (ops.length === 0) {
-                            postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
-                        }
+                                // Add/Update posts and re-order
+                                const fragment = document.createDocumentFragment();
+                                ops.forEach(opData => {
+                                    let opElement = currentOpElements.get(opData.id);
+                                    const totalCount = state.directChildrenCounts[opData.id] || 0;
 
-                        if (loadingMessage) loadingMessage.classList.add('hidden');
+                                    if (opElement) {
+                                        // Update existing post
+                                        updatePostElement(opElement, opData, 0); // Depth 0 for OPs
+                                    } else {
+                                        // Create new post
+                                        opElement = createPostElement(opData, false, totalCount, 0);
+                                        applyPostEffects(opData, opElement);
+                                        currentOpElements.set(opData.id, opElement);
+                                    }
+                                    fragment.appendChild(opElement);
+                                });
+                                
+                                // Clear and append all to ensure correct order
+                                postsContainer.innerHTML = '';
+                                postsContainer.appendChild(fragment);
+
+                                if (ops.length === 0) {
+                                    postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
+                                }
+
+                                if (loadingMessage) loadingMessage.classList.add('hidden');
+                            })
+                            .catch(error => {
+                                console.error("Error obteniendo todos los posts para contar respuestas:", error);
+                                if (loadingMessage) {
+                                    loadingMessage.textContent = 'Error al cargar posts. Revisa la consola.';
+                                    loadingMessage.classList.remove('hidden');
+                                }
+                            });
                     }, (error) => {
                         console.error("Error obteniendo posts del tablero:", error);
                         if (loadingMessage) {
@@ -1954,7 +1962,7 @@
                 // Update timestamp (only if it significantly changes, or for consistency)
                 const timestampElement = postElement.querySelector('.post-timestamp');
                 if (timestampElement) {
-                    const newTimestamp = newPostData.timestamp?.toDate ? newPostData.timestamp.toDate() : (newPostData.timestamp ? new Date(newPostData.timestamp) : new Date()); // Fallback for timestamp
+                    const newTimestamp = newPostData.timestamp?.toDate ? newPostData.timestamp.toDate() : (newPostData.timestamp ? new Date(newPostData.timestamp).getTime() : 0); // Fallback for timestamp
                     const newTimeString = newTimestamp.toLocaleTimeString ? newTimestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
                     
                     const currentTimestampText = timestampElement.textContent;
@@ -2278,12 +2286,12 @@
 
                 // FIX: Hide "Responder" button for final level posts (depth 3)
                 // A.1. Mostrar el botón “Responder” también en las tarjetas de nivel 3
-                const replyButtonHtml = !isThreadParent ? `
+                const replyButtonHtml = `
                     <button class="reply-button reaction-button" aria-label="Responder a este post">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
                         Responder
                     </button>
-                ` : '';
+                `;
 
 
                 const replyFormHtml = `
@@ -2432,24 +2440,58 @@
                 const replyContentTextarea = replyFormContainer.querySelector('.reply-content');
                 const replyEmojiToggle = replyFormContainer.querySelector('.emoji-toggle');
                 const replyEmojiPicker = replyFormContainer.querySelector('.reply-emoji-picker');
-                // Removed replyFileUploadLabel and its click listener, as input is now nested in label
+                const replyFileUploadLabel = replyFormContainer.querySelector('.reply-file-upload-label'); // Obtener la etiqueta
                 const replyFileUploadInput = replyFormContainer.querySelector('.reply-file-upload');
                 const replyFileNameSpan = replyFormContainer.querySelector('.reply-file-name');
                 const replyPasswordToggle = replyFormContainer.querySelector('.reply-password-toggle');
                 const submitReplyButton = replyFormContainer.querySelector('.submit-reply');
                 const replyAvatar = replyFormContainer.querySelector('.reply-avatar'); 
 
+                let ignoreBlurForFileUpload = false; // Nueva bandera para este formulario específico
+
                 replyAvatar.addEventListener('click', () => openProfileEmojiPicker(replyAvatar));
 
                 replyAvatar.textContent = replyAvatar.dataset.avatar || avatars[Math.floor(Math.random() * avatars.length)];
 
                 replyContentTextarea.addEventListener('input', autoResizeTextarea);
+                
+                // Añadir listener de focus para asegurar que ignoreBlurForFileUpload se resetee al ganar foco
+                replyContentTextarea.addEventListener('focus', () => {
+                    ignoreBlurForFileUpload = false; // Resetear al ganar foco para asegurar un estado limpio
+                });
+
                 replyContentTextarea.addEventListener('blur', (e) => {
-                    // Si shouldStayOpenOnBlur es true (es un OP en el tablón principal o el OP en vista de hilo),
-                    // no ocultar el formulario al perder el foco.
-                    if (!shouldStayOpenOnBlur && e.target.value.trim() === '' && !replyFileUploadInput.files[0]) {
-                        hideReplyForm(replyFormContainer);
+                    const currentText = e.target.value.trim();
+                    const hasFile = replyFileUploadInput.files[0];
+
+                    // Si debemos ignorar este blur debido a la interacción con la subida de archivos
+                    if (ignoreBlurForFileUpload) {
+                        ignoreBlurForFileUpload = false; // Restablecer la bandera inmediatamente
+                        return; // No ocultar el formulario
                     }
+
+                    // Programar el ocultamiento del formulario con un pequeño retraso
+                    // Esto permite que el evento de clic en la etiqueta (que abre el diálogo de archivo) se procese completamente
+                    if (!shouldStayOpenOnBlur && currentText === '' && !hasFile) {
+                        setTimeout(() => {
+                            // Re-verificar las condiciones después del retraso, en caso de que el usuario haya seleccionado un archivo
+                            if (e.target.value.trim() === '' && !replyFileUploadInput.files[0]) {
+                                hideReplyForm(replyFormContainer);
+                            }
+                        }, 50); // Pequeño retraso de 50ms
+                    }
+                });
+
+                // Añadir listener al mousedown en la etiqueta del input de archivo
+                // Esto se dispara ANTES del blur del textarea
+                replyFileUploadLabel.addEventListener('mousedown', (e) => {
+                    ignoreBlurForFileUpload = true; // Establecer la bandera para ignorar el blur
+                });
+
+                // Añadir listener al change del input de archivo para actualizar el nombre del archivo
+                // No es necesario resetear ignoreBlurForFileUpload aquí, ya que el manejador de blur lo hace.
+                replyFileUploadInput.addEventListener('change', () => {
+                    replyFileNameSpan.textContent = replyFileUploadInput.files[0] ? replyFileUploadInput.files[0].name : '';
                 });
 
                 EMOJIS.forEach(emoji => {
@@ -2482,11 +2524,6 @@
                     if (replyEmojiPicker.classList.contains('active') && !replyEmojiPicker.contains(e.target) && e.target !== replyEmojiToggle) {
                         replyEmojiPicker.classList.remove('active');
                     }
-                });
-
-                // Add change listener for reply file upload input
-                replyFileUploadInput.addEventListener('change', () => {
-                    replyFileNameSpan.textContent = replyFileUploadInput.files[0] ? replyFileUploadInput.files[0].name : '';
                 });
 
                 replyPasswordToggle.addEventListener('click', () => openPostPasswordModal(true, parentPostId));
@@ -2584,6 +2621,7 @@
                 avatarElement.textContent = avatars[Math.floor(Math.random() * avatars.length)]; 
                 avatarElement.dataset.avatar = avatarElement.textContent; // Update dataset for consistency
                 state.tempPostName = null;
+                state.tempPostTitle = null; // Clear temp title
                 state.tempPostPassword = null;
                 autoResizeTextarea({ target: formContainer.querySelector('.reply-content') });
                 // Solo ocultar si no es un formulario que deba permanecer abierto en blur
@@ -2593,6 +2631,12 @@
             }
 
             function showReplyForm(formContainer, autoFocus = false) {
+                // Hide all other reply forms first
+                document.querySelectorAll('.reply-form-container').forEach(form => {
+                    if (form !== formContainer) {
+                        hideReplyForm(form);
+                    }
+                });
                 formContainer.style.display = 'block';
                 if (autoFocus) {
                     formContainer.querySelector('.reply-content').focus();
@@ -3141,24 +3185,27 @@
                 const modal = document.getElementById('postPasswordModal');
                 const title = document.getElementById('postPasswordModalTitle');
                 const message = document.getElementById('postPasswordModalMessage');
-                const nameField = document.getElementById('postPasswordModalNameField');
+                const nameTitleFields = document.getElementById('postPasswordModalNameTitleFields'); // Renamed
                 const nameInput = document.getElementById('postPasswordModalNameInput');
+                const titleInput = document.getElementById('postPasswordModalTitleInput'); // New
                 const passwordInput = document.getElementById('postPasswordModalInput');
 
                 if (isReply) {
                     title.textContent = "Establecer Nombre y Contraseña";
                     message.textContent = "Establece un nombre (opcional) y una contraseña (opcional) para poder editar o borrar esta respuesta en el futuro.";
-                    nameField.style.display = 'block';
+                    nameTitleFields.style.display = 'block'; // Show name and title fields for replies
                     nameInput.value = state.tempPostName || ''; 
+                    titleInput.value = ''; // Replies don't have titles, so clear it
                     passwordInput.value = state.tempPostPassword || ''; 
                     nameInput.focus();
                 } else {
-                    title.textContent = "Establecer Contraseña del Post";
-                    message.textContent = "Establece una contraseña (opcional) para poder editar o borrar este post en el futuro.";
-                    nameField.style.display = 'none';
-                    nameInput.value = '';
+                    title.textContent = "Configuración de Post"; // Changed title
+                    message.textContent = "Establece tu nombre y título (opcionales) y una contraseña (opcional) para poder editar o borrar este post en el futuro."; // Changed message
+                    nameTitleFields.style.display = 'block'; // Show name and title fields for main posts
+                    nameInput.value = state.tempPostName || '';
+                    titleInput.value = state.tempPostTitle || ''; // Populate with temp title
                     passwordInput.value = state.tempPostPassword || ''; 
-                    passwordInput.focus();
+                    nameInput.focus();
                 }
                 modal.classList.add('flex');
             }
@@ -3176,6 +3223,7 @@
 
             function confirmPostPassword() {
                 state.tempPostName = document.getElementById('postPasswordModalNameInput').value.trim();
+                state.tempPostTitle = document.getElementById('postPasswordModalTitleInput').value.trim(); // Get title
                 state.tempPostPassword = document.getElementById('postPasswordModalInput').value.trim();
                 closePostPasswordModal();
             }
@@ -3183,6 +3231,7 @@
             function cancelPostPassword() {
                 // Reset temp values if user cancels
                 state.tempPostName = null;
+                state.tempPostTitle = null; // Clear temp title
                 state.tempPostPassword = null;
                 closePostPasswordModal();
             }
