@@ -72,6 +72,11 @@
             overflow-x: hidden;
             transition: background-color 0.3s, color 0.3s;
         }
+        
+        /* New: Prevent scrolling when modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
 
         .app-header {
             background-color: var(--card-bg);
@@ -150,11 +155,11 @@
 
         .post-form-card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color-light);
-            border-radius: 8px;
+            border: 1.5px solid var(--border-color-light); /* Slightly thicker border */
+            border-radius: 12px; /* More rounded corners */
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Stronger shadow */
         }
 
         .post-form-card .input-field {
@@ -438,7 +443,7 @@
             margin: 0.75rem 0;
         }
         .post-image-container img {
-            max-width: 100%;
+            width: 100%; /* Ensure homogeneous width */
             height: auto;
             max-height: 500px; 
             object-fit: cover;
@@ -1087,7 +1092,8 @@
             align-items: center;
             padding: 1rem;
             position: relative;
-            overflow: hidden; /* Hide scrollbars if content overflows */
+            overflow-y: auto; /* Allow scrolling if content overflows vertically */
+            box-sizing: border-box; /* Include padding in width/height */
         }
 
         #enlargedImage {
@@ -1121,12 +1127,13 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
-        #imageViewerPostDetails {
+        /* Removed #imageViewerPostDetails as requested */
+        /* #imageViewerPostDetails {
             color: var(--text-secondary-color);
             font-size: 0.85rem;
             margin-bottom: 1rem;
             text-align: center;
-        }
+        } */
 
         #imageViewerReplyFormContainer {
             width: 100%;
@@ -1427,7 +1434,6 @@
         <div class="modal-content image-viewer-content">
             <button id="closeImageViewerModal" class="close-button">&times;</button>
             <img id="enlargedImage" src="" alt="Enlarged Post Image" class="w-full h-auto max-h-[70vh] object-contain rounded-lg mb-4"/>
-            <div id="imageViewerPostDetails" class="text-sm text-center mb-4"></div>
             <div id="imageViewerReplyFormContainer" class="post-form-card p-4">
                 <div class="post-input-area mb-2">
                     <div class="avatar reply-avatar"></div>
@@ -2362,14 +2368,14 @@
                             img = document.createElement('img');
                             img.src = DOMPurify.sanitize(newPostData.image);
                             img.alt = "Imagen del post";
-                            img.className = "max-w-full h-auto cursor-zoom-in";
+                            img.className = "max-w-full h-auto w-full cursor-zoom-in"; /* Added w-full */
                             imageContainer.appendChild(img);
                         }
                     } else {
                         console.log(`Adding new image container for post ${newPostData.id}.`);
                         const newImageDiv = document.createElement('div');
                         newImageDiv.className = 'post-image-container';
-                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="max-w-full h-auto cursor-zoom-in"/>`;
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="max-w-full h-auto w-full cursor-zoom-in"/>`; /* Added w-full */
                         postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
                         img = newImageDiv.querySelector('img');
                     }
@@ -2559,7 +2565,7 @@
                 const contentTextHtml = post.text ? `<div class="post-content text-sm mb-2 mt-1">${sanitizedText}</div>` : '';
                 
                 console.log(`Creating post element for ID: ${post.id}, isReply: ${!!post.replyTo}, Image present: ${!!post.image}, Image data type: ${typeof post.image}`);
-                const contentImageHtml = post.image ? `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="max-w-full h-auto cursor-zoom-in"/></div>` : '';
+                const contentImageHtml = post.image ? `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="max-w-full h-auto w-full cursor-zoom-in"/></div>` : '';
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
@@ -3674,21 +3680,10 @@
 
                 const modal = document.getElementById('imageViewerModal');
                 const enlargedImage = modal.querySelector('#enlargedImage');
-                const postDetails = modal.querySelector('#imageViewerPostDetails');
                 const replyFormContainer = modal.querySelector('#imageViewerReplyFormContainer');
 
                 enlargedImage.src = DOMPurify.sanitize(post.image);
                 enlargedImage.alt = `Imagen de post por ${post.name}`;
-
-                const formattedTimestamp = formatPostTimestamp(post.timestamp);
-                postDetails.innerHTML = `Post por <strong>${DOMPurify.sanitize(post.name)}</strong> en ${formattedTimestamp}`;
-                if (post.title) {
-                    postDetails.innerHTML += `<br>Título: <strong>${DOMPurify.sanitize(post.title)}</strong>`;
-                }
-                if (post.text) {
-                    const sanitizedText = DOMPurify.sanitize(post.text);
-                    postDetails.innerHTML += `<br>${sanitizedText.length > 100 ? sanitizedText.substring(0, 100) + '...' : sanitizedText}`;
-                }
 
                 // Setup reply form for the image viewer
                 const replyAvatar = replyFormContainer.querySelector('.reply-avatar');
@@ -3698,10 +3693,12 @@
                 setupReplyForm(replyFormContainer, postId, true, 0, true); // Pass true for isImageViewer
 
                 modal.classList.add('flex');
+                document.body.classList.add('modal-open'); // Prevent background scrolling
             }
 
             function closeImageViewerModal() {
                 document.getElementById('imageViewerModal').classList.remove('flex');
+                document.body.classList.remove('modal-open'); // Re-enable background scrolling
                 state.imageViewerCurrentPostId = null;
                 // Optionally clear reply form content
                 const replyFormContainer = document.getElementById('imageViewerReplyFormContainer');
