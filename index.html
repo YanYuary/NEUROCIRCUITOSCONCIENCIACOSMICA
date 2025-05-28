@@ -1269,8 +1269,8 @@
         const postsCollectionRef = collection(db, "Posts");
 
         (function() {
-            const MAX_IMAGE_SIZE = 5 * 1024 * 1024; 
-            const ADMIN_HASH = '$2a$12$WOw1y6eWAuHGhRJp7Q/P.uuE4mnnkscCmCAWTQig6/FijJlJ5EhYm'; 
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; 
+            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vYcnVe'; 
 
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             
@@ -1490,7 +1490,7 @@
                 document.getElementById('submitPost').addEventListener('click', createPost);
                 document.getElementById('adminLogoutButton').addEventListener('click', adminLogout);
                 setupAudioToggle();
-                setupFileUpload();
+                setupFileUpload(); // Main post file upload
 
                 document.querySelectorAll('.board-selector').forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -1516,7 +1516,7 @@
 
                 document.getElementById('postPasswordToggle').addEventListener('click', () => openPostPasswordModal(false));
                 document.getElementById('closePostPasswordModal').addEventListener('click', closePostPasswordModal);
-                document.getElementById('cancelPostPassword').addEventListener('click', closePostPasswordModal);
+                document.getElementById('cancelPostPassword').addEventListener('click', cancelPostPassword); // Changed to cancelPostPassword
                 document.getElementById('confirmPostPassword').addEventListener('click', confirmPostPassword);
 
                 document.getElementById('mainPostAvatar').addEventListener('click', () => openProfileEmojiPicker(document.getElementById('mainPostAvatar')));
@@ -1566,6 +1566,11 @@
                                 state.currentPostAvatar = emoji;
                                 localStorage.setItem('neurochan_profile_avatar', emoji);
                             } else {
+                                // For reply avatars, update the specific reply form's avatar
+                                const replyAvatarElement = state.profileEmojiPickerTarget;
+                                if (replyAvatarElement.classList.contains('reply-avatar')) {
+                                    replyAvatarElement.dataset.avatar = emoji; // Store in dataset for retrieval
+                                }
                             }
                         }
                         profileEmojiPickerModal.classList.remove('flex');
@@ -1797,7 +1802,10 @@
                     const docRef = doc(db, "Posts", state.viewingThreadId);
                     unsubscribePosts = onSnapshot(docRef, async (docSnap) => {
                         const threadContainer = document.getElementById('threadContainer');
-                        threadContainer.innerHTML = ''; 
+                        // Clear only if the main OP changes or is removed
+                        if (!docSnap.exists() || threadContainer.querySelector(`#post-${docSnap.id}`) === null) {
+                            threadContainer.innerHTML = ''; 
+                        }
 
                         if (docSnap.exists()) {
                             const postData = { id: docSnap.id, ...docSnap.data() };
@@ -1806,13 +1814,18 @@
                             // Recalcular directChildrenCounts para el hilo actual y sus descendientes
                             await calculateDirectChildrenCountsForThread(postData.id);
 
-                            // Pass 0 as depth for the OP (level 0)
-                            const postElement = createPostElement(postData, true, 0, 0); // replyCount here is 0, as it's the OP
-                            threadContainer.appendChild(postElement);
-                            applyPostEffects(postData, postElement);
+                            let opElement = threadContainer.querySelector(`#post-${postData.id}`);
+                            if (opElement) {
+                                updatePostElement(opElement, postData, 0); // Depth 0 for OPs
+                            } else {
+                                const totalCount = state.directChildrenCounts[postData.id] || 0; // This will be the total descendants
+                                opElement = createPostElement(postData, true, totalCount, 0); 
+                                threadContainer.appendChild(opElement);
+                                applyPostEffects(postData, opElement);
+                            }
                             
                             // Load nested replies starting from depth 1
-                            await loadNestedReplies(postData.id, postElement, 1); 
+                            await loadNestedReplies(postData.id, opElement, 1); 
 
                         } else {
                             threadContainer.innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
@@ -1834,29 +1847,27 @@
                         });
 
                         const ops = [];
-                        const repliesByParent = {}; 
-                        state.directChildrenCounts = {}; // Reset direct children counts
+                        const repliesByParent = {};
+                        state.directChildrenCounts = {};
 
                         allBoardPosts.forEach(p => {
-                            state.allPostsData[p.id] = p; 
+                            state.allPostsData[p.id] = p;
                             if (p.replyTo === null) {
                                 ops.push(p);
                             } else {
                                 if (!repliesByParent[p.replyTo]) repliesByParent[p.replyTo] = [];
                                 repliesByParent[p.replyTo].push(p);
-                                // Populate directChildrenCounts
                                 state.directChildrenCounts[p.replyTo] = (state.directChildrenCounts[p.replyTo] || 0) + 1;
                             }
                         });
 
-                        // New logic: Calculate total nested replies for each OP
                         const totalNestedCounts = {};
                         function countDescendants(postId) {
                             let count = 0;
                             const directReplies = repliesByParent[postId] || [];
                             count += directReplies.length;
                             for (const reply of directReplies) {
-                                count += countDescendants(reply.id); // Recursively count for children
+                                count += countDescendants(reply.id);
                             }
                             return count;
                         }
@@ -1868,24 +1879,53 @@
                         ops.sort((a, b) => {
                             const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
                             const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
-                            return timeB - timeA; 
+                            return timeB - timeA;
+                        });
+
+                        // Granular update logic for main board view
+                        const currentOpElements = new Map(); // Map of postId to DOM element
+                        Array.from(postsContainer.children).forEach(child => {
+                            if (child.dataset.id) {
+                                currentOpElements.set(child.dataset.id, child);
+                            }
+                        });
+
+                        const newOpIds = new Set(ops.map(op => op.id));
+
+                        // Remove old posts
+                        for (const [postId, element] of currentOpElements) {
+                            if (!newOpIds.has(postId)) {
+                                element.remove();
+                                currentOpElements.delete(postId);
+                            }
+                        }
+
+                        // Add/Update posts and re-order
+                        const fragment = document.createDocumentFragment();
+                        ops.forEach(opData => {
+                            let opElement = currentOpElements.get(opData.id);
+                            const totalCount = totalNestedCounts[opData.id] || 0;
+
+                            if (opElement) {
+                                // Update existing post
+                                updatePostElement(opElement, opData, 0); // Depth 0 for OPs
+                            } else {
+                                // Create new post
+                                opElement = createPostElement(opData, false, totalCount, 0);
+                                applyPostEffects(opData, opElement);
+                                currentOpElements.set(opData.id, opElement);
+                            }
+                            fragment.appendChild(opElement);
                         });
                         
-                        state.currentBoardOPs = ops; 
+                        // Clear and append all to ensure correct order
+                        postsContainer.innerHTML = '';
+                        postsContainer.appendChild(fragment);
 
-                        postsContainer.innerHTML = ''; 
                         if (ops.length === 0) {
                             postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
-                        } else {
-                            ops.forEach(opData => {
-                                // Use the calculated total nested count here
-                                const totalCount = totalNestedCounts[opData.id] || 0;
-                                const postElement = createPostElement(opData, false, totalCount, 0); // Pass totalCount
-                                postsContainer.appendChild(postElement);
-                                applyPostEffects(opData, postElement);
-                            });
                         }
-                        
+
                         if (loadingMessage) loadingMessage.classList.add('hidden');
                     }, (error) => {
                         console.error("Error obteniendo posts del tablero:", error);
@@ -1896,6 +1936,153 @@
                     });
                 }
             }
+
+            // Nuevo: Función para actualizar un elemento de post existente de forma granular
+            function updatePostElement(postElement, newPostData, currentPostDepth = 0) {
+                // Update avatar if changed (unlikely but good to have)
+                const avatarElement = postElement.querySelector('.post-avatar');
+                if (avatarElement && avatarElement.textContent !== newPostData.avatar) {
+                    avatarElement.textContent = newPostData.avatar;
+                }
+
+                // Update username
+                const usernameElement = postElement.querySelector('.post-username');
+                if (usernameElement && usernameElement.textContent !== DOMPurify.sanitize(newPostData.name)) {
+                    usernameElement.textContent = DOMPurify.sanitize(newPostData.name);
+                }
+
+                // Update timestamp (only if it significantly changes, or for consistency)
+                const timestampElement = postElement.querySelector('.post-timestamp');
+                if (timestampElement) {
+                    const newTimestamp = newPostData.timestamp?.toDate ? newPostData.timestamp.toDate() : (newPostData.timestamp ? new Date(newPostData.timestamp) : new Date()); // Fallback for timestamp
+                    const newTimeString = newTimestamp.toLocaleTimeString ? newTimestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+                    
+                    const currentTimestampText = timestampElement.textContent;
+                    const newTimestampText = `${newTimeString} ${newPostData.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''}`;
+
+                    // Only update if the content has actually changed to prevent unnecessary DOM writes
+                    if (!currentTimestampText.includes(newTimeString) || !currentTimestampText.includes(newPostData.authorUID === auth.currentUser?.uid ? '(Tú)' : '')) {
+                        timestampElement.innerHTML = newTimestampText;
+                    }
+                }
+
+                // Update title
+                const titleElement = postElement.querySelector('.post-title');
+                if (newPostData.title) {
+                    if (titleElement) {
+                        if (titleElement.textContent !== DOMPurify.sanitize(newPostData.title)) {
+                            titleElement.textContent = DOMPurify.sanitize(newPostData.title);
+                        }
+                    } else {
+                        // If title was empty and now has content, create and insert
+                        const newTitleEl = document.createElement('h4');
+                        newTitleEl.className = 'post-title';
+                        newTitleEl.textContent = DOMPurify.sanitize(newPostData.title);
+                        postElement.insertBefore(newTitleEl, postElement.querySelector('.post-content') || postElement.querySelector('.post-image-container') || postElement.querySelector('.post-actions'));
+                    }
+                } else if (titleElement) {
+                    titleElement.remove(); // Remove if title is now empty
+                }
+
+                // Update content text
+                const contentTextElement = postElement.querySelector('.post-content');
+                const newSanitizedText = DOMPurify.sanitize(newPostData.text || '').replace(/\n/g,'<br>');
+                const newTextWithLinks = newSanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
+                    const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
+                    const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
+                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard;
+                    const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
+                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
+                });
+
+                if (contentTextElement) {
+                    if (contentTextElement.innerHTML !== newTextWithLinks) {
+                        contentTextElement.innerHTML = newTextWithLinks;
+                    }
+                } else if (newPostData.text) {
+                    // If text was empty and now has content, create and insert
+                    const newTextEl = document.createElement('div');
+                    newTextEl.className = 'post-content text-sm mb-2 mt-1';
+                    newTextEl.innerHTML = newTextWithLinks;
+                    postElement.insertBefore(newTextEl, postElement.querySelector('.post-image-container') || postElement.querySelector('.post-actions'));
+                }
+
+                // Update image
+                const imageContainer = postElement.querySelector('.post-image-container');
+                if (newPostData.image) {
+                    if (imageContainer) {
+                        const img = imageContainer.querySelector('img');
+                        if (img && img.src !== DOMPurify.sanitize(newPostData.image)) {
+                            img.src = DOMPurify.sanitize(newPostData.image);
+                        }
+                    } else {
+                        // Add new image container if it didn't exist
+                        const newImageDiv = document.createElement('div');
+                        newImageDiv.className = 'post-image-container';
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="max-w-full h-auto"/>`;
+                        postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
+                    }
+                } else if (imageContainer) {
+                    imageContainer.remove(); // Remove image if it's no longer present
+                }
+
+                // Update reaction counts
+                const heartCountSpan = postElement.querySelector('.heart-reaction-button .count');
+                if (heartCountSpan && parseInt(heartCountSpan.textContent) !== (newPostData.heartCount || 0)) {
+                    heartCountSpan.textContent = newPostData.heartCount || 0;
+                }
+                const funnyCountSpan = postElement.querySelector('.funny-reaction-button .count');
+                if (funnyCountSpan && parseInt(funnyCountSpan.textContent) !== (newPostData.funnyCount || 0)) {
+                    funnyCountSpan.textContent = newPostData.funnyCount || 0;
+                }
+                const angryCountSpan = postElement.querySelector('.angry-reaction-button .count');
+                if (angryCountSpan && parseInt(angryCountSpan.textContent) !== (newPostData.angryCount || 0)) {
+                    angryCountSpan.textContent = newPostData.angryCount || 0;
+                }
+
+                // Update reaction button active states
+                const userUID = auth.currentUser?.uid;
+                const reactedBy = newPostData.reactedBy || {};
+                const userReactions = reactedBy[userUID] || [];
+
+                const heartButton = postElement.querySelector('.heart-reaction-button');
+                if (heartButton) heartButton.classList.toggle('active', userReactions.includes('corazón'));
+                const funnyButton = postElement.querySelector('.funny-reaction-button');
+                if (funnyButton) funnyButton.classList.toggle('active', userReactions.includes('me diverte'));
+                const angryButton = postElement.querySelector('.angry-reaction-button');
+                if (angryButton) angryButton.classList.toggle('active', userReactions.includes('me enoja'));
+
+                // Update delete/edit button visibility (if admin status or password hash changes)
+                const deleteButton = postElement.querySelector('.delete-button');
+                const editButton = postElement.querySelector('.edit-button');
+                const canShowEditButton = state.isAdmin || (newPostData.passwordHash && newPostData.authorUID === auth.currentUser?.uid);
+
+                if (deleteButton) deleteButton.style.display = canShowEditButton ? 'inline-flex' : 'none';
+                if (editButton) editButton.style.display = canShowEditButton ? 'inline-flex' : 'none';
+
+                // Update reply count for main posts (OPs)
+                const viewThreadButton = postElement.querySelector('.view-thread-button');
+                if (viewThreadButton && !state.viewingThreadId && !newPostData.replyTo) {
+                    const newReplyCount = state.directChildrenCounts[newPostData.id] || 0; // This needs to be total descendants for OPs
+                    const currentReplyCountText = viewThreadButton.textContent;
+                    if (!currentReplyCountText.includes(`(${newReplyCount})`)) {
+                         viewThreadButton.textContent = `Respuestas (${newReplyCount})`;
+                    }
+                }
+
+                // Update nested reply count for replies (depth 1, 2, 3)
+                const nestedReplyToggle = postElement.querySelector('.nested-reply-toggle');
+                if (nestedReplyToggle) {
+                    const replyCountDisplay = nestedReplyToggle.querySelector('.reply-count-display');
+                    if (replyCountDisplay) {
+                        const newNestedCount = state.directChildrenCounts[newPostData.id] || 0;
+                        if (parseInt(replyCountDisplay.textContent) !== newNestedCount) {
+                            replyCountDisplay.textContent = newNestedCount;
+                        }
+                    }
+                }
+            }
+
 
             // Nuevo: Función para calcular directChildrenCounts para un hilo específico
             async function calculateDirectChildrenCountsForThread(opId) {
@@ -1947,12 +2134,7 @@
                         repliesContainer.classList.add('hidden');
                     }
                     parentElement.appendChild(repliesContainer);
-                } else {
-                    // FIX: Objetivo 3 - Mantener el estado oculto/visible de las respuestas anidadas
-                    const estabaOculto = repliesContainer.classList.contains('hidden');
-                    repliesContainer.innerHTML = '';
-                    if (estabaOculto) repliesContainer.classList.add('hidden');
-                }
+                } 
 
                 try {
                     const querySnapshot = await getDocs(repliesQuery);
@@ -1970,29 +2152,67 @@
                         return timeA - timeB; 
                     });
 
-                    // Actualizar el contador del elemento padre (el post al que se le están cargando las respuestas directas)
+                    // Granular update logic for replies
+                    const currentReplyElements = new Map();
+                    Array.from(repliesContainer.children).forEach(child => {
+                        if (child.dataset.id) {
+                            currentReplyElements.set(child.dataset.id, child);
+                        }
+                    });
+
+                    const newReplyIds = new Set(repliesData.map(reply => reply.id));
+
+                    // Remove old replies
+                    for (const [replyId, element] of currentReplyElements) {
+                        if (!newReplyIds.has(replyId)) {
+                            element.remove();
+                            currentReplyElements.delete(replyId);
+                        }
+                    }
+
+                    // Add/Update replies and re-order
+                    const fragment = document.createDocumentFragment();
+                    repliesData.forEach(replyData => {
+                        let replyElement = currentReplyElements.get(replyData.id);
+                        const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
+
+                        if (replyElement) {
+                            // Update existing reply
+                            updatePostElement(replyElement, replyData, depth);
+                        } else {
+                            // Create new reply
+                            replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth);
+                            applyPostEffects(replyData, replyElement);
+                            currentReplyElements.set(replyData.id, replyElement);
+                        }
+                        fragment.appendChild(replyElement);
+                    });
+
+                    // Clear and append all to ensure correct order
+                    repliesContainer.innerHTML = '';
+                    repliesContainer.appendChild(fragment);
+
+                    // Update the parent's reply count display (if it exists)
                     const parentReplyCountDisplay = parentElement.querySelector('.reply-count-display');
                     if (parentReplyCountDisplay) {
                         parentReplyCountDisplay.textContent = repliesData.length;
                     }
 
 
-                    if (repliesData.length > 0) {
-                        for (const replyData of repliesData) {
-                            // Obtener el conteo de hijos directos para esta respuesta específica
-                            const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
-                            const replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth);
-                            repliesContainer.appendChild(replyElement);
-                            applyPostEffects(replyData, replyElement);
-                            // Recursively load replies for this reply, incrementing depth
-                            await loadNestedReplies(replyData.id, replyElement, depth + 1); 
-                        }
-                    } else {
+                    if (repliesData.length === 0) {
                         const noRepliesMessage = document.createElement('p');
                         noRepliesMessage.className = 'text-sm pl-4 mt-2';
                         noRepliesMessage.style.color = 'var(--text-secondary-color)';
                         noRepliesMessage.textContent = 'Aún no hay respuestas en este hilo.';
                         repliesContainer.appendChild(noRepliesMessage); // Añadir el mensaje si no hay respuestas
+                    }
+
+                    // Recursively load replies for this reply, incrementing depth
+                    for (const replyData of repliesData) {
+                        const replyElement = repliesContainer.querySelector(`#post-${replyData.id}`);
+                        if (replyElement) {
+                           await loadNestedReplies(replyData.id, replyElement, depth + 1);
+                        }
                     }
 
                 } catch (e) {
@@ -2083,8 +2303,8 @@
                             <button class="emoji-toggle icon-button" aria-label="Abrir selector de emojis">😊</button>
                             <label class="reply-file-upload-label icon-button" aria-label="Subir imagen">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
+                                <input type="file" class="reply-file-upload hidden" accept="image/*" aria-hidden="true">
                             </label>
-                            <input type="file" class="reply-file-upload hidden" accept="image/*" aria-hidden="true">
                             <span class="reply-file-name text-xs text-gray-500 ml-2 self-center"></span>
                             
                             <button class="reply-password-toggle icon-button" aria-label="Establecer nombre y contraseña para la respuesta">
@@ -2212,7 +2432,7 @@
                 const replyContentTextarea = replyFormContainer.querySelector('.reply-content');
                 const replyEmojiToggle = replyFormContainer.querySelector('.emoji-toggle');
                 const replyEmojiPicker = replyFormContainer.querySelector('.reply-emoji-picker');
-                const replyFileUploadLabel = replyFormContainer.querySelector('.reply-file-upload-label');
+                // Removed replyFileUploadLabel and its click listener, as input is now nested in label
                 const replyFileUploadInput = replyFormContainer.querySelector('.reply-file-upload');
                 const replyFileNameSpan = replyFormContainer.querySelector('.reply-file-name');
                 const replyPasswordToggle = replyFormContainer.querySelector('.reply-password-toggle');
@@ -2221,7 +2441,7 @@
 
                 replyAvatar.addEventListener('click', () => openProfileEmojiPicker(replyAvatar));
 
-                replyAvatar.textContent = avatars[Math.floor(Math.random() * avatars.length)];
+                replyAvatar.textContent = replyAvatar.dataset.avatar || avatars[Math.floor(Math.random() * avatars.length)];
 
                 replyContentTextarea.addEventListener('input', autoResizeTextarea);
                 replyContentTextarea.addEventListener('blur', (e) => {
@@ -2243,16 +2463,28 @@
                     });
                     replyEmojiPicker.appendChild(emojiBtn);
                 });
+
+                // FIX: Localized emoji picker toggle
                 replyEmojiToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
+                    e.stopPropagation(); // Prevent propagation to document
+                    // Close other active emoji pickers if any, but only the ones for replies
+                    document.querySelectorAll('.reply-emoji-picker.active').forEach(picker => {
+                        if (picker !== replyEmojiPicker) {
+                            picker.classList.remove('active');
+                        }
+                    });
                     replyEmojiPicker.classList.toggle('active');
                 });
+
+                // FIX: Localized document click for closing emoji picker
+                // This listener should be added to the document but only affect *this specific* reply picker
                 document.addEventListener('click', function(e) {
-                    if (!replyEmojiPicker.contains(e.target) && e.target !== replyEmojiToggle) {
+                    if (replyEmojiPicker.classList.contains('active') && !replyEmojiPicker.contains(e.target) && e.target !== replyEmojiToggle) {
                         replyEmojiPicker.classList.remove('active');
                     }
                 });
 
+                // Add change listener for reply file upload input
                 replyFileUploadInput.addEventListener('change', () => {
                     replyFileNameSpan.textContent = replyFileUploadInput.files[0] ? replyFileUploadInput.files[0].name : '';
                 });
@@ -2350,6 +2582,7 @@
                 formContainer.querySelector('.reply-file-upload').value = '';
                 formContainer.querySelector('.reply-file-name').textContent = '';
                 avatarElement.textContent = avatars[Math.floor(Math.random() * avatars.length)]; 
+                avatarElement.dataset.avatar = avatarElement.textContent; // Update dataset for consistency
                 state.tempPostName = null;
                 state.tempPostPassword = null;
                 autoResizeTextarea({ target: formContainer.querySelector('.reply-content') });
@@ -2944,6 +3177,13 @@
             function confirmPostPassword() {
                 state.tempPostName = document.getElementById('postPasswordModalNameInput').value.trim();
                 state.tempPostPassword = document.getElementById('postPasswordModalInput').value.trim();
+                closePostPasswordModal();
+            }
+
+            function cancelPostPassword() {
+                // Reset temp values if user cancels
+                state.tempPostName = null;
+                state.tempPostPassword = null;
                 closePostPasswordModal();
             }
 
