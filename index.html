@@ -138,7 +138,7 @@
             border: 1px solid var(--border-color-light);
             border-radius: 8px;
             padding: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced vertical space */
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         #boardInfo h2 {
@@ -158,7 +158,7 @@
             border: 1.5px solid var(--border-color-light); /* Slightly thicker border */
             border-radius: 12px; /* More rounded corners */
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced vertical space */
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Stronger shadow */
         }
 
@@ -207,7 +207,8 @@
             line-height: 1.3;
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-            padding-right: calc(1rem + 36px + 0.75rem); /* 1rem default padding, 36px button width, 0.75rem space */
+            /* Adjusted padding-right for button alignment */
+            padding-right: calc(1rem + 36px + 1rem); /* 1rem default padding, 36px button width, 1rem space */
         }
         .post-input-area textarea::placeholder {
             color: var(--text-secondary-color);
@@ -265,7 +266,7 @@
         .icon-button.submit-button {
             background-color: var(--primary-accent-color);
             color: #FFFFFF;
-            right: 0.75rem; /* Aligned with textarea padding */
+            right: 1rem; /* Aligned with textarea padding */
             /* Vertically center the button within the textarea's padding */
             transform: translateY(-50%);
             top: 50%; /* Position relative to the middle of the textarea container */
@@ -366,7 +367,7 @@
             background-color: var(--card-bg);
             border: 1px solid var(--border-color-light);
             border-radius: 8px;
-            margin-bottom: 0.75rem; /* Reduced vertical space */
+            margin-bottom: 0.5rem; /* Reduced vertical space */
             padding: 1rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             transition: box-shadow 0.2s;
@@ -1181,7 +1182,7 @@
             scroll-snap-type: x mandatory; /* Snap to items */
             gap: 0.75rem; /* Space between stories */
             padding: 0.5rem 0.5rem; /* Vertical padding and slight horizontal padding */
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced vertical space */
             border-radius: 12px;
             background-color: var(--card-bg);
             border: 1.5px solid var(--border-color-light);
@@ -1233,13 +1234,37 @@
 
         /* Responsive grid for posts container */
         @media (min-width: 1024px) { /* lg breakpoint */
+            .container {
+                padding-left: 6rem; /* Wider margins for desktop */
+                padding-right: 6rem; /* Wider margins for desktop */
+            }
             #postsContainer {
                 grid-template-columns: repeat(2, minmax(0, 1fr)); /* Two columns on desktop */
             }
         }
         @media (max-width: 1023px) { /* Below lg breakpoint (mobile/tablet) */
+            .container {
+                padding-left: 0; /* No padding on mobile */
+                padding-right: 0; /* No padding on mobile */
+            }
             #postsContainer {
                 grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column on mobile/tablet */
+                gap: 0; /* No gap between posts on mobile */
+            }
+            /* Ensure posts themselves have no horizontal padding on mobile */
+            .post {
+                border-radius: 0; /* No rounded corners on mobile edges */
+                margin-left: 0;
+                margin-right: 0;
+            }
+            /* Ensure post-form-card and storiesContainer have no horizontal padding on mobile */
+            .post-form-card, #storiesContainer, #boardInfo {
+                border-radius: 0; /* No rounded corners on mobile edges */
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .app-header {
+                border-radius: 0;
             }
         }
     </style>
@@ -1624,6 +1649,7 @@
                 scrollAfterReply: null,
                 directChildrenCounts: {},
                 imageViewerCurrentPostId: null, // New state for image viewer
+                unsubscribeImageViewer: null, // New unsubscribe for image viewer
             };
 
             const avatars = [ 
@@ -2424,7 +2450,7 @@
                 }
 
                 const contentTextElement = postElement.querySelector('.post-content');
-                const newSanitizedText = DOMPurify.sanitize(newPostData.text || '').replace(/\n/g,'<br>');
+                const newSanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
                 
                 const newTextWithLinks = newSanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
@@ -3765,6 +3791,27 @@
                 if (cardInfoDisplay) cardInfoDisplay.classList.remove('hidden');
             }
 
+            function updateImageViewerReactionsUI(postData) {
+                const reactionsContainer = document.getElementById('imageViewerReactionsContainer');
+                if (!reactionsContainer) return;
+
+                const userUID = auth.currentUser?.uid;
+                const reactedBy = postData.reactedBy || {};
+                const userReactions = reactedBy[userUID] || [];
+
+                const heartButton = reactionsContainer.querySelector('.heart-reaction-button');
+                const funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
+                const angryButton = reactionsContainer.querySelector('.angry-reaction-button');
+
+                if (heartButton) heartButton.querySelector('.count').textContent = postData.heartCount || 0;
+                if (funnyButton) funnyButton.querySelector('.count').textContent = postData.funnyCount || 0;
+                if (angryButton) angryButton.querySelector('.count').textContent = postData.angryCount || 0;
+
+                if (heartButton) heartButton.classList.toggle('active', userReactions.includes('corazón'));
+                if (funnyButton) funnyButton.classList.toggle('active', userReactions.includes('me diverte'));
+                if (angryButton) angryButton.classList.toggle('active', userReactions.includes('me enoja'));
+            }
+
             function openImageViewerModal(postId) {
                 const post = state.allPostsData[postId];
                 if (!post || !post.image) {
@@ -3781,35 +3828,45 @@
                 enlargedImage.src = DOMPurify.sanitize(post.image);
                 enlargedImage.alt = `Imagen de post por ${post.name}`;
 
-                // Update reaction counts and active states
-                const userUID = auth.currentUser?.uid;
-                const reactedBy = post.reactedBy || {};
-                const userReactions = reactedBy[userUID] || [];
+                // Update reaction counts and active states initially
+                updateImageViewerReactionsUI(post);
 
+                // Setup real-time listener for the specific post
+                if (state.unsubscribeImageViewer) {
+                    state.unsubscribeImageViewer(); // Unsubscribe from any previous listener
+                }
+                state.unsubscribeImageViewer = onSnapshot(doc(db, "Posts", postId), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const updatedPostData = { id: docSnap.id, ...docSnap.data() };
+                        state.allPostsData[updatedPostData.id] = updatedPostData; // Keep global state updated
+                        updateImageViewerReactionsUI(updatedPostData); // Update modal UI
+                    } else {
+                        console.log("Post for image viewer no longer exists.");
+                        closeImageViewerModal(); // Close modal if post is deleted
+                    }
+                }, (error) => {
+                    console.error("Error listening to image viewer post:", error);
+                });
+
+                // Ensure reaction buttons in modal have correct listeners
                 const heartButton = reactionsContainer.querySelector('.heart-reaction-button');
                 const funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
                 const angryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
-                heartButton.querySelector('.count').textContent = post.heartCount || 0;
-                funnyButton.querySelector('.count').textContent = post.funnyCount || 0;
-                angryButton.querySelector('.count').textContent = post.angryCount || 0;
+                // Remove previous listeners to prevent duplicates
+                heartButton.replaceWith(heartButton.cloneNode(true));
+                funnyButton.replaceWith(funnyButton.cloneNode(true));
+                angryButton.replaceWith(angryButton.cloneNode(true));
 
-                heartButton.classList.toggle('active', userReactions.includes('corazón'));
-                funnyButton.classList.toggle('active', userReactions.includes('me diverte'));
-                angryButton.classList.toggle('active', userReactions.includes('me enoja'));
+                // Get new references after cloning
+                const newHeartButton = reactionsContainer.querySelector('.heart-reaction-button');
+                const newFunnyButton = reactionsContainer.querySelector('.funny-reaction-button');
+                const newAngryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
-                // Remove previous listeners and add new ones to prevent duplicates
-                const cloneHeartButton = heartButton.cloneNode(true);
-                heartButton.parentNode.replaceChild(cloneHeartButton, heartButton);
-                cloneHeartButton.addEventListener('click', () => reaccionarCorazon(postId));
-
-                const cloneFunnyButton = funnyButton.cloneNode(true);
-                funnyButton.parentNode.replaceChild(cloneFunnyButton, funnyButton);
-                cloneFunnyButton.addEventListener('click', () => reaccionarMeDiverte(postId));
-
-                const cloneAngryButton = angryButton.cloneNode(true);
-                angryButton.parentNode.replaceChild(cloneAngryButton, angryButton);
-                cloneAngryButton.addEventListener('click', () => reaccionarMeEnoja(postId));
+                // Add new listeners
+                newHeartButton.addEventListener('click', () => reaccionarCorazon(postId));
+                newFunnyButton.addEventListener('click', () => reaccionarMeDiverte(postId));
+                newAngryButton.addEventListener('click', () => reaccionarMeEnoja(postId));
 
                 modal.classList.add('flex');
                 document.body.classList.add('modal-open'); // Prevent background scrolling
@@ -3819,6 +3876,10 @@
                 document.getElementById('imageViewerModal').classList.remove('flex');
                 document.body.classList.remove('modal-open'); // Re-enable background scrolling
                 state.imageViewerCurrentPostId = null;
+                if (state.unsubscribeImageViewer) {
+                    state.unsubscribeImageViewer(); // Unsubscribe when closing
+                    state.unsubscribeImageViewer = null;
+                }
             }
 
             function downloadEnlargedImage() {
