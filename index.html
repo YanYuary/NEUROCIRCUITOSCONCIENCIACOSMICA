@@ -1298,7 +1298,7 @@
             };
 
             const avatars = [ 
-                '�', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
+                '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
                 '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
@@ -1373,7 +1373,6 @@
                 window.addEventListener('hashchange', handleHashChange);
             });
 
-            // --- Funciones para el modal de Configuración y Login de Admin ---
             function showAdminLoginInSettings() {
                 document.getElementById('adminLoginModalButton').style.display = 'none';
                 document.getElementById('adminLogoutFromSettingsButton').style.display = 'none'; 
@@ -1413,7 +1412,6 @@
                     showGenericModal("Acceso Denegado", "La contraseña de administrador es incorrecta.", [{ text: 'Intentar de Nuevo', action: () => { document.getElementById('adminPasswordSettingsInput').focus(); document.getElementById('adminPasswordSettingsInput').value = ''; } }, { text: 'Cancelar', action: closeGenericModal }]);
                 }
             }
-            // --- Fin Funciones Modal Configuración ---
 
             function applyInitialTheme() {
                 if (localStorage.getItem('neurochan_theme') === 'dark') {
@@ -1457,7 +1455,7 @@
                 }
                 updateUiForView(); 
 
-                // FIX: Objetivo 2 - Formulario de respuesta del OP visible
+                // FIX: Objetivo 1 - Mostrar siempre el formulario de respuesta del OP
                 if (state.viewingThreadId && postIdFromUrl && postIdFromUrl === state.viewingThreadId) {
                     setTimeout(() => {
                         const opPostElement = document.querySelector(`#post-${state.viewingThreadId}`);
@@ -1803,10 +1801,12 @@
                         if (docSnap.exists()) {
                             const postData = { id: docSnap.id, ...docSnap.data() };
                             state.allPostsData[postData.id] = postData; 
-                            const postElement = createPostElement(postData, true, 0); 
+                            // Pass 0 as depth for the OP (level 0)
+                            const postElement = createPostElement(postData, true, 0, 0); 
                             threadContainer.appendChild(postElement);
                             applyPostEffects(postData, postElement);
                             
+                            // Load nested replies starting from depth 1
                             await loadNestedReplies(postData.id, postElement, 1); 
 
                         } else {
@@ -1854,7 +1854,8 @@
                         } else {
                             ops.forEach(opData => {
                                 const count = repliesByParent[opData.id] ? repliesByParent[opData.id].length : 0;
-                                const postElement = createPostElement(opData, false, count);
+                                // Pass 0 as depth for OPs in the main board view
+                                const postElement = createPostElement(opData, false, count, 0);
                                 postsContainer.appendChild(postElement);
                                 applyPostEffects(opData, postElement);
                             });
@@ -1872,7 +1873,9 @@
             }
 
             async function loadNestedReplies(parentPostId, parentElement, depth) {
-                if (depth > 2) return;
+                // Max depth is 3 (OP -> Reply -> Sub-reply -> Sub-sub-reply)
+                // So, if current depth is 3, we don't load further replies.
+                if (depth > 3) return;
 
                 const repliesQuery = query(postsCollectionRef, where("replyTo", "==", parentPostId));
                 
@@ -1883,7 +1886,9 @@
                     repliesContainer.style.borderColor = 'var(--divider-color)';
                     repliesContainer.dataset.parentId = parentPostId;
                     // FIX: Objetivo 1 - Mostrar las respuestas del primer nivel en el hilo, ocultar las sub-respuestas
-                    if (depth > 1) {
+                    // If depth is 1 (replies to OP), they are visible.
+                    // If depth is 2 or more (replies to replies), they are hidden by default.
+                    if (depth >= 2) {
                         repliesContainer.classList.add('hidden');
                     }
                     parentElement.appendChild(repliesContainer);
@@ -1912,9 +1917,11 @@
 
                     if (repliesData.length > 0) {
                         for (const replyData of repliesData) {
-                            const replyElement = createPostElement(replyData, false, 0);
+                            // Pass the current depth of the replyData being created
+                            const replyElement = createPostElement(replyData, false, 0, depth);
                             repliesContainer.appendChild(replyElement);
                             applyPostEffects(replyData, replyElement);
+                            // Recursively load replies for this reply, incrementing depth
                             await loadNestedReplies(replyData.id, replyElement, depth + 1); 
                         }
                     } else {
@@ -1938,7 +1945,7 @@
             function applyPostEffects(post, element) {
             }
 
-            function createPostElement(post, isThreadParent = false, replyCount = 0) {
+            function createPostElement(post, isThreadParent = false, replyCount = 0, currentPostDepth = 0) {
                 const postElement = document.createElement('div');
                 postElement.className = `post p-4 rounded-lg mb-4`; 
                 postElement.dataset.id = post.id; 
@@ -1976,17 +1983,26 @@
                 const replyCountHtml = !post.replyTo && !state.viewingThreadId ? 
                     `<span class="text-xs ml-2" style="color: var(--text-secondary-color);">Respuestas: <span class="reply-count-display">${replyCount}</span></span>` : '';
 
+                // FIX: Check if current post is at the final reply level (depth 3)
+                const isFinalLevelPost = currentPostDepth >= 3;
+
                 // FIX: Objetivo 2 - Reemplazar la definición de nestedReplyCountHtml
-                const nestedReplyCountHtml = state.viewingThreadId && post.replyTo ?
+                // The 💬 icon should be visible on level 2 posts (depth 2) to show their level 3 children.
+                // It should NOT be visible on level 3 posts (depth 3).
+                const nestedReplyCountHtml = state.viewingThreadId && post.replyTo && !isFinalLevelPost ?
                   `<button type="button"
                           class="nested-reply-toggle text-xs ml-2 flex items-center gap-0.5"
                           aria-label="Mostrar/ocultar respuestas">
                       💬 <span class="reply-count-display">${replyCount}</span>
                   </button>` : '';
 
-                // FIX: Objetivo 2 - Eliminar toggleNestedRepliesButtonHtml ya que nestedReplyCountHtml lo reemplaza
-                // const toggleNestedRepliesButtonHtml = state.viewingThreadId && post.replyTo && replyCount > 0 ?
-                //     `<button class="toggle-nested-replies-button secondary-button text-xs py-1 px-2 ml-2" aria-label="Ver respuestas anidadas">Ver respuestas (${replyCount})</button>` : '';
+                // FIX: Objetivo 3 - Hide "Responder" button for final level posts (depth 3)
+                const replyButtonHtml = !isThreadParent && !isFinalLevelPost ? `
+                    <button class="reply-button reaction-button" aria-label="Responder a este post">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                        Responder
+                    </button>
+                ` : '';
 
 
                 const replyFormHtml = `
@@ -2045,12 +2061,7 @@
                             <button class="reaction-button angry-reaction-button flex items-center gap-1" aria-label="Reaccionar con Me Enoja">
                                 😠 <span class="count">${post.angryCount || 0}</span>
                             </button>
-                            ${!isThreadParent ? `
-                                <button class="reply-button reaction-button" aria-label="Responder a este post">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                                    Responder
-                                </button>
-                            ` : ''}
+                            ${replyButtonHtml}
                             ${threadViewButtonHtml}
                         </div>
                         <div class="flex items-center">
@@ -2113,7 +2124,10 @@
                   });
                 }
 
-                setupReplyForm(postElement, post.id);
+                // Only set up reply form if it's not a final level post
+                if (!isFinalLevelPost) {
+                    setupReplyForm(postElement, post.id);
+                }
 
                 return postElement;
             }
@@ -2287,19 +2301,14 @@
             function replyToPost(postId) {
                 state.scrollAfterReply = postId; 
 
-                // FIX: Objetivo 3 - Mostrar los campos debajo de la respuesta a la que estas respondiendo
-                // FIX: Objetivo 2 - No referenciar el ID ">>Hkqr" al responder a una respuesta
                 const postElement = document.getElementById(`post-${postId}`);
                 if (postElement) {
                     const replyForm = postElement.querySelector('.reply-form-container');
                     if (replyForm) {
-                        showReplyForm(replyForm, true); // Show and focus the specific reply form
-                        // No need to set value or change hash here, as the form is directly under the post.
+                        showReplyForm(replyForm, true);
                     }
                 } else {
-                    // Fallback if postElement is not found, though it should be if in a thread view
                     console.error(`Post element with ID ${postId} not found for reply.`);
-                    // If somehow the element is not found, navigate to the thread and let the OP form handle it
                     window.location.hash = `board=${state.currentBoard}&post=${state.viewingThreadId || postId}`;
                 }
             }
@@ -2960,4 +2969,3 @@
     </script>
 </body>
 </html>
-�
