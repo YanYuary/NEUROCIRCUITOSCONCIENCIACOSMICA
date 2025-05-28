@@ -3,867 +3,957 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Primera Página</title>
+    <meta name="theme-color" content="#FFFFFF" id="themeColorMeta">
+    <title>🧠 NeuroChan: Tableros de la Mente</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
-    <meta name="theme-color" id="themeColorMeta" content="#ffffff">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js" defer></script>
+    
     <style>
-        /* Aquí puedes añadir tus estilos CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
         :root {
-            --app-bg: #f0f2f5;
-            --header-bg: #e0e2e5;
-            --text-color: #333;
-            --text-secondary-color: #666;
-            --text-tertiary-color: #999;
-            --card-bg: #ffffff;
-            --border-color: #e0e0e0;
-            --divider-color: #ccc;
-            --input-bg: #f9f9f9;
-            --input-border: #ddd;
-            --primary-accent-color: #6a0dad; /* Morado */
-            --secondary-accent-color: #9370db; /* Morado claro */
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --button-hover-bg: #f0f0f0;
-            --modal-bg: rgba(0, 0, 0, 0.5);
-            --modal-content-bg: #ffffff;
-            --modal-border: #ccc;
-            --tooltip-bg: #333;
-            --tooltip-text: #fff;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --reaction-button-bg: #f0f0f0;
-            --reaction-button-hover: #e0e0e0;
-            --reaction-button-active: #d0d0d0;
-            --post-border-color: #e0e0e0;
-            --post-hover-shadow: rgba(0, 0, 0, 0.15);
-            --board-selector-bg: #e0e0e0;
-            --board-selector-active-bg: #6a0dad;
-            --board-selector-active-text: #fff;
-            --admin-toggle-color: #666;
-            --admin-toggle-hover: #333;
+            --app-bg: #F0F2F5; 
+            --card-bg: #FFFFFF;
+            --text-primary-color: #050505; 
+            --text-secondary-color: #65676B; 
+            --text-tertiary-color: #8A8D91; 
+            --border-color-light: #CED0D4; 
+            --border-color-strong: #BCC0C4;
+            --divider-color: #E4E6EB;
+            /* Colores corporativos actualizados */
+            --primary-accent-color: #6a0dad; 
+            --primary-accent-hover-color: #590bb3;
+            --danger-color: #E02C4A; 
+            --success-color: #31A24C; 
+            --icon-color: #606770;
+            --icon-bg-hover: #E4E6EB;
+            --button-secondary-bg: #E4E6EB;
+            --button-secondary-text: #050505;
+            --button-secondary-hover-bg: #D8DADF;
+            --link-color: var(--primary-accent-color);
+
+            --dark-app-bg: #18191A;
+            --dark-card-bg: #242526;
+            --dark-text-primary-color: #E4E6EB;
+            --dark-text-secondary-color: #B0B3B8;
+            --dark-text-tertiary-color: #A0A3A7;
+            --dark-border-color-light: #3E4042;
+            --dark-border-color-strong: #4E4F50;
+            --dark-divider-color: #3A3B3C;
+            --dark-icon-color: #B0B3B8;
+            --dark-icon-bg-hover: #3A3B3C;
+            --dark-button-secondary-bg: #3A3B3C;
+            --dark-button-secondary-text: #E4E6EB;
+            --dark-button-secondary-hover-bg: #4E5052;
         }
 
-        .dark-theme {
-            --app-bg: #1a1a2e;
-            --header-bg: #16213e;
-            --text-color: #e0e0e0;
-            --text-secondary-color: #a0a0a0;
-            --text-tertiary-color: #777;
-            --card-bg: #0f3460;
-            --border-color: #0d2a4d;
-            --divider-color: #0a203c;
-            --input-bg: #113c6e;
-            --input-border: #0f3460;
-            --primary-accent-color: #e94560; /* Rosa neón */
-            --secondary-accent-color: #533483; /* Morado oscuro */
-            --success-color: #4CAF50;
-            --danger-color: #f44336;
-            --button-hover-bg: #2b3a57;
-            --modal-bg: rgba(0, 0, 0, 0.7);
-            --modal-content-bg: #16213e;
-            --modal-border: #0d2a4d;
-            --tooltip-bg: #e0e0e0;
-            --tooltip-text: #333;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --reaction-button-bg: #2b3a57;
-            --reaction-button-hover: #3e5c76;
-            --reaction-button-active: #537a96;
-            --post-border-color: #0d2a4d;
-            --post-hover-shadow: rgba(0, 0, 0, 0.4);
-            --board-selector-bg: #2b3a57;
-            --board-selector-active-bg: #e94560;
-            --board-selector-active-text: #fff;
-            --admin-toggle-color: #a0a0a0;
-            --admin-toggle-hover: #e0e0e0;
-            --icon-color: #a0a0a0; /* Color por defecto para iconos no activos */
+        body.dark-theme {
+            --app-bg: var(--dark-app-bg);
+            --card-bg: var(--dark-card-bg);
+            --text-primary-color: var(--dark-text-primary-color);
+            --text-secondary-color: var(--dark-text-secondary-color);
+            --text-tertiary-color: var(--dark-text-tertiary-color);
+            --border-color-light: var(--dark-border-color-light);
+            --border-color-strong: var(--dark-border-color-strong);
+            --divider-color: var(--dark-divider-color);
+            --icon-color: var(--dark-icon-color);
+            --icon-bg-hover: var(--dark-icon-bg-hover);
+            --button-secondary-bg: var(--dark-button-secondary-bg);
+            --button-secondary-text: var(--dark-button-secondary-text);
+            --button-secondary-hover-bg: var(--dark-button-secondary-hover-bg);
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--app-bg);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--text-primary-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .app-header {
-            background-color: var(--header-bg);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .app-header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-accent-color);
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px var(--shadow-color);
+            background-color: var(--card-bg);
+            padding: 0.75rem 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .app-header h1 a {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-accent-color);
             text-decoration: none;
-            color: inherit;
         }
-
-        .app-header p {
-            font-size: 1.2rem;
+        .app-header h1 a:hover {
+            opacity: 0.8;
+        }
+        
+        .app-header #boardTitle {
+            font-size: 1rem;
             color: var(--text-secondary-color);
         }
 
-        .container {
-            max-width: 1200px;
+        .board-selectors-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        .board-selectors-container button {
-            background-color: var(--board-selector-bg);
-            color: var(--text-color);
-            padding: 0.5rem 1rem;
-            border-radius: 9999px; /* rounded-full */
+        .board-selector {
             font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
+            padding: 0.625rem 1rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            color: var(--text-secondary-color);
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
 
-        .board-selectors-container button:hover {
-            background-color: var(--button-hover-bg);
+        .board-selector:hover {
+            background-color: var(--button-secondary-hover-bg);
+            color: var(--text-primary-color);
         }
 
-        .board-selectors-container button.active {
-            background-color: var(--board-selector-active-bg);
-            color: var(--board-selector-active-text);
-            border-color: var(--board-selector-active-bg);
+        .board-selector.active {
+            background-color: var(--primary-accent-color);
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+        .board-selector.active:hover {
+            background-color: var(--primary-accent-hover-color);
         }
 
         #boardInfo {
             background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-
         #boardInfo h2 {
-            color: var(--primary-accent-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary-color);
+            margin-bottom: 0.5rem;
         }
-
         #boardInfo p {
             color: var(--text-secondary-color);
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
         .post-form-card {
             background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color-light);
             border-radius: 8px;
-            border: 1px solid var(--input-border);
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            transition: border-color 0.2s ease, background-color 0.2s ease;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
-        .input-field:focus {
+        .post-form-card .input-field {
+            background-color: transparent;
+            border: 1px solid var(--border-color-light);
+            color: var(--text-primary-color);
+            border-radius: 6px;
+            padding: 0.625rem 0.75rem;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .post-form-card .input-field::placeholder {
+            color: var(--text-secondary-color);
+        }
+        .post-form-card .input-field:focus {
             outline: none;
             border-color: var(--primary-accent-color);
-            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2); /* Sombra morada */
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
         }
 
         .post-input-area {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
+            gap: 0.75rem;
+        }
+        .post-input-area .avatar {
+            flex-shrink: 0;
         }
 
         .post-input-area textarea {
             flex-grow: 1;
+            background-color: var(--app-bg); 
+            border: 1px solid var(--border-color-light);
+            color: var(--text-primary-color);
+            border-radius: 20px;
             padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-            background-color: var(--input-bg);
-            color: var(--text-color);
+            font-size: 0.95rem;
             resize: none;
-            overflow-y: hidden;
             min-height: 40px;
-            transition: border-color 0.2s ease, background-color 0.2s ease;
+            line-height: 1.3;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
-
+        .post-input-area textarea::placeholder {
+            color: var(--text-secondary-color);
+        }
         .post-input-area textarea:focus {
             outline: none;
             border-color: var(--primary-accent-color);
             box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
+            background-color: var(--card-bg);
         }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--secondary-accent-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        .post-input-area textarea:focus.focus\:ring-0 {
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
         }
 
         .post-actions-row {
             display: flex;
-            align-items: center;
+            justify-content: flex-end;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--divider-color);
         }
-
         .icon-button {
-            background: none;
-            border: none;
+            background-color: var(--button-secondary-bg);
             color: var(--icon-color);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
         }
-
         .icon-button:hover {
-            background-color: var(--button-hover-bg);
-            color: var(--primary-accent-color);
+            background-color: var(--button-secondary-hover-bg);
+            color: var(--text-primary-color);
         }
-
-        .submit-button {
+        .icon-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        .icon-button.submit-button {
             background-color: var(--primary-accent-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 500;
-            margin-left: auto; /* Empuja el botón al final */
-            transition: background-color 0.2s ease;
+            color: #FFFFFF;
         }
-
-        .submit-button:hover:not(:disabled) {
-            background-color: var(--secondary-accent-color);
+        .icon-button.submit-button:hover {
+            background-color: var(--primary-accent-hover-color);
         }
-
-        .submit-button:disabled {
-            opacity: 0.6;
+        .icon-button.submit-button:disabled {
+            background-color: var(--button-secondary-bg);
+            color: var(--text-secondary-color);
             cursor: not-allowed;
         }
 
-        .typing-effect {
-            color: var(--text-secondary-color);
-            font-style: italic;
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0; 
+            width: 280px; 
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 0.75rem; 
+            z-index: 50;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); 
+            gap: 0.25rem; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .emoji-picker.active {
+            display: grid;
+        }
+        .emoji-option {
+            font-size: 1.5rem; 
+            cursor: pointer;
+            text-align: center;
+            padding: 0.25rem; 
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .emoji-option:hover {
+            background-color: var(--icon-bg-hover);
+        }
+
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.625rem 1rem;
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            border: 1px solid var(--border-color-light);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .file-upload-label:hover {
+            background-color: var(--button-secondary-hover-bg);
+            border-color: var(--border-color-strong);
+        }
+        .file-upload-label svg { 
+            margin-right: 0.5rem;
+        }
+
+
+        .primary-button {
+            background-color: var(--primary-accent-color);
+            color: #FFFFFF;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .primary-button:hover {
+            background-color: var(--primary-accent-hover-color);
+        }
+        .primary-button svg {
+            margin-right: 0.5rem;
+        }
+
+        .secondary-button {
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color-light);
+            transition: background-color 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        .secondary-button:hover {
+            background-color: var(--button-secondary-hover-bg);
+            border-color: var(--border-color-strong);
         }
 
         .post {
             background-color: var(--card-bg);
-            border: 1px solid var(--post-border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative; /* Para el tooltip */
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+            animation: fadeIn 0.5s ease-out; 
         }
-
-        .post:hover {
-            box-shadow: 0 6px 12px var(--post-hover-shadow);
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
+        
         .post-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
-
-        .post-avatar {
-            width: 32px;
-            height: 32px;
+        .post-avatar { 
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--secondary-accent-color);
+            margin-right: 0.75rem;
+            object-fit: cover;
+            background-color: var(--app-bg); 
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            box-shadow: 0 1px 3px var(--shadow-color);
-            border: 1px solid var(--border-color);
+            justify-content: center;
+            font-size: 1.5rem; 
+            color: var(--text-primary-color); 
+            cursor: pointer;
         }
-
         .post-userinfo {
             display: flex;
             flex-direction: column;
         }
-
         .post-username {
             font-weight: 600;
-            color: var(--primary-accent-color);
+            color: var(--text-primary-color);
+            font-size: 0.95rem;
         }
-
         .post-timestamp {
-            font-size: 0.75rem;
-            color: var(--text-tertiary-color);
+            font-size: 0.8rem;
+            color: var(--text-secondary-color);
         }
 
-        .post-title {
-            font-size: 1.1rem;
+        .post .post-title { 
+            font-size: 1.15rem; 
             font-weight: 600;
+            color: var(--text-primary-color);
             margin-bottom: 0.5rem;
-            color: var(--text-color);
         }
 
-        .post-content {
-            color: var(--text-color);
+
+        .post-content { 
+            font-family: 'Inter', sans-serif; 
+            color: var(--text-primary-color);
+            font-size: 0.95rem;
+            line-height: 1.5;
             word-wrap: break-word;
-            white-space: pre-wrap; /* Para respetar saltos de línea */
-        }
-
-        .post-image-container {
-            max-width: 100%;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-top: 0.75rem;
             margin-bottom: 0.75rem;
-            border: 1px solid var(--border-color);
         }
-
-        .post-image-container img {
-            width: 100%;
+        .post-content img { 
+            max-width: 100%;
             height: auto;
-            display: block;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+            border: 1px solid var(--border-color-light);
+        }
+        .post-image-container { 
+            margin: 0.75rem 0;
+        }
+        .post-image-container img {
+            max-width: 100%;
+            height: auto;
+            max-height: 500px; 
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color-light);
         }
 
         .post-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; 
             align-items: center;
-            margin-top: 1rem;
             padding-top: 0.75rem;
             border-top: 1px solid var(--divider-color);
+            margin-top: 1rem;
         }
-
         .reaction-button {
-            background-color: var(--reaction-button-bg);
-            color: var(--text-secondary-color);
-            padding: 0.4rem 0.8rem;
-            border-radius: 9999px; /* rounded-full */
-            font-size: 0.8rem;
+            background: none;
+            border: none;
+            color: var(--icon-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            border: 1px solid var(--border-color);
+            transition: background-color 0.2s, color 0.2s;
         }
-
+        .reaction-button svg { 
+            width: 18px;
+            height: 18px;
+            margin-right: 0.375rem;
+        }
         .reaction-button:hover {
-            background-color: var(--reaction-button-hover);
+            background-color: var(--icon-bg-hover);
+            color: var(--text-primary-color);
+        }
+        .reaction-button.active {
             color: var(--primary-accent-color);
+            font-weight: 600;
         }
-
-        .reaction-button:active {
-            background-color: var(--reaction-button-active);
-        }
-
-        .reaction-button svg {
-            width: 1rem;
-            height: 1rem;
-        }
-
-        .delete-button {
+        .reaction-button.delete {
             color: var(--danger-color);
         }
-        .delete-button:hover {
-            background-color: var(--danger-color);
-            color: white;
+         .reaction-button.delete:hover {
+            background-color: rgba(224, 44, 74, 0.1);
         }
 
         .modal {
+            display: none; 
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--modal-bg);
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.6); 
+            z-index: 1000; 
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            transition: opacity 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
         }
-
-        .modal.flex {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background-color: var(--modal-content-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px var(--shadow-color);
-            max-width: 90%;
-            width: 400px;
-            border: 1px solid var(--modal-border);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .modal.flex .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-actions {
+        .modal.flex { 
             display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1.5rem;
         }
-
-        .primary-button {
-            background-color: var(--primary-accent-color);
-            color: white;
-            padding: 0.75rem 1.5rem;
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            padding: 1.5rem;
             border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            max-width: 450px;
+            width: 90%;
+        }
+        .modal-content h3 {
+            font-size: 1.25rem;
             font-weight: 600;
-            transition: background-color 0.2s ease;
-            cursor: pointer;
-            border: none;
+            margin-bottom: 1rem;
+            color: var(--text-primary-color);
         }
-
-        .primary-button:hover {
-            background-color: var(--secondary-accent-color);
+        .modal-content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary-color);
+            margin-bottom: 1rem;
         }
-
-        .secondary-button {
-            background-color: var(--button-hover-bg);
-            color: var(--text-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
+        .modal-content input[type="password"],
+        .modal-content input[type="text"],
+        .modal-content textarea {
+             background-color: var(--app-bg);
+             border: 1px solid var(--border-color-light);
+             color: var(--text-primary-color);
+             border-radius: 6px;
+             padding: 0.625rem;
+             margin-bottom: 1rem;
         }
-
-        .secondary-button:hover {
-            background-color: var(--border-color);
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--input-border);
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .modal-input:focus {
+        .modal-content input[type="password"]:focus,
+        .modal-content input[type="text"]:focus,
+        .modal-content textarea:focus {
             outline: none;
             border-color: var(--primary-accent-color);
             box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
         }
-
-        .app-footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            color: var(--text-secondary-color);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-            background-color: var(--header-bg);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        .app-footer p {
-            margin-bottom: 0.5rem;
+        .modal-content .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
         }
 
         .admin-panel {
             position: fixed;
-            bottom: 1rem;
-            left: 1rem;
-            display: flex;
-            gap: 0.5rem;
-            z-index: 500;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1001; 
+            display: flex; 
+            gap: 0.5rem; 
         }
-
-        .admin-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
+        .admin-toggle, #audioToggle {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            color: var(--icon-color);
             padding: 0.5rem;
             border-radius: 50%;
-            color: var(--admin-toggle-color);
-            transition: color 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
-
-        .admin-toggle:hover {
-            background-color: var(--button-hover-bg);
-            color: var(--admin-toggle-hover);
+        .admin-toggle:hover, #audioToggle:hover {
+            background-color: var(--icon-bg-hover);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.15);
         }
-
-        #audioToggle {
-            background: none;
-            border: none;
-            cursor: pointer;
+        #audioToggle { 
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+        }
+         #audioToggle svg {
+            width: 20px; height: 20px;
             color: var(--icon-color);
-            transition: color 0.2s ease;
+         }
+         .admin-toggle svg, #adminLogoutButton svg {
+             width: 20px; height: 20px;
+         }
+         #adminLogoutButton.admin-toggle {
+             color: var(--danger-color);
+         }
+         #adminLogoutButton.admin-toggle:hover {
+             background-color: rgba(224, 44, 74, 0.1);
+         }
+        #settingsToggle { 
         }
 
-        #audioToggle:hover {
-             color: var(--primary-accent-color);
-        }
 
-        .file-upload-label {
-            background-color: var(--secondary-accent-color);
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .file-upload-label:hover {
-            background-color: var(--primary-accent-color);
-        }
-
-        .reply-link {
-            color: var(--primary-accent-color);
-            text-decoration: underline;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .reply-link:hover {
-            color: var(--secondary-accent-color);
-        }
-
-        .reply-link .tooltip-text {
-            visibility: hidden;
-            background-color: var(--tooltip-bg);
-            color: var(--tooltip-text);
-            text-align: left;
-            border-radius: 6px;
-            padding: 0.5rem;
+        .emoji-picker {
+            display: none;
             position: absolute;
-            z-index: 1;
-            bottom: 125%; /* Posición encima del elemento */
+            top: 100%;
+            right: 0; 
+            width: 280px; 
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 0.75rem; 
+            z-index: 50;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); 
+            gap: 0.25rem; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .emoji-picker.active {
+            display: grid;
+        }
+        .emoji-option {
+            font-size: 1.5rem; 
+            cursor: pointer;
+            text-align: center;
+            padding: 0.25rem; 
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .emoji-option:hover {
+            background-color: var(--icon-bg-hover);
+        }
+
+        .reply-indicator {
+            border-left: 3px solid var(--primary-accent-color);
+            padding-left: 1rem; 
+            margin-left: 0; 
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(106, 13, 173, 0.05);
+            border-radius: 0 4px 4px 0;
+        }
+        .reply-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .reply-link:hover {
+            text-decoration: underline;
+            color: var(--primary-accent-hover-color);
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: #333; 
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
-            transition: opacity 0.3s;
-            min-width: 150px;
-            box-shadow: 0 2px 8px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            pointer-events: none; /* Para que no bloquee clics */
-            white-space: normal; /* Permitir que el texto se ajuste */
-            font-size: 0.75rem;
+            transition: opacity 0.2s;
+            font-size: 0.8rem; 
+            white-space: nowrap;
         }
-
-        .reply-link:hover .tooltip-text {
+        .tooltip:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
         }
 
-        .reply-link .tooltip-text::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--tooltip-bg) transparent transparent transparent;
+        #loadingMessage {
+            text-align: center;
+            font-size: 1rem; 
+            padding: 2rem; 
+            color: var(--text-secondary-color);
         }
 
-        /* Emoji Picker */
-        .emoji-picker {
-            position: absolute;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            padding: 0.5rem;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr); /* 6 columnas */
-            gap: 0.25rem;
-            z-index: 10;
-            bottom: calc(100% + 10px); /* Arriba del botón/avatar */
-            left: 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-        }
-
-        .emoji-picker.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .emoji-option {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 4px;
-            transition: background-color 0.1s ease;
-        }
-
-        .emoji-option:hover {
-            background-color: var(--button-hover-bg);
-        }
-
-        /* Specific positioning for main emoji picker */
-        #emojiPicker {
-            left: 40px; /* Ajustar según el tamaño del avatar */
-            bottom: calc(100% + 10px);
-        }
-
-        /* Specific positioning for avatar picker */
-        .avatar-picker {
-            left: 0; /* Alineado con el avatar */
-            bottom: calc(100% + 10px);
-        }
-
-        /* Tarot Game Styles */
+        /* Estilos para el juego de Tarot (modernizado) */
         #tarotGameContainer {
             background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 1.5rem; 
+            margin-top: 1.5rem; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-
+        #tarotGameContainer h2 {
+            font-size: 1.5rem; 
+            font-weight: 600;
+            color: var(--text-primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
         #tarotInitialCardContainer {
-            width: 150px;
-            height: 250px;
-            perspective: 1000px;
-            margin-bottom: 2rem;
-        }
-
-        .tarot-initial-card {
-            width: 100%;
-            height: 100%;
-            background-color: var(--secondary-accent-color);
-            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 5rem;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            transition: transform 0.5s ease, opacity 0.5s ease;
+            margin-bottom: 1.5rem;
+            min-height: 150px; 
+        }
+        .tarot-initial-card {
+            width: 100px;
+            height: 150px;
+            background-color: var(--app-bg);
+            border: 2px solid var(--primary-accent-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-accent-color);
+            cursor: default; 
+            transition: transform 0.6s ease-in-out, opacity 0.3s;
             transform-style: preserve-3d;
         }
-
-        .tarot-initial-card.spin {
-            animation: spin-card 1s forwards;
+        @keyframes spinAndFade {
+            0% { transform: rotateY(0deg) scale(1); opacity: 1; }
+            50% { transform: rotateY(180deg) scale(1.1); opacity: 0.8; }
+            100% { transform: rotateY(360deg) scale(0.5); opacity: 0; }
         }
 
-        @keyframes spin-card {
-            0% { transform: rotateY(0deg); opacity: 1; }
-            100% { transform: rotateY(720deg); opacity: 0; }
-        }
 
         #tarotSpreadContainer {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
-            width: 100%;
+            gap: 0.75rem; 
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-
         .tarot-row {
             display: flex;
             justify-content: center;
-            gap: 0.75rem;
-            width: 100%;
+            gap: 0.75rem; 
         }
-
         .tarot-card {
-            width: 100px;
-            height: 160px;
-            background-color: var(--secondary-accent-color);
+            width: 80px;
+            height: 120px;
+            border: 1px solid var(--border-color-strong);
             border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 3rem;
-            color: white;
             cursor: pointer;
-            box-shadow: 0 2px 5px var(--shadow-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.6s, box-shadow 0.3s;
+            perspective: 1000px;
             position: relative;
-            transform-style: preserve-3d;
-            transform: translateY(20px); /* Initial state for animation */
-            opacity: 0; /* Initial state for animation */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transform-style: preserve-3d; 
+            opacity: 0; 
+            transform: translateY(20px); 
         }
-
-        .tarot-card.placed {
-            transform: translateY(0);
+         .tarot-card.placed { 
             opacity: 1;
+            transform: translateY(0);
         }
 
         .tarot-card:hover {
-            box-shadow: 0 4px 10px var(--shadow-color);
-            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-
-        .card-face {
+        .tarot-card .card-face {
             position: absolute;
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            border-radius: 8px;
+            justify-content: center;
+            border-radius: 7px; 
+            overflow: hidden;
         }
-
-        .card-back {
-            background-color: var(--secondary-accent-color);
-            color: white;
-            font-size: 3rem;
+        .tarot-card .card-back {
+            background-color: var(--app-bg); 
+            color: var(--text-secondary-color);
+            font-size: 2rem;
+            transform: rotateY(0deg); 
         }
-
-        .card-front {
-            background-color: var(--card-bg);
-            transform: rotateY(180deg);
+        .tarot-card .card-front {
+            background-color: var(--card-bg); 
+            transform: rotateY(180deg); 
             padding: 5px;
+            box-sizing: border-box;
         }
-
-        .tarot-card.flipped {
+        .tarot-card.flipped .card-back {
             transform: rotateY(180deg);
         }
-
-        .tarot-card.selected-for-info {
-            border: 2px solid var(--primary-accent-color);
-            box-shadow: 0 0 0 3px var(--primary-accent-color);
+        .tarot-card.flipped .card-front {
+            transform: rotateY(0deg);
         }
 
-        .tarot-image-display {
+        .tarot-card img.tarot-image-display {
             max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 6px;
+            height: auto;
+            object-fit: cover; 
+            border-radius: 4px;
+        }
+        .tarot-card .tarot-info-overlay { 
+           display: none;
         }
 
         #tarotCardInfoDisplay {
             background-color: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
+            border: 1px solid var(--border-color-light);
+            padding: 1.5rem; 
+            border-radius: 8px;
+            max-width: 500px;
+            margin: 1.5rem auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
-        #tarotCardInfoDisplay h3 {
-            color: var(--primary-accent-color);
+        #tarotCardInfoDisplay h3 { 
+            font-size: 1.3rem; 
+            margin-bottom: 0.75rem;
+            text-align: center;
+            color: var(--text-primary-color);
         }
-
-        #tarotCardInfoDisplay img {
+        #tarotCardInfoDisplay img { 
+            max-height: 200px; 
+            display:block; 
+            margin: 0.75rem auto;
+            border-radius: 6px;
             border: 1px solid var(--border-color-light);
         }
+        #tarotCardInfoDisplay p { 
+            font-size: 0.9rem; 
+            margin-bottom: 0.5rem; 
+            color: var(--text-secondary-color);
+            line-height: 1.4;
+        }
+         #tarotCardInfoDisplay p strong {
+            color: var(--text-primary-color);
+         }
 
-        #tarotCardInfoDisplay p {
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--divider-color);
+            font-size: 0.85rem;
+            color: var(--text-tertiary-color);
+        }
+        footer a {
+            color: var(--primary-accent-color);
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Clases de utilidad y limpieza de estilos "neon" y "glitch" */
+        .glitch, .neon-text:not(.post-title), .neon-border, .neon-button, .crt-effect, .fractal-bg,
+        .dream-glow, .tech-glow, .dimension-glow, .transmission-effect {
+            animation: none !important;
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
+        
+        .neon-border {
+            border: 1px solid var(--border-color-light) !important;
+        }
+        .app-header .neon-text { 
+            color: var(--primary-accent-color) !important;
+        }
+        #boardInfo .neon-text { 
+             color: var(--text-primary-color) !important;
+             font-weight: 600;
+        }
+
+        #submitPost.neon-button { 
+            background-color: var(--primary-accent-color);
+            color: white;
+            border: none;
+            box-shadow: none;
+        }
+         #submitPost.neon-button:hover {
+             background-color: var(--primary-accent-hover-color);
+         }
+
+        #themeToggle.neon-button { 
+             background-color: var(--button-secondary-bg);
+             color: var(--button-secondary-text);
+             border: 1px solid var(--border-color-light);
+             box-shadow: none;
+        }
+         #themeToggle.neon-button:hover {
+             background-color: var(--button-secondary-hover-bg);
+             border-color: var(--border-color-strong);
+         }
+
+        body.dark-theme .post,
+        body.dark-theme .post-form-card,
+        body.dark-theme #boardInfo,
+        body.dark-theme .modal-content,
+        body.dark-theme .admin-toggle,
+        body.dark-theme #audioToggle,
+        body.dark-theme .app-header,
+        body.dark-theme .board-selectors-container,
+        body.dark-theme #tarotGameContainer,
+        body.dark-theme #tarotCardInfoDisplay {
+            border-color: var(--dark-border-color-light);
+        }
+        body.dark-theme .post-form-card .input-field,
+        body.dark-theme .post-input-area textarea,
+        body.dark-theme .modal-content input[type="password"],
+        body.dark-theme .modal-content input[type="text"],
+        body.dark-theme .modal-content textarea {
+             background-color: var(--dark-app-bg);
+             border-color: var(--dark-border-color-strong);
+        }
+        body.dark-theme .post-input-area textarea:focus {
+            background-color: var(--dark-card-bg);
+        }
+
+        body.dark-theme .board-selector:not(.active) {
+            color: var(--dark-text-secondary-color);
+        }
+        body.dark-theme .board-selector:not(.active):hover {
+             background-color: var(--dark-button-secondary-hover-bg);
+             color: var(--dark-text-primary-color);
+        }
+         body.dark-theme .file-upload-label {
+             background-color: var(--dark-button-secondary-bg);
+             color: var(--dark-button-secondary-text);
+             border-color: var(--dark-border-color-strong);
+         }
+         body.dark-theme .file-upload-label:hover {
+             background-color: var(--dark-button-secondary-hover-bg);
+         }
+
+        button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible:not([tabindex="-1"]) {
+            outline: 2px solid var(--primary-accent-color);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3);
+        }
+        .post-form-card input:focus-visible, 
+        .post-form-card textarea:focus-visible,
+        .modal-content input:focus-visible,
+        .modal-content textarea:focus-visible {
+            outline: none; 
+        }
+
+        .avatar { 
+            filter: none; 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem; 
+            background-color: var(--app-bg); 
+            color: var(--text-primary-color);
+            cursor: pointer;
+        }
+        
+        #typingPreview {
+            background-color: var(--app-bg);
+            border: 1px solid var(--border-color-light);
+            padding: 0.75rem;
+            margin-top: 1rem;
+        }
+        #typingText {
+            color: var(--text-secondary-color);
+            font-style: italic;
+        }
+        .typing-effect::after { 
+            content: "|";
+            animation: blink 1s step-end infinite;
             color: var(--text-secondary-color);
         }
-
-        #tarotCardInfoDisplay strong {
-            color: var(--text-color);
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        [aria-hidden="true"] { 
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .app-header h1 {
-                font-size: 1.8rem;
-            }
-            .app-header p {
-                font-size: 1rem;
-            }
-            .post-form-card, #boardInfo, .post {
-                padding: 1rem;
-            }
-            .post-input-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .avatar {
-                margin-bottom: 0.5rem;
-            }
-            .post-actions-row {
-                flex-wrap: wrap;
-            }
-            .submit-button {
-                margin-left: 0;
-                width: 100%;
-                margin-top: 0.5rem;
-            }
-            .post-actions {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            .reaction-button {
-                width: auto;
-            }
-            .modal-content {
-                width: 95%;
-                padding: 1.5rem;
-            }
-            .emoji-picker {
-                grid-template-columns: repeat(4, 1fr); /* Menos columnas en móvil */
-            }
-            #emojiPicker {
-                left: 0; /* Ajustar posición para móvil */
-                bottom: calc(100% + 10px);
-            }
-            .tarot-card {
-                width: 80px;
-                height: 130px;
-                font-size: 2rem;
-            }
-            .tarot-initial-card {
-                width: 120px;
-                height: 200px;
-                font-size: 4rem;
-            }
-        }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen"> 
     <header class="app-header text-center">
         <h1><a href="#board=meta" aria-label="Ir al tablero principal /meta/">🧠 NeuroChan</a></h1>
         <p id="boardTitle">/meta/ Tableros de la Mente</p>
     </header>
 
-    <div class="container mx-auto px-4 py-2 md:py-4">
+    <div class="container mx-auto px-4 py-2 md:py-4"> 
         <div class="board-selectors-container flex flex-wrap gap-2 mb-6 justify-center">
             <button class="board-selector active" data-board="meta" aria-label="Tablero meta">
                 /meta/
@@ -882,20 +972,20 @@
             </button>
         </div>
 
-        <div id="boardInfo" class="mb-8">
-            <h2 class="text-xl font-semibold mb-1">/meta/ - Metaprogramación y Viaje Dimensional</h2>
+        <div id="boardInfo" class="mb-8"> 
+            <h2 class="text-xl font-semibold mb-1">/meta/ - Metaprogramación y Viaje Dimensional</h2> 
             <p class="text-sm mb-1">Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime</p>
             <p class="text-xs">Todos los posts son persistentes y se sincronizan en tiempo real.</p>
         </div>
 
-        <div id="postFormContainer" class="post-form-card relative">
-            <input
+        <div id="postFormContainer" class="post-form-card relative"> 
+            <input 
                 id="postName"
-                class="input-field mb-2"
+                class="input-field mb-2" 
                 placeholder="Nombre (opcional)"
                 maxlength="30"
                 aria-label="Nombre del usuario">
-            <input
+            <input 
                 id="postTitle"
                 class="input-field mb-3"
                 placeholder="Título del Post (opcional)"
@@ -903,18 +993,18 @@
                 aria-label="Título del post">
 
             <div class="post-input-area mb-2">
-                <div id="mainPostAvatar" class="avatar relative cursor-pointer"></div>
-                <div id="mainAvatarPicker" class="emoji-picker avatar-picker"></div> <div class="relative flex-grow">
+                <div id="mainPostAvatar" class="avatar"></div>
+                <div class="relative flex-grow">
                     <textarea
                         id="postContent"
-                        class="w-full focus:ring-0"
+                        class="w-full focus:ring-0" 
                         rows="1"
                         placeholder="¿Qué estás pensando...?"
                         aria-label="Contenido del post"></textarea>
                     <div id="emojiPicker" class="emoji-picker"></div>
                 </div>
             </div>
-
+            
             <div class="post-actions-row">
                 <button id="emojiToggle" class="icon-button" aria-label="Abrir selector de emojis">😊</button>
                 <label for="fileUpload" class="icon-button" aria-label="Subir imagen">
@@ -922,7 +1012,7 @@
                 </label>
                 <input type="file" id="fileUpload" class="hidden" accept="image/*" aria-hidden="true">
                 <span id="fileName" class="text-xs text-gray-500 ml-2 self-center"></span>
-
+                
                 <button id="postPasswordToggle" class="icon-button" aria-label="Establecer contraseña para el post">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.078 2.25c-.217-.065-.437-.12-.65-.173a1.75 1.75 0 00-1.946.002c-.213.053-.433.108-.65.173C5.77 3.072 4.5 5.25 4.5 7.5c0 1.97.823 3.717 2.096 4.904.284.344.468.756.528 1.186a3.5 3.5 0 00.878 2.033L9.18 16.06a1.75 1.75 0 002.64 0l.178-.445a3.5 3.5 0 00.878-2.033c.06-.43.243-.842.528-1.186C14.677 11.217 15.5 9.47 15.5 7.5c0-2.25-1.27-4.428-3.344-5.078zM10 9.5a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
                 </button>
@@ -935,7 +1025,7 @@
                 <p id="typingText" class="typing-effect"></p>
             </div>
         </div>
-
+        
         <div id="loadingMessage" class="hidden">Cargando transmisiones...</div>
 
         <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -943,7 +1033,7 @@
 
         <div id="threadContainer" class="hidden mt-8">
             </div>
-
+        
         <div id="tarotGameContainer" class="hidden flex flex-col items-center p-4">
             <h2 class="text-2xl font-semibold mb-6">Lectura de Tarot Piramidal</h2>
             <div id="tarotInitialCardContainer" class="mb-6">
@@ -1039,12 +1129,23 @@
         </div>
     </div>
 
+    <div id="profileEmojiPickerModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Elige tu Avatar Emoji</h3>
+                <button id="closeProfileEmojiPickerModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
+            </div>
+            <div id="profileEmojiGrid" class="grid grid-cols-6 gap-2 text-center">
+                </div>
+        </div>
+    </div>
+
 
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <h3 class="text-xl mb-4">Confirmar borrado</h3>
             <p class="mb-4">Introduce la contraseña para borrar este post:</p>
-            <input type="password" id="deletePasswordInput" class="w-full p-2 mb-4">
+            <input type="password" id="deletePasswordInput" class="w-full p-2 mb-4"> 
             <div class="modal-actions">
                 <button id="cancelDelete" class="secondary-button">Cancelar</button>
                 <button id="confirmDelete" class="primary-button" style="background-color: var(--danger-color);">Borrar</button>
@@ -1055,7 +1156,7 @@
     <div id="editModal" class="modal">
         <div class="modal-content max-w-md">
             <h3 class="text-xl mb-4">Editar Transmisión</h3>
-
+            
             <div id="editPasswordPromptContainer" class="mb-4" style="display: none;">
                 <label for="editPostPasswordPrompt" class="block mb-1 text-sm">Contraseña del Post (para editar):</label>
                 <input type="password" id="editPostPasswordPrompt" class="w-full p-2">
@@ -1096,11 +1197,11 @@
                 <button id="closeInfoModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
             </div>
             <p class="mb-4 text-sm">
-                NeuroChan es un espacio para la comunidad espiritual de los "Fungis": aquellos que exploran la conciencia,
+                NeuroChan es un espacio para la comunidad espiritual de los "Fungis": aquellos que exploran la conciencia, 
                 desafían los metaprogramas del ego que operan en nuestros neurocircuitos y encuentran sabiduría en herramientas como el tarot.
             </p>
             <p class="mb-4 text-sm">
-                Aquí puedes compartir tus experiencias con "inochis" (seres o energías), encuentros con entidades inorgánicas,
+                Aquí puedes compartir tus experiencias con "inochis" (seres o energías), encuentros con entidades inorgánicas, 
                 la naturaleza del ego, despertares de conciencia y cualquier tema relacionado con la expansión de la mente y el espíritu.
             </p>
             <h4 class="text-lg mb-2 font-semibold">Reglas del Sitio (Guías Espirituales):</h4>
@@ -1133,18 +1234,17 @@
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import {
-            getFirestore, collection, addDoc, onSnapshot,
-            doc, deleteDoc, updateDoc, query, where, orderBy,
-            increment, serverTimestamp, getDoc, getDocs
+        import { 
+            getFirestore, collection, addDoc, onSnapshot, 
+            doc, deleteDoc, updateDoc, query, where, increment, 
+            serverTimestamp, getDoc, getDocs 
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        import {
-            getAuth, signInAnonymously, onAuthStateChanged
+        
+        import { 
+            getAuth, signInAnonymously, onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
+        
         let bcryptInstance;
-        // Check if bcrypt is loaded from the CDN
         if (typeof bcrypt !== 'undefined') {
             bcryptInstance = bcrypt;
         } else if (globalThis.dcodeIO && globalThis.dcodeIO.bcrypt) {
@@ -1152,12 +1252,12 @@
         } else {
             console.error("Bcrypt.js no está cargado. Las funciones de contraseña no funcionarán.");
         }
-
+        
         const firebaseConfig = {
             apiKey: "AIzaSyDQ6q9KkYS0To-BJEjxQSQUyQ65C6wam6o",
             authDomain: "neurocircuitos.firebaseapp.com",
             projectId: "neurocircuitos",
-            storageBucket: "neurocircuitos.appspot.com",
+            storageBucket: "neurocircuitos.appspot.com", 
             messagingSenderId: "988092454441",
             appId: "1:988092454441:web:e260431acea58ada5f2e38",
             measurementId: "G-9678SEZ792"
@@ -1169,37 +1269,38 @@
         const postsCollectionRef = collection(db, "Posts");
 
         (function() {
-            const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
-            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vFYAcnVe';
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; 
+            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vYcnVe'; 
 
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
-
-            const avatars = [
-                '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
-                '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
-            ];
-
+            
             let state = {
                 currentBoard: 'meta',
-                currentTheme: localStorage.getItem('neurochan_theme') || 'light',
+                currentTheme: localStorage.getItem('neurochan_theme') || 'light', 
                 audioEnabled: false,
                 isAdmin: localStorage.getItem('neurochan_admin') === 'true',
-                replyTo: null,
+                replyTo: null, 
                 currentDeletePostId: null,
-                allPostsData: {},
-                currentBoardOPs: [],
-                currentEditPostId: null,
-                currentEditPostData: null,
+                allPostsData: {}, 
+                currentBoardOPs: [], 
+                currentEditPostId: null, 
+                currentEditPostData: null, 
                 viewingThreadId: null,
-                tarotDeck: [],
-                tarotSpread: [],
-                tarotCardInfoVisible: false,
-                tarotInitialCardFlipped: false,
-                tempPostPassword: null, // Nuevo: para almacenar la contraseña temporalmente
-                tempPostName: null,    // Nuevo: para almacenar el nombre temporalmente
-                currentPostAvatar: null, // Nuevo: para el avatar del post principal
+                tarotDeck: [], 
+                tarotSpread: [], 
+                tarotCardInfoVisible: false, 
+                tarotInitialCardFlipped: false, 
+                tempPostPassword: null, 
+                tempPostName: null,    
+                currentPostAvatar: null, 
+                profileEmojiPickerTarget: null,
+                scrollAfterReply: null,
             };
 
+            const avatars = [ 
+                '�', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
+                '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
+            ];
 
             const boards = {
                 meta: { title: "/meta/ - Metaprogramación y Viaje Dimensional", description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime", footer: "Todos los posts son persistentes y se sincronizan en tiempo real." },
@@ -1208,7 +1309,7 @@
                 retro: { title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos." },
                 tarot: { title: "/tarot/ - Arcanos y Sincronicidad", description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", footer: "Las cartas revelan los ecos del alma y los susurros del destino." }
             };
-
+            
             const tarotDeckData = [
                 { cartnumber: 0, namecart: "The Fool", significado1cart: "Inicio, potencial ilimitado, fe en el camino", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 1, namecart: "The Magician", significado1cart: "Voluntad consciente, capacidad de manifestar", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/1.BOTA_Tarot_The-Magician.jpg" },
@@ -1218,7 +1319,7 @@
                 { cartnumber: 5, namecart: "The Hierophant", significado1cart: "Tradición, guía espiritual, aprendizaje", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/5.BOTA_Tarot_The-Hierophant.jpg" },
                 { cartnumber: 6, namecart: "The Lovers", significado1cart: "Integración de opuestos, elección consciente", significado2cart: "Circuit 7 – Neuro‑genético: consciencia arquetípica", significado3cart: "Antes de dormir, coloca la carta bajo la almohada y anota sueños al despertar.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/6.BOTA_Tarot_The-Lovers.jpg" },
                 { cartnumber: 7, namecart: "The Chariot", significado1cart: "Dominio de fuerzas, autodirección", significado2cart: "Circuit 8 – Cuántico‑noético: trascendencia, unidad", significado3cart: "Realiza una sesión de meditación profunda (theta) sosteniendo la carta en la mano.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/7-bota_tarot_the-chariot.jpg" },
-                { cartnumber: 8, namecart: "Strength", significado1cart: "Valor, autocontrol emocional, compasión", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/8-bota_tarot_strength.jpg" },
+                { cartnumber: 8, namecart: "Strength", significado1cart: "Valor, autocontrol emocional, compasión", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 9, namecart: "The Hermit", significado1cart: "Búsqueda interior, introspección, retiro", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/9-bota_tarot_the-hermit.jpg" },
                 { cartnumber: 10, namecart: "Wheel of Fortune", significado1cart: "Cambio cíclico, destino, oportunidad", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surjan y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/10-bota_tarot_wheel-of-fortune.jpg" },
                 { cartnumber: 11, namecart: "Justice", significado1cart: "Equilibrio, causa‑efecto, verdad", significado2cart: "Circuit 4 – Socio‑sexual: pertenencia e identidad", significado3cart: "Comparte tu interpretación con alguien cercano y observa la resonancia mutua.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/11-bota_tarot_justice.jpg" },
@@ -1234,24 +1335,23 @@
                 { cartnumber: 21, namecart: "The World", significado1cart: "Plenitud, cierre de ciclo, maestría", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/21-bota_tarot_the-world.jpg" }
             ];
 
-            let unsubscribePosts = null;
+            let unsubscribePosts = null; 
 
             document.addEventListener('DOMContentLoaded', function() {
                 setupEventListeners();
                 setupEmojiPicker();
-                setupMainAvatarPicker(); // New: Setup for main avatar picker
-                applyInitialTheme();
+                setupProfileEmojiPicker();
+                applyInitialTheme(); 
                 if (state.isAdmin) setupAdminPanel();
                 document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-                // Asignar un avatar inicial al formulario principal
-                state.currentPostAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+                state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || avatars[Math.floor(Math.random() * avatars.length)];
                 document.getElementById('mainPostAvatar').textContent = state.currentPostAvatar;
 
                 onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        console.log("Usuario autenticado anónimamente:", user.uid);
-                        handleHashChange();
+                    if (user) { 
+                        console.log("Usuario autenticado anónimamente:", user.uid); 
+                        handleHashChange(); 
                     } else {
                         console.log("Usuario no autenticado, intentando autenticación anónima...");
                         signInAnonymously(auth).catch((error) => {
@@ -1260,7 +1360,7 @@
                             const loadingMessageElement = document.getElementById('loadingMessage');
 
                             if (loadingMessageElement) {
-                                loadingMessageElement.classList.remove('hidden');
+                                loadingMessageElement.classList.remove('hidden'); 
                                 if (error.code === 'auth/configuration-not-found') {
                                      userMessage = 'ERROR DE CONFIGURACIÓN DE FIREBASE: El inicio de sesión anónimo no está habilitado. Por favor, ve a tu consola de Firebase -> Authentication -> Sign-in method y habilita el proveedor "Anónimo".';
                                     console.error("ACCIÓN REQUERIDA: Habilita el proveedor de inicio de sesión 'Anónimo' en la sección 'Authentication' -> 'Sign-in method' de tu Firebase console.");
@@ -1276,7 +1376,7 @@
             // --- Funciones para el modal de Configuración y Login de Admin ---
             function showAdminLoginInSettings() {
                 document.getElementById('adminLoginModalButton').style.display = 'none';
-                document.getElementById('adminLogoutFromSettingsButton').style.display = 'none';
+                document.getElementById('adminLogoutFromSettingsButton').style.display = 'none'; 
                 document.getElementById('adminPasswordInputAreaSettings').style.display = 'block';
                 document.getElementById('adminPasswordSettingsInput').focus();
             }
@@ -1294,21 +1394,21 @@
             }
 
             function handleAdminLogoutFromSettings() {
-                adminLogout();
+                adminLogout(); 
                 document.getElementById('adminLoginModalButton').style.display = 'block';
                 document.getElementById('adminLogoutFromSettingsButton').style.display = 'none';
-                closeSettingsModal();
+                closeSettingsModal(); 
             }
 
-            function verifyAdminPasswordFromSettings() {
-                const password = document.getElementById('adminPasswordSettingsInput').value;
+            function verifyAdminPasswordFromSettings() { 
+                const password = document.getElementById('adminPasswordSettingsInput').value; 
                 if (bcryptInstance && bcryptInstance.compareSync(password, ADMIN_HASH)) {
                     state.isAdmin = true;
                     localStorage.setItem('neurochan_admin', 'true');
-                    closeSettingsModal(); // Cerrar el modal de configuración
+                    closeSettingsModal();
                     setupAdminPanel();
                     showGenericModal("Acceso Concedido", "Has iniciado sesión como administrador.", [{ text: 'OK', action: closeGenericModal }]);
-                    loadContentForBoard();
+                    loadContentForBoard(); 
                 } else {
                     showGenericModal("Acceso Denegado", "La contraseña de administrador es incorrecta.", [{ text: 'Intentar de Nuevo', action: () => { document.getElementById('adminPasswordSettingsInput').focus(); document.getElementById('adminPasswordSettingsInput').value = ''; } }, { text: 'Cancelar', action: closeGenericModal }]);
                 }
@@ -1316,30 +1416,25 @@
             // --- Fin Funciones Modal Configuración ---
 
             function applyInitialTheme() {
-                const themeColorMeta = document.getElementById('themeColorMeta');
                 if (localStorage.getItem('neurochan_theme') === 'dark') {
                     document.body.classList.add('dark-theme');
-                    if (themeColorMeta) {
-                        themeColorMeta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
-                    }
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
                 } else {
-                    document.body.classList.remove('dark-theme');
-                    if (themeColorMeta) {
-                        themeColorMeta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
-                    }
+                    document.body.classList.remove('dark-theme'); 
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
                 }
                 updateThemeButtonText();
             }
-
+            
             function handleHashChange() {
-                const hash = window.location.hash.substring(1);
+                const hash = window.location.hash.substring(1); 
                 const params = new URLSearchParams(hash);
                 const postIdFromUrl = params.get('post');
                 const boardFromUrl = params.get('board') || state.currentBoard;
 
                 let boardActuallyChanged = false;
                 if (boardFromUrl && boardFromUrl !== state.currentBoard) {
-                    state.currentBoard = boardFromUrl;
+                    state.currentBoard = boardFromUrl; 
                     boardActuallyChanged = true;
                     document.querySelectorAll('.board-selector').forEach(btn => {
                         btn.classList.toggle('active', btn.dataset.board === state.currentBoard);
@@ -1349,28 +1444,37 @@
                         <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
                         <p class="text-sm mb-1">${boardData.description}</p>
                         <p class="text-xs">${boardData.footer}</p>`;
-                    document.getElementById('boardTitle').textContent = state.currentBoard === 'meta' ?
-                        "NeuroChan" :
+                    document.getElementById('boardTitle').textContent = state.currentBoard === 'meta' ? 
+                        "NeuroChan" : 
                         `${boardData.title.split(' - ')[0]}`;
                 }
-
+                
                 const previousViewingThreadId = state.viewingThreadId;
                 state.viewingThreadId = postIdFromUrl || null;
-
+                
                 if (boardActuallyChanged || state.viewingThreadId !== previousViewingThreadId || !unsubscribePosts || (boardFromUrl && boardFromUrl !== 'tarot') || (boardFromUrl === 'tarot' && state.currentBoard === 'tarot') ) {
                     loadContentForBoard();
                 }
-                updateUiForView();
+                updateUiForView(); 
 
-                // Si se navegó a un hilo y se debe mostrar el formulario de respuesta
+                // FIX: Objetivo 2 - Formulario de respuesta del OP visible
                 if (state.viewingThreadId && postIdFromUrl && postIdFromUrl === state.viewingThreadId) {
-                    // Esperar un breve momento para que el DOM se actualice con el post del hilo
                     setTimeout(() => {
-                        const replyForm = document.querySelector(`#post-${state.viewingThreadId} .reply-form-container`);
-                        if (replyForm) {
-                            showReplyForm(replyForm, true); // Mostrar y enfocar
+                        const opPostElement = document.querySelector(`#post-${state.viewingThreadId}`);
+                        if (opPostElement) {
+                            const replyForm = opPostElement.querySelector('.reply-form-container');
+                            if (replyForm) {
+                                showReplyForm(replyForm, true);
+                            }
                         }
-                    }, 300); // Pequeño retraso
+                        if (state.scrollAfterReply) {
+                            const targetElement = document.getElementById(`post-${state.scrollAfterReply}`);
+                            if (targetElement) {
+                                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            state.scrollAfterReply = null;
+                        }
+                    }, 300); 
                 }
             }
 
@@ -1399,10 +1503,9 @@
                 document.getElementById('confirmDelete').addEventListener('click', deletePostWithPassword);
                 document.getElementById('infoToggle').addEventListener('click', openInfoModal);
                 document.getElementById('closeInfoModal').addEventListener('click', closeInfoModal);
-                document.getElementById('confirmEdit').addEventListener('click', () => confirmEdit());
+                document.getElementById('confirmEdit').addEventListener('click', () => confirmEdit()); 
                 document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
 
-                // Listeners para el nuevo modal de configuración
                 document.getElementById('settingsToggle').addEventListener('click', openSettingsModal);
                 document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
                 document.getElementById('themeToggleModalButton').addEventListener('click', toggleTheme);
@@ -1412,13 +1515,13 @@
                 document.getElementById('cancelAdminLoginSettings').addEventListener('click', hideAdminLoginInSettings);
                 document.getElementById('shuffleTarotButton').addEventListener('click', shuffleAndDealTarot);
 
-                // Nuevos listeners para el modal de contraseña de post
                 document.getElementById('postPasswordToggle').addEventListener('click', () => openPostPasswordModal(false));
                 document.getElementById('closePostPasswordModal').addEventListener('click', closePostPasswordModal);
                 document.getElementById('cancelPostPassword').addEventListener('click', closePostPasswordModal);
                 document.getElementById('confirmPostPassword').addEventListener('click', confirmPostPassword);
 
-                // Auto-redimensionar textarea
+                document.getElementById('mainPostAvatar').addEventListener('click', () => openProfileEmojiPicker(document.getElementById('mainPostAvatar')));
+
                 document.getElementById('postContent').addEventListener('input', autoResizeTextarea);
             }
 
@@ -1433,7 +1536,7 @@
                     emojiBtn.addEventListener('click', function() {
                         insertAtCursor(textarea, emoji);
                         emojiPicker.classList.remove('active');
-                        autoResizeTextarea({ target: textarea }); // Redimensionar después de insertar emoji
+                        autoResizeTextarea({ target: textarea });
                     });
                     emojiPicker.appendChild(emojiBtn);
                 });
@@ -1448,34 +1551,46 @@
                 });
             }
 
-            function setupMainAvatarPicker() {
-                const mainPostAvatar = document.getElementById('mainPostAvatar');
-                const mainAvatarPicker = document.getElementById('mainAvatarPicker');
+            function setupProfileEmojiPicker() {
+                const profileEmojiGrid = document.getElementById('profileEmojiGrid');
+                const profileEmojiPickerModal = document.getElementById('profileEmojiPickerModal');
+                const closeProfileEmojiPickerModal = document.getElementById('closeProfileEmojiPickerModal');
 
-                avatars.forEach(avatarEmoji => {
-                    const avatarBtn = document.createElement('button');
-                    avatarBtn.className = 'emoji-option'; // Reusing emoji-option for styling
-                    avatarBtn.textContent = avatarEmoji;
-                    avatarBtn.addEventListener('click', function() {
-                        state.currentPostAvatar = avatarEmoji;
-                        mainPostAvatar.textContent = avatarEmoji;
-                        mainAvatarPicker.classList.remove('active');
+                EMOJIS.forEach(emoji => {
+                    const emojiBtn = document.createElement('button');
+                    emojiBtn.className = 'emoji-option';
+                    emojiBtn.textContent = emoji;
+                    emojiBtn.addEventListener('click', function() {
+                        if (state.profileEmojiPickerTarget) {
+                            state.profileEmojiPickerTarget.textContent = emoji;
+                            if (state.profileEmojiPickerTarget.id === 'mainPostAvatar') {
+                                state.currentPostAvatar = emoji;
+                                localStorage.setItem('neurochan_profile_avatar', emoji);
+                            } else {
+                            }
+                        }
+                        profileEmojiPickerModal.classList.remove('flex');
                     });
-                    mainAvatarPicker.appendChild(avatarBtn);
+                    profileEmojiGrid.appendChild(emojiBtn);
                 });
 
-                mainPostAvatar.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    mainAvatarPicker.classList.toggle('active');
+                closeProfileEmojiPickerModal.addEventListener('click', () => {
+                    profileEmojiPickerModal.classList.remove('flex');
+                    state.profileEmojiPickerTarget = null;
                 });
 
-                document.addEventListener('click', function(e) {
-                    if (!mainAvatarPicker.contains(e.target) && e.target !== mainPostAvatar) {
-                        mainAvatarPicker.classList.remove('active');
+                profileEmojiPickerModal.addEventListener('click', (e) => {
+                    if (e.target === profileEmojiPickerModal) {
+                        profileEmojiPickerModal.classList.remove('flex');
+                        state.profileEmojiPickerTarget = null;
                     }
                 });
             }
 
+            function openProfileEmojiPicker(targetElement) {
+                state.profileEmojiPickerTarget = targetElement;
+                document.getElementById('profileEmojiPickerModal').classList.add('flex');
+            }
 
             function insertAtCursor(textarea, text) {
                 const startPos = textarea.selectionStart;
@@ -1488,15 +1603,15 @@
 
             function autoResizeTextarea(event) {
                 const textarea = event.target;
-                textarea.style.height = 'auto'; // Reset height to recalculate
-                textarea.style.height = textarea.scrollHeight + 'px'; // Set to scroll height
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
             }
 
             async function createPost() {
                 const contentInput = document.getElementById('postContent').value.trim();
                 const name = document.getElementById('postName').value.trim() || state.tempPostName || "Anónimo";
-                const title = document.getElementById('postTitle').value.trim();
-                const password = state.tempPostPassword; // Usar la contraseña del estado temporal
+                const title = document.getElementById('postTitle').value.trim(); 
+                const password = state.tempPostPassword; 
                 const fileInput = document.getElementById('fileUpload');
 
                 if (!auth.currentUser) {
@@ -1511,29 +1626,28 @@
                 }
 
                 let actualReplyTo = null;
-                if (state.viewingThreadId) {
-                    actualReplyTo = state.viewingThreadId;
-                } else if (state.replyTo) {
-                    actualReplyTo = state.replyTo;
-                }
+                if (state.viewingThreadId) { 
+                    const opPost = state.allPostsData[state.viewingThreadId];
+                    actualReplyTo = opPost.replyTo || state.viewingThreadId;
+                } 
 
                 const newPostData = {
-                    authorUID: auth.currentUser.uid,
-                    avatar: state.currentPostAvatar, // Usar el avatar generado para el post principal
+                    authorUID: auth.currentUser.uid, 
+                    avatar: state.currentPostAvatar, 
                     board: state.currentBoard,
                     text: DOMPurify.sanitize(contentInput),
-                    title: title ? DOMPurify.sanitize(title) : null,
+                    title: title ? DOMPurify.sanitize(title) : null, 
                     image: null,
                     name: name,
                     passwordHash: password && bcryptInstance ? bcryptInstance.hashSync(password, 10) : null,
                     heartCount: 0,
                     funnyCount: 0,
                     angryCount: 0,
-                    reactedBy: {},
-                    timestamp: serverTimestamp(),
-                    replyTo: actualReplyTo,
+                    reactedBy: {}, 
+                    timestamp: serverTimestamp(), 
+                    replyTo: actualReplyTo, 
                 };
-
+                
                 const submitButton = document.getElementById('submitPost');
                 submitButton.disabled = true;
                 submitButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-spin" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 11.414V15a1 1 0 102 0v-3.586l1.293-1.293a1 1 0 000-1.414z" clip-rule="evenodd" /></svg>`;
@@ -1555,7 +1669,7 @@
                             });
                         };
                         reader.readAsDataURL(file);
-                    } else {
+                    } else { 
                         await completePostCreationFirestore(newPostData);
                     }
                 } catch (error) {
@@ -1565,35 +1679,31 @@
                     submitButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>`;
                 }
             }
-
+            
             async function completePostCreationFirestore(postData) {
                 try {
                     const docRef = await addDoc(postsCollectionRef, postData);
                     console.log("Post creado con ID: ", docRef.id);
-
+                    
                     document.getElementById('postContent').value = '';
                     document.getElementById('postName').value = '';
-                    document.getElementById('postTitle').value = '';
+                    document.getElementById('postTitle').value = ''; 
                     document.getElementById('fileUpload').value = '';
                     document.getElementById('fileName').textContent = '';
                     document.getElementById('typingPreview').classList.add('hidden');
-
-                    state.tempPostPassword = null; // Limpiar contraseña temporal
-                    state.tempPostName = null;     // Limpiar nombre temporal
-                    state.replyTo = null;
-
-                    // Generar un nuevo avatar para el próximo post principal
-                    state.currentPostAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+                    
+                    state.tempPostPassword = null; 
+                    state.tempPostName = null;     
+                    state.replyTo = null; 
+                    
+                    state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || avatars[Math.floor(Math.random() * avatars.length)];
                     document.getElementById('mainPostAvatar').textContent = state.currentPostAvatar;
 
-                    // Resetear altura del textarea
                     const postContentTextarea = document.getElementById('postContent');
                     postContentTextarea.style.height = 'auto';
                     postContentTextarea.style.height = postContentTextarea.scrollHeight + 'px';
 
-                    document.getElementById('postContent').placeholder = state.viewingThreadId
-                        ? `Respondiendo al hilo... >>${state.viewingThreadId.slice(-4)}`
-                        : "¿Qué estás pensando...?";
+                    document.getElementById('postContent').placeholder = "¿Qué estás pensando...?";
 
                 } catch (error) {
                     console.error("Error guardando post en Firestore:", error);
@@ -1612,7 +1722,7 @@
                     const ctx = canvas.getContext('2d');
                     const maxWidth = 800; const maxHeight = 800;
                     let width = img.width; let height = img.height;
-                    if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } }
+                    if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } } 
                     else { if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; } }
                     canvas.width = width; canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
@@ -1620,45 +1730,43 @@
                 };
                 img.src = imageData;
             }
-
+            
             function updateUiForView() {
                 const postsContainer = document.getElementById('postsContainer');
                 const threadContainer = document.getElementById('threadContainer');
                 const postFormContainer = document.getElementById('postFormContainer');
                 const boardInfoSection = document.getElementById('boardInfo');
-                const postTitleInput = document.getElementById('postTitle'); // Ahora es un input, no un contenedor
+                const postNameInput = document.getElementById('postName');
+                const postTitleInput = document.getElementById('postTitle'); 
                 const tarotGameContainer = document.getElementById('tarotGameContainer');
+                const mainPostContentTextarea = document.getElementById('postContent');
 
                 if (state.currentBoard === 'tarot') {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.add('hidden');
                     if (postFormContainer) postFormContainer.classList.add('hidden');
-                    if (boardInfoSection) boardInfoSection.classList.remove('hidden');
+                    if (boardInfoSection) boardInfoSection.classList.remove('hidden'); 
                     tarotGameContainer.classList.remove('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'block';
-                    document.getElementById('postName').style.display = 'block';
+                    if (postTitleInput) postTitleInput.style.display = 'block'; 
+                    if (postNameInput) postNameInput.style.display = 'block'; 
                 } else if (state.viewingThreadId) {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.remove('hidden');
-                    // Point 1: Keep postFormContainer hidden in thread view
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.add('hidden');
                     tarotGameContainer.classList.add('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'none'; // Ocultar título en hilos
-                    document.getElementById('postName').style.display = 'none'; // Ocultar nombre en hilos
-                    document.getElementById('postTitle').value = '';
-                    document.getElementById('postName').value = '';
-                    document.getElementById('postContent').placeholder = `Respondiendo al hilo... >>${state.viewingThreadId.slice(-4)}`;
+                    if (postTitleInput) postTitleInput.style.display = 'none'; 
+                    if (postNameInput) postNameInput.style.display = 'none'; 
                 } else {
                     postsContainer.classList.remove('hidden');
                     threadContainer.classList.add('hidden');
-                    threadContainer.innerHTML = '';
+                    threadContainer.innerHTML = ''; 
                     if (postFormContainer) postFormContainer.classList.remove('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden');
                     tarotGameContainer.classList.add('hidden');
-                    if (postTitleInput) postTitleInput.style.display = 'block'; // Mostrar título en vista de tablero
-                    document.getElementById('postName').style.display = 'block'; // Mostrar nombre en vista de tablero
-                    document.getElementById('postContent').placeholder = "¿Qué estás pensando...?";
+                    if (postTitleInput) postTitleInput.style.display = 'block'; 
+                    if (postNameInput) postNameInput.style.display = 'block'; 
+                    mainPostContentTextarea.placeholder = "¿Qué estás pensando...?";
                 }
             }
 
@@ -1666,12 +1774,12 @@
                 const loadingMessage = document.getElementById('loadingMessage');
                 if (loadingMessage) {
                     loadingMessage.classList.remove('hidden');
-                    loadingMessage.textContent = 'Cargando transmisiones...';
+                    loadingMessage.textContent = 'Cargando transmisiones...'; 
                 }
 
                 if (unsubscribePosts) {
                     unsubscribePosts();
-                    unsubscribePosts = null;
+                    unsubscribePosts = null; 
                 }
 
                 if (!auth.currentUser) {
@@ -1682,23 +1790,25 @@
                     }
                     return;
                 }
+                
+                updateUiForView(); 
 
-                updateUiForView();
-
-                const postsContainer = document.getElementById('postsContainer');
+                const postsContainer = document.getElementById('postsContainer'); 
                 if (state.viewingThreadId) {
                     const docRef = doc(db, "Posts", state.viewingThreadId);
-                    unsubscribePosts = onSnapshot(docRef, (docSnap) => {
+                    unsubscribePosts = onSnapshot(docRef, async (docSnap) => {
                         const threadContainer = document.getElementById('threadContainer');
-                        threadContainer.innerHTML = '';
+                        threadContainer.innerHTML = ''; 
 
                         if (docSnap.exists()) {
                             const postData = { id: docSnap.id, ...docSnap.data() };
-                            state.allPostsData[postData.id] = postData;
-                            const postElement = createPostElement(postData, true, 0); // isThreadParent = true
+                            state.allPostsData[postData.id] = postData; 
+                            const postElement = createPostElement(postData, true, 0); 
                             threadContainer.appendChild(postElement);
                             applyPostEffects(postData, postElement);
-                            loadAndRenderReplies(postData.id, threadContainer);
+                            
+                            await loadNestedReplies(postData.id, postElement, 1); 
+
                         } else {
                             threadContainer.innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
                         }
@@ -1721,7 +1831,7 @@
                         const ops = [];
                         const repliesByParent = {};
                         allBoardPosts.forEach(p => {
-                            state.allPostsData[p.id] = p;
+                            state.allPostsData[p.id] = p; 
                             if (p.replyTo === null) {
                                 ops.push(p);
                             } else {
@@ -1733,12 +1843,12 @@
                         ops.sort((a, b) => {
                             const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
                             const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
-                            return timeB - timeA;
+                            return timeB - timeA; 
                         });
+                        
+                        state.currentBoardOPs = ops; 
 
-                        state.currentBoardOPs = ops;
-
-                        postsContainer.innerHTML = '';
+                        postsContainer.innerHTML = ''; 
                         if (ops.length === 0) {
                             postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones en este tablero aún. ¡Sé el primero!</p>';
                         } else {
@@ -1749,7 +1859,7 @@
                                 applyPostEffects(opData, postElement);
                             });
                         }
-
+                        
                         if (loadingMessage) loadingMessage.classList.add('hidden');
                     }, (error) => {
                         console.error("Error obteniendo posts del tablero:", error);
@@ -1761,100 +1871,131 @@
                 }
             }
 
-            async function loadAndRenderReplies(parentPostId, threadContainerElement) {
+            async function loadNestedReplies(parentPostId, parentElement, depth) {
+                if (depth > 2) return;
+
                 const repliesQuery = query(postsCollectionRef, where("replyTo", "==", parentPostId));
-
-                const oldRepliesContainer = threadContainerElement.querySelector('.replies-container');
-                if (oldRepliesContainer) {
-                    oldRepliesContainer.remove();
+                
+                let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
+                if (!repliesContainer) {
+                    repliesContainer = document.createElement('div');
+                    repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
+                    repliesContainer.style.borderColor = 'var(--divider-color)';
+                    repliesContainer.dataset.parentId = parentPostId;
+                    // FIX: Objetivo 1 - Mostrar las respuestas del primer nivel en el hilo, ocultar las sub-respuestas
+                    if (depth > 1) {
+                        repliesContainer.classList.add('hidden');
+                    }
+                    parentElement.appendChild(repliesContainer);
+                } else {
+                    // FIX: Objetivo 3 - Mantener el estado oculto/visible de las respuestas anidadas
+                    const estabaOculto = repliesContainer.classList.contains('hidden');
+                    repliesContainer.innerHTML = '';
+                    if (estabaOculto) repliesContainer.classList.add('hidden');
                 }
-
-                const repliesContainer = document.createElement('div');
-                repliesContainer.className = 'replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4';
-                repliesContainer.style.borderColor = 'var(--divider-color)';
 
                 try {
                     const querySnapshot = await getDocs(repliesQuery);
                     const repliesData = [];
-
-                    querySnapshot.forEach(function(doc) {
+                
+                    querySnapshot.forEach(function(doc) { 
                         const replyData = { id: doc.id, ...doc.data() };
                         repliesData.push(replyData);
-                        state.allPostsData[replyData.id] = replyData;
+                        state.allPostsData[replyData.id] = replyData; 
                     });
 
                     repliesData.sort((a,b) => {
                         const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : new Date(a.timestamp).getTime();
                         const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : new Date(b.timestamp).getTime();
-                        return timeA - timeB;
+                        return timeA - timeB; 
                     });
-
-                    repliesData.forEach(replyData => {
-                        const replyElement = createPostElement(replyData, false, 0);
-                        repliesContainer.appendChild(replyElement);
-                        applyPostEffects(replyData, replyElement);
-                    });
-
-                    const opElementInThread = threadContainerElement.querySelector(`.post[data-id="${parentPostId}"] .reply-count-display`);
-                    if (opElementInThread) {
-                        opElementInThread.textContent = repliesData.length;
-                    }
 
                     if (repliesData.length > 0) {
-                         threadContainerElement.appendChild(repliesContainer);
+                        for (const replyData of repliesData) {
+                            const replyElement = createPostElement(replyData, false, 0);
+                            repliesContainer.appendChild(replyElement);
+                            applyPostEffects(replyData, replyElement);
+                            await loadNestedReplies(replyData.id, replyElement, depth + 1); 
+                        }
                     } else {
                         const noRepliesMessage = document.createElement('p');
                         noRepliesMessage.className = 'text-sm pl-4 mt-2';
                         noRepliesMessage.style.color = 'var(--text-secondary-color)';
                         noRepliesMessage.textContent = 'Aún no hay respuestas en este hilo.';
-                        repliesContainer.appendChild(noRepliesMessage);
-                        threadContainerElement.appendChild(repliesContainer);
                     }
+
+                    const replyCountDisplay = parentElement.querySelector('.reply-count-display');
+                    if (replyCountDisplay) {
+                        replyCountDisplay.textContent = repliesData.length;
+                    }
+
                 } catch (e) {
-                    console.error("Error cargando respuestas: ", e);
+                    console.error("Error cargando respuestas anidadas: ", e);
                     repliesContainer.innerHTML = '<p class="text-red-500">Error al cargar respuestas.</p>';
-                    threadContainerElement.appendChild(repliesContainer);
                 }
             }
 
             function applyPostEffects(post, element) {
-                // No hay efectos de brillo en el nuevo tema
             }
 
             function createPostElement(post, isThreadParent = false, replyCount = 0) {
                 const postElement = document.createElement('div');
-                postElement.className = `post p-4 rounded-lg mb-4`;
-                postElement.dataset.id = post.id;
-                postElement.id = `post-${post.id}`; // Añadir ID para fácil referencia
+                postElement.className = `post p-4 rounded-lg mb-4`; 
+                postElement.dataset.id = post.id; 
+                postElement.id = `post-${post.id}`;
 
                 if (isThreadParent) {
-                    postElement.classList.add('mb-6');
+                    postElement.classList.add('mb-6'); 
                     postElement.style.borderWidth = '2px';
                     postElement.style.borderColor = 'var(--primary-accent-color)';
                 }
 
                 const postTimestamp = post.timestamp?.toDate ? post.timestamp.toDate() : new Date(post.timestamp);
                 const timeString = postTimestamp.toLocaleTimeString ? postTimestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
-                const contentHtml = getPostContentHtml(post);
+                
                 const titleHtml = post.title ? `<h4 class="post-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
+                const textContent = typeof post.text === 'string' ? post.text : '';
+                let sanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
+                
+                sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
+                    const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
+                    const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
+                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard; 
+                    const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
+                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
+                });
+
+                const contentTextHtml = post.text ? `<div class="post-content text-sm mb-2 mt-1">${sanitizedText}</div>` : '';
+                const contentImageHtml = post.image ? `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="max-w-full h-auto"/></div>` : '';
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
-
-                const threadViewButtonHtml = !state.viewingThreadId && !post.replyTo ?
-                    `<button class="view-thread-button reaction-button" aria-label="Ver hilo" style="color: var(--primary-accent-color);">Ver Hilo (${replyCount})</button>` : '';
-
-                const replyCountHtml = !post.replyTo && !state.viewingThreadId ?
+                
+                const threadViewButtonHtml = !state.viewingThreadId && !post.replyTo ? 
+                    `<button class="view-thread-button reaction-button" aria-label="Ver hilo" style="color: var(--primary-accent-color);">Ver Hilo (${replyCount})</button>` : ''; 
+                
+                const replyCountHtml = !post.replyTo && !state.viewingThreadId ? 
                     `<span class="text-xs ml-2" style="color: var(--text-secondary-color);">Respuestas: <span class="reply-count-display">${replyCount}</span></span>` : '';
 
-                // Reply form for all posts (initially hidden for replies, always visible for OP in thread view)
+                // FIX: Objetivo 2 - Reemplazar la definición de nestedReplyCountHtml
+                const nestedReplyCountHtml = state.viewingThreadId && post.replyTo ?
+                  `<button type="button"
+                          class="nested-reply-toggle text-xs ml-2 flex items-center gap-0.5"
+                          aria-label="Mostrar/ocultar respuestas">
+                      💬 <span class="reply-count-display">${replyCount}</span>
+                  </button>` : '';
+
+                // FIX: Objetivo 2 - Eliminar toggleNestedRepliesButtonHtml ya que nestedReplyCountHtml lo reemplaza
+                // const toggleNestedRepliesButtonHtml = state.viewingThreadId && post.replyTo && replyCount > 0 ?
+                //     `<button class="toggle-nested-replies-button secondary-button text-xs py-1 px-2 ml-2" aria-label="Ver respuestas anidadas">Ver respuestas (${replyCount})</button>` : '';
+
+
                 const replyFormHtml = `
                     <div class="reply-form-container post-form-card mt-4 p-4" style="display: none;">
                         <div class="post-input-area mb-2">
-                            <div class="reply-avatar avatar relative cursor-pointer"></div>
-                            <div class="reply-avatar-picker emoji-picker avatar-picker"></div>
+                            <div class="avatar reply-avatar"></div>
                             <div class="relative flex-grow">
                                 <textarea
-                                    class="reply-content w-full focus:ring-0"
+                                    class="reply-content w-full focus:ring-0" 
                                     rows="1"
                                     placeholder="Escribe una respuesta..."
                                     aria-label="Contenido de la respuesta"></textarea>
@@ -1868,7 +2009,7 @@
                             </label>
                             <input type="file" class="reply-file-upload hidden" accept="image/*" aria-hidden="true">
                             <span class="reply-file-name text-xs text-gray-500 ml-2 self-center"></span>
-
+                            
                             <button class="reply-password-toggle icon-button" aria-label="Establecer nombre y contraseña para la respuesta">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.078 2.25c-.217-.065-.437-.12-.65-.173a1.75 1.75 0 00-1.946.002c-.213.053-.433.108-.65.173C5.77 3.072 4.5 5.25 4.5 7.5c0 1.97.823 3.717 2.096 4.904.284.344.468.756.528 1.186a3.5 3.5 0 00.878 2.033L9.18 16.06a1.75 1.75 0 002.64 0l.178-.445a3.5 3.5 0 00.878-2.033c.06-.43.243-.842.528-1.186C14.677 11.217 15.5 9.47 15.5 7.5c0-2.25-1.27-4.428-3.344-5.078zM10 9.5a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
                             </button>
@@ -1886,13 +2027,14 @@
                         <div class="post-avatar">${post.avatar}</div>
                         <div class="post-userinfo">
                             <span class="post-username">${DOMPurify.sanitize(post.name)}</span>
-                            <span class="post-timestamp">${timeString} ${post.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''} ${replyCountHtml}</span>
+                            <span class="post-timestamp">${timeString} ${post.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''} ${replyCountHtml} ${nestedReplyCountHtml}</span>
                         </div>
                     </div>
                     ${titleHtml}
-                    <div class="post-content text-sm mb-2 mt-1">${contentHtml}</div>
+                    ${contentTextHtml} 
+                    ${contentImageHtml}
                     <div class="post-actions">
-                        <div class="flex gap-1 items-center flex-wrap">
+                        <div class="flex gap-1 items-center flex-wrap"> 
                             <button class="reaction-button heart-reaction-button flex items-center gap-1" aria-label="Reaccionar con Corazón">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg>
                                 <span class="count">${post.heartCount || 0}</span>
@@ -1903,10 +2045,12 @@
                             <button class="reaction-button angry-reaction-button flex items-center gap-1" aria-label="Reaccionar con Me Enoja">
                                 😠 <span class="count">${post.angryCount || 0}</span>
                             </button>
-                            <button class="reply-button reaction-button" aria-label="Responder a este post">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                                Responder
-                            </button>
+                            ${!isThreadParent ? `
+                                <button class="reply-button reaction-button" aria-label="Responder a este post">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                    Responder
+                                </button>
+                            ` : ''}
                             ${threadViewButtonHtml}
                         </div>
                         <div class="flex items-center">
@@ -1915,34 +2059,29 @@
                             <span class="text-xs ml-2" style="color: var(--text-tertiary-color);">ID: ${post.id.slice(-4)}</span>
                         </div>
                     </div>
-                    ${replyFormHtml}
+                    ${replyFormHtml} 
                 `;
+
+                // FIX: Objetivo 1 - Mostrar siempre el formulario de respuesta del OP
+                if (isThreadParent) {
+                    const replyFormContainer = postElement.querySelector('.reply-form-container');
+                    showReplyForm(replyFormContainer);
+                }
 
                 postElement.querySelector('.heart-reaction-button').addEventListener('click', () => reaccionarCorazon(post.id));
                 postElement.querySelector('.funny-reaction-button').addEventListener('click', () => reaccionarMeDiverte(post.id));
                 postElement.querySelector('.angry-reaction-button').addEventListener('click', () => reaccionarMeEnoja(post.id));
-
+                
                 const replyBtn = postElement.querySelector('.reply-button');
                 if (replyBtn) {
-                    replyBtn.addEventListener('click', () => {
-                        const replyFormContainer = postElement.querySelector('.reply-form-container');
-                        if (state.viewingThreadId) { // If in thread view, toggle the form
-                            if (replyFormContainer.style.display === 'none') {
-                                showReplyForm(replyFormContainer, true);
-                            } else {
-                                hideReplyForm(replyFormContainer);
-                            }
-                        } else { // If in board list view, navigate to thread
-                            replyToPost(post.id); // This will change hash and trigger load
-                        }
-                    });
+                    replyBtn.addEventListener('click', () => replyToPost(post.id));
                 }
-
+                
                 const deleteBtn = postElement.querySelector('.delete-button');
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', () => {
                         if (state.isAdmin) deletePostFirestore(post.id);
-                        else openDeleteModal(post.id, post.passwordHash);
+                        else openDeleteModal(post.id, post.passwordHash); 
                     });
                 }
                 const editBtn = postElement.querySelector('.edit-button');
@@ -1954,7 +2093,7 @@
                     link.addEventListener('mouseenter', () => showReplyPreview(link.dataset.postId, link));
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
-                        viewThread(link.dataset.postId);
+                        viewThread(link.dataset.postId); 
                     });
                 });
 
@@ -1963,68 +2102,48 @@
                     viewThreadBtn.addEventListener('click', () => viewThread(post.id));
                 }
 
-                // Setup reply form for all posts (initially hidden by default CSS)
-                const replyFormContainer = postElement.querySelector('.reply-form-container');
-                if (replyFormContainer) {
-                    setupReplyForm(replyFormContainer, post.id);
-                    // Point 1: If it's the OP in thread view, ensure its reply form is visible
-                    if (isThreadParent) {
-                        showReplyForm(replyFormContainer, false); // Don't auto-focus immediately
-                    }
+                // FIX: Objetivo 2 - Añadir listener para el nuevo botón 💬
+                const nestedToggle = postElement.querySelector('.nested-reply-toggle');
+                if (nestedToggle) {
+                  nestedToggle.addEventListener('click', () => {
+                    const container = postElement.querySelector(
+                      `.replies-container[data-parent-id="${post.id}"]`
+                    );
+                    if (container) container.classList.toggle('hidden');
+                  });
                 }
+
+                setupReplyForm(postElement, post.id);
 
                 return postElement;
             }
 
-            function setupReplyForm(formContainer, parentPostId) {
-                const replyContentTextarea = formContainer.querySelector('.reply-content');
-                const replyEmojiToggle = formContainer.querySelector('.emoji-toggle');
-                const replyEmojiPicker = formContainer.querySelector('.reply-emoji-picker');
-                const replyFileUploadLabel = formContainer.querySelector('.reply-file-upload-label');
-                const replyFileUploadInput = formContainer.querySelector('.reply-file-upload');
-                const replyFileNameSpan = formContainer.querySelector('.reply-file-name');
-                const replyPasswordToggle = formContainer.querySelector('.reply-password-toggle');
-                const submitReplyButton = formContainer.querySelector('.submit-reply');
-                const replyAvatarElement = formContainer.querySelector('.reply-avatar');
-                const replyAvatarPicker = formContainer.querySelector('.reply-avatar-picker');
+            function setupReplyForm(postElement, parentPostId) {
+                const replyFormContainer = postElement.querySelector('.reply-form-container');
+                if (!replyFormContainer) return;
 
-                // Assign initial random avatar for this reply form
-                let currentReplyAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-                replyAvatarElement.textContent = currentReplyAvatar;
+                const replyContentTextarea = replyFormContainer.querySelector('.reply-content');
+                const replyEmojiToggle = replyFormContainer.querySelector('.emoji-toggle');
+                const replyEmojiPicker = replyFormContainer.querySelector('.reply-emoji-picker');
+                const replyFileUploadLabel = replyFormContainer.querySelector('.reply-file-upload-label');
+                const replyFileUploadInput = replyFormContainer.querySelector('.reply-file-upload');
+                const replyFileNameSpan = replyFormContainer.querySelector('.reply-file-name');
+                const replyPasswordToggle = replyFormContainer.querySelector('.reply-password-toggle');
+                const submitReplyButton = replyFormContainer.querySelector('.submit-reply');
+                const replyAvatar = replyFormContainer.querySelector('.reply-avatar'); 
 
-                // Setup avatar picker for this reply form
-                avatars.forEach(avatarEmoji => {
-                    const avatarBtn = document.createElement('button');
-                    avatarBtn.className = 'emoji-option';
-                    avatarBtn.textContent = avatarEmoji;
-                    avatarBtn.addEventListener('click', function() {
-                        currentReplyAvatar = avatarEmoji; // Update local avatar for this form
-                        replyAvatarElement.textContent = avatarEmoji;
-                        replyAvatarPicker.classList.remove('active');
-                    });
-                    replyAvatarPicker.appendChild(avatarBtn);
-                });
+                replyAvatar.addEventListener('click', () => openProfileEmojiPicker(replyAvatar));
 
-                replyAvatarElement.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    replyAvatarPicker.classList.toggle('active');
-                });
-                document.addEventListener('click', function(e) {
-                    if (!replyAvatarPicker.contains(e.target) && e.target !== replyAvatarElement) {
-                        replyAvatarPicker.classList.remove('active');
-                    }
-                });
+                replyAvatar.textContent = avatars[Math.floor(Math.random() * avatars.length)];
 
-
-                // Auto-redimensionar textarea de respuesta
                 replyContentTextarea.addEventListener('input', autoResizeTextarea);
                 replyContentTextarea.addEventListener('blur', (e) => {
-                    if (e.target.value.trim() === '' && !replyFileUploadInput.files[0]) {
-                        hideReplyForm(formContainer);
+                    const isOPReplyForm = state.viewingThreadId === parentPostId && postElement.dataset.id === parentPostId;
+                    if (!isOPReplyForm && e.target.value.trim() === '' && !replyFileUploadInput.files[0]) {
+                        hideReplyForm(replyFormContainer);
                     }
                 });
 
-                // Configurar selector de emojis para respuestas
                 EMOJIS.forEach(emoji => {
                     const emojiBtn = document.createElement('button');
                     emojiBtn.className = 'emoji-option';
@@ -2040,26 +2159,22 @@
                     e.stopPropagation();
                     replyEmojiPicker.classList.toggle('active');
                 });
-                // Cerrar picker si se hace clic fuera
                 document.addEventListener('click', function(e) {
                     if (!replyEmojiPicker.contains(e.target) && e.target !== replyEmojiToggle) {
                         replyEmojiPicker.classList.remove('active');
                     }
                 });
 
-                // Manejar subida de archivo para respuestas
                 replyFileUploadInput.addEventListener('change', () => {
                     replyFileNameSpan.textContent = replyFileUploadInput.files[0] ? replyFileUploadInput.files[0].name : '';
                 });
 
-                // Manejar modal de contraseña/nombre para respuestas
                 replyPasswordToggle.addEventListener('click', () => openPostPasswordModal(true, parentPostId));
 
-                // Manejar envío de respuesta
                 submitReplyButton.addEventListener('click', async () => {
                     const content = replyContentTextarea.value.trim();
-                    const name = state.tempPostName || "Anónimo"; // Usar el nombre del modal si se estableció
-                    const password = state.tempPostPassword; // Usar la contraseña del modal si se estableció
+                    const name = state.tempPostName || "Anónimo"; 
+                    const password = state.tempPostPassword; 
                     const file = replyFileUploadInput.files[0];
 
                     if (!content && !file) {
@@ -2067,12 +2182,16 @@
                         return;
                     }
 
+                    let targetReplyTo = parentPostId;
+                    // The reply is always to the direct parent of the form used.
+                    // This ensures replies to replies are correctly nested under their direct parent.
+
                     const newReplyData = {
                         authorUID: auth.currentUser.uid,
-                        avatar: currentReplyAvatar, // Use the locally selected avatar for this reply
+                        avatar: replyAvatar.textContent, 
                         board: state.currentBoard,
                         text: DOMPurify.sanitize(content),
-                        title: null, // Las respuestas no tienen título
+                        title: null, 
                         image: null,
                         name: name,
                         passwordHash: password && bcryptInstance ? bcryptInstance.hashSync(password, 10) : null,
@@ -2081,7 +2200,7 @@
                         angryCount: 0,
                         reactedBy: {},
                         timestamp: serverTimestamp(),
-                        replyTo: parentPostId,
+                        replyTo: targetReplyTo,
                     };
 
                     submitReplyButton.disabled = true;
@@ -2098,13 +2217,13 @@
                                 compressImage(e.target.result, async function(compressedImage) {
                                     newReplyData.image = compressedImage;
                                     await addDoc(postsCollectionRef, newReplyData);
-                                    resetReplyForm(formContainer, replyAvatarElement);
+                                    resetReplyForm(replyFormContainer, replyAvatar);
                                 });
                             };
                             reader.readAsDataURL(file);
                         } else {
                             await addDoc(postsCollectionRef, newReplyData);
-                            resetReplyForm(formContainer, replyAvatarElement);
+                            resetReplyForm(replyFormContainer, replyAvatar);
                         }
                     } catch (error) {
                         console.error("Error creando respuesta:", error);
@@ -2120,12 +2239,12 @@
                 formContainer.querySelector('.reply-content').value = '';
                 formContainer.querySelector('.reply-file-upload').value = '';
                 formContainer.querySelector('.reply-file-name').textContent = '';
-                avatarElement.textContent = avatars[Math.floor(Math.random() * avatars.length)]; // Nuevo avatar para la próxima respuesta
+                avatarElement.textContent = avatars[Math.floor(Math.random() * avatars.length)]; 
                 state.tempPostName = null;
                 state.tempPostPassword = null;
                 autoResizeTextarea({ target: formContainer.querySelector('.reply-content') });
-                // Do not hide if it's the OP's reply form in thread view
-                if (!formContainer.closest('.thread-container')) { // Check if it's a nested reply form
+                const isOPReplyForm = state.viewingThreadId !== null && formContainer.closest(`.post[data-id="${state.viewingThreadId}"]`);
+                if (!isOPReplyForm) {
                     hideReplyForm(formContainer);
                 }
             }
@@ -2144,7 +2263,7 @@
 
 
             function showReplyPreview(postId, element) {
-                const post = state.allPostsData[postId];
+                const post = state.allPostsData[postId]; 
                 if (!post) {
                     console.warn(`Post ${postId} no encontrado en caché para preview.`);
                     return;
@@ -2166,16 +2285,22 @@
             }
 
             function replyToPost(postId) {
-                state.replyTo = postId;
-                // Navigate to the thread if not already in it (Point 5)
-                if (state.viewingThreadId !== postId) {
-                    window.location.hash = `board=${state.currentBoard}&post=${postId}`;
-                } else {
-                    // If already in the thread, simply show the form and focus
-                    const replyForm = document.querySelector(`#post-${postId} .reply-form-container`);
+                state.scrollAfterReply = postId; 
+
+                // FIX: Objetivo 3 - Mostrar los campos debajo de la respuesta a la que estas respondiendo
+                // FIX: Objetivo 2 - No referenciar el ID ">>Hkqr" al responder a una respuesta
+                const postElement = document.getElementById(`post-${postId}`);
+                if (postElement) {
+                    const replyForm = postElement.querySelector('.reply-form-container');
                     if (replyForm) {
-                        showReplyForm(replyForm, true);
+                        showReplyForm(replyForm, true); // Show and focus the specific reply form
+                        // No need to set value or change hash here, as the form is directly under the post.
                     }
+                } else {
+                    // Fallback if postElement is not found, though it should be if in a thread view
+                    console.error(`Post element with ID ${postId} not found for reply.`);
+                    // If somehow the element is not found, navigate to the thread and let the OP form handle it
+                    window.location.hash = `board=${state.currentBoard}&post=${state.viewingThreadId || postId}`;
                 }
             }
 
@@ -2185,28 +2310,21 @@
 
             function getPostContentHtml(post) {
                 let html = '';
-                if (post.image) {
-                    html += `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post"></div>`;
-                }
-
+                
                 const textContent = typeof post.text === 'string' ? post.text : '';
                 let sanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
-
-                sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
-                    const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
-                    const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
-                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard;
-                    const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
-                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
-                });
-
-                if (post.text) {
+                
+                if (post.text) { 
                     html += `<p>${sanitizedText}</p>`;
                 }
-
-                return html || (post.image ? '' : '<p style="color: var(--text-tertiary-color);">[sin contenido textual]</p>');
+                
+                if (post.image) {
+                    html += `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="max-w-full h-auto"/></div>`;
+                }
+                
+                return html || (post.image ? '' : '<p style="color: var(--text-tertiary-color);">[sin contenido textual]</p>'); 
             }
-
+   
             function updateTypingEffect(text) {
                 const preview = document.getElementById('typingPreview');
                 const typingText = document.getElementById('typingText');
@@ -2218,7 +2336,7 @@
                 }
             }
             document.getElementById('postContent').addEventListener('input', e => updateTypingEffect(e.target.value));
-
+            
             function setupAudioToggle() {
                 const audio = document.getElementById('bgAudio');
                 const toggleButton = document.getElementById('audioToggle');
@@ -2226,16 +2344,16 @@
                     state.audioEnabled = !state.audioEnabled;
                     if (state.audioEnabled) {
                         audio.play().catch(e => console.log("Error al reproducir audio:", e));
-                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a1 1 0 000 2H4v2a1 1 0 102 0V6h3a1 1 0 100-2H7zM6 8a2 2 0 11-4 0 2 2 0 014 0zM13 4a1 1 0 100 2h3v2a1 1 0 102 0V6h-3a1 1 0 100-2h-3zM14 8a2 2 0 11-4 0 2 2 0 014 0zM4 12a1 1 0 100 2h12a1 1 0 100-2H4z" /></svg>`; // Icono de sonido ON
+                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M7 4a1 1 0 000 2H4v2a1 1 0 102 0V6h3a1 1 0 100-2H7zM6 8a2 2 0 11-4 0 2 2 0 014 0zM13 4a1 1 0 100 2h3v2a1 1 0 102 0V6h-3a1 1 0 100-2h-3zM14 8a2 2 0 11-4 0 2 2 0 014 0zM4 12a1 1 0 100 2h12a1 1 0 100-2H4z" /></svg>`;
                         toggleButton.style.color = 'var(--primary-accent-color)';
                     } else {
                         audio.pause();
-                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`; // Icono de sonido OFF
+                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
                         toggleButton.style.color = 'var(--icon-color)';
                     }
                 });
             }
-
+            
             function setupFileUpload() {
                 const fileInput = document.getElementById('fileUpload');
                 fileInput.addEventListener('change', () => {
@@ -2254,33 +2372,33 @@
                             preview.style.display = 'block';
                         }
                         reader.readAsDataURL(editFileInput.files[0]);
-                        document.getElementById('removeCurrentImage').checked = false;
+                        document.getElementById('removeCurrentImage').checked = false; 
                     } else {
                         span.textContent = '';
                     }
                 });
             }
-
+        
             function changeBoard(board, updateHash = true) {
                 state.currentBoard = board;
                 document.querySelectorAll('.board-selector').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.board === board);
                 });
-                const boardData = boards[board] || boards.meta;
+                const boardData = boards[board] || boards.meta; 
                 const boardInfoEl = document.getElementById('boardInfo');
                 boardInfoEl.innerHTML = `
                     <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
                     <p class="text-sm mb-1">${boardData.description}</p>
                     <p class="text-xs">${boardData.footer}</p>`;
-                document.getElementById('boardTitle').textContent = board === 'meta' ?
-                    "NeuroChan" :
+                document.getElementById('boardTitle').textContent = board === 'meta' ? 
+                    "NeuroChan" : 
                     `${boardData.title.split(' - ')[0]}`;
-
-                if (updateHash) {
-                    state.viewingThreadId = null;
+                
+                if (updateHash) { 
+                    state.viewingThreadId = null; 
                     window.location.hash = `board=${board}`;
                 } else {
-                    loadContentForBoard();
+                    loadContentForBoard(); 
                 }
             }
 
@@ -2289,9 +2407,9 @@
                 localStorage.removeItem('neurochan_admin');
                 showGenericModal("Sesión Cerrada", "Has cerrado la sesión de administrador.", [{ text: 'OK', action: closeGenericModal }]);
                 document.getElementById('adminLogoutButton').style.display = 'none';
-                document.getElementById('adminToggle')?.classList.remove('text-pink-400');
-                setupAdminPanel();
-                loadContentForBoard();
+                document.getElementById('adminToggle')?.classList.remove('text-pink-400'); 
+                setupAdminPanel(); 
+                loadContentForBoard(); 
             }
 
             async function reactWith(postId, reactionType, reactionField) {
@@ -2301,7 +2419,7 @@
                 }
                 const userUID = auth.currentUser.uid;
                 const postRef = doc(db, "Posts", postId);
-
+                
                 try {
                     const postDoc = await getDoc(postRef);
                     if (!postDoc.exists()) {
@@ -2320,8 +2438,8 @@
                         userReactions.push(reactionType);
                         updates[reactionField] = increment(1);
                     }
-                    updates[`reactedBy.${userUID}`] = userReactions;
-
+                    updates[`reactedBy.${userUID}`] = userReactions; 
+                    
                     await updateDoc(postRef, updates);
                 } catch (error) {
                     console.error(`Error al reaccionar con ${reactionType}:`, error);
@@ -2335,39 +2453,34 @@
 
             function toggleTheme() {
                 if (document.body.classList.contains('dark-theme')) {
-                    state.currentTheme = 'light';
-                } else {
-                    state.currentTheme = 'dark';
+                    state.currentTheme = 'light'; 
+                } else { 
+                    state.currentTheme = 'dark';  
                 }
                 applyCurrentTheme();
                 saveThemePreference();
             }
 
             function updateThemeButtonText() {
-                const themeToggle = document.getElementById('themeToggleModalButton');
+                const themeToggle = document.getElementById('themeToggleModalButton'); 
                 if (document.body.classList.contains('dark-theme')) {
                     themeToggle.innerHTML = '☀️ Cambiar a Tema Claro';
                 } else {
                     themeToggle.innerHTML = '🌙 Cambiar a Tema Oscuro';
                 }
             }
-
+            
             function saveThemePreference() {
                 localStorage.setItem('neurochan_theme', state.currentTheme);
             }
-
+            
             function applyCurrentTheme() {
-                const themeColorMeta = document.getElementById('themeColorMeta');
                 if (state.currentTheme === 'dark') {
                     document.body.classList.add('dark-theme');
-                    if (themeColorMeta) {
-                        themeColorMeta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
-                    }
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--dark-app-bg').trim());
                 } else {
                     document.body.classList.remove('dark-theme');
-                    if (themeColorMeta) {
-                        themeColorMeta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
-                    }
+                    document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
                 }
                 updateThemeButtonText();
             }
@@ -2385,18 +2498,18 @@
                     [
                         { text: 'Cancelar', class: 'secondary-button', action: closeGenericModal },
                         { text: 'Borrar Definitivamente', class: 'primary-button', style: {backgroundColor: 'var(--danger-color)'}, action: async () => {
-                            try {
+                            try { 
                                 const repliesQuery = query(postsCollectionRef, where("replyTo", "==", postId));
                                 const repliesSnapshot = await getDocs(repliesQuery);
                                 const deletePromises = [];
-                                repliesSnapshot.forEach(docReply => {
+                                repliesSnapshot.forEach(docReply => { 
                                     deletePromises.push(deleteDoc(docReply.ref));
                                 });
                                 await Promise.all(deletePromises);
                                 console.log(`Borradas ${deletePromises.length} respuestas para el post ${postId}`);
 
-                                await deleteDoc(doc(db, "Posts", postId));
-                                closeGenericModal();
+                                await deleteDoc(doc(db, "Posts", postId)); 
+                                closeGenericModal(); 
                                 if (state.viewingThreadId === postId) {
                                     window.location.hash = `board=${state.currentBoard}`;
                                 }
@@ -2404,15 +2517,15 @@
                             catch (error) { console.error("Error borrando post y/o respuestas:", error); showGenericModal("Error", "No se pudo borrar el post o sus respuestas.", [{ text: 'OK', action: closeGenericModal }]); }
                         }}
                     ],
-                    false
+                    false 
                 );
             }
-
+            
             let currentPostPasswordHash = null;
 
             function openDeleteModal(postId, passwordHash) {
                 state.currentDeletePostId = postId;
-                currentPostPasswordHash = passwordHash;
+                currentPostPasswordHash = passwordHash; 
                 document.getElementById('deleteModal').classList.add('flex');
                 document.getElementById('deletePasswordInput').value = '';
                 document.getElementById('deletePasswordInput').focus();
@@ -2432,15 +2545,15 @@
                     return;
                 }
                 const passwordAttempt = document.getElementById('deletePasswordInput').value;
-                if (!state.currentDeletePostId || currentPostPasswordHash === null) {
+                if (!state.currentDeletePostId || currentPostPasswordHash === null) { 
                     showGenericModal("Error", "No se puede borrar este post o no requiere contraseña.", [{ text: 'Entendido', action: closeGenericModal }]);
                     closeDeleteModal();
                     return;
                 }
 
                 if (bcryptInstance && bcryptInstance.compareSync(passwordAttempt, currentPostPasswordHash)) {
-                    await deletePostFirestore(state.currentDeletePostId);
-                    closeDeleteModal();
+                    await deletePostFirestore(state.currentDeletePostId); 
+                    closeDeleteModal(); 
                 } else {
                      showGenericModal("Error", "Contraseña incorrecta.", [{ text: 'Entendido', action: () => document.getElementById('deletePasswordInput').focus() }]);
                 }
@@ -2448,7 +2561,7 @@
 
             function openInfoModal() { document.getElementById('infoModal').classList.add('flex'); }
             function closeInfoModal() { document.getElementById('infoModal').classList.remove('flex'); }
-
+            
             function openSettingsModal() {
                 const adminLoginBtn = document.getElementById('adminLoginModalButton');
                 const adminLogoutBtn = document.getElementById('adminLogoutFromSettingsButton');
@@ -2461,38 +2574,38 @@
                     adminLoginBtn.style.display = 'block';
                     adminLogoutBtn.style.display = 'none';
                 }
-                adminPasswordArea.style.display = 'none';
-                document.getElementById('adminPasswordSettingsInput').value = '';
+                adminPasswordArea.style.display = 'none'; 
+                document.getElementById('adminPasswordSettingsInput').value = ''; 
                 document.getElementById('settingsModal').classList.add('flex');
             }
-            function closeSettingsModal() {
-                document.getElementById('settingsModal').classList.remove('flex');
+            function closeSettingsModal() { 
+                document.getElementById('settingsModal').classList.remove('flex'); 
                 const adminPasswordArea = document.getElementById('adminPasswordInputAreaSettings');
                 if (adminPasswordArea) adminPasswordArea.style.display = 'none';
                 const adminLoginBtn = document.getElementById('adminLoginModalButton');
                 if (adminLoginBtn && !state.isAdmin) adminLoginBtn.style.display = 'block';
             }
-
+            
             function setupAdminPanel() {
                 const adminLogoutBtn = document.getElementById('adminLogoutButton');
-                const adminToggleBtn = document.getElementById('settingsToggle');
+                const adminToggleBtn = document.getElementById('settingsToggle'); 
 
                 if(state.isAdmin) {
-                    if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-flex';
-                    if (adminToggleBtn) adminToggleBtn.style.color = 'var(--primary-accent-color)';
+                    if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-flex'; 
+                    if (adminToggleBtn) adminToggleBtn.style.color = 'var(--primary-accent-color)'; 
                 } else {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
                     if (adminToggleBtn) adminToggleBtn.style.color = 'var(--icon-color)';
                 }
             }
-
+         
             function showGenericModal(title, message, buttons = [{ text: 'OK', action: closeGenericModal }], closeModalOnClickOutside = true) {
                 const modal = document.getElementById('genericModal');
                 document.getElementById('genericModalTitle').textContent = title;
-                document.getElementById('genericModalMessage').innerHTML = DOMPurify.sanitize(message);
+                document.getElementById('genericModalMessage').innerHTML = DOMPurify.sanitize(message); 
 
                 const buttonsContainer = document.getElementById('genericModalButtons');
-                buttonsContainer.innerHTML = '';
+                buttonsContainer.innerHTML = ''; 
 
                 buttons.forEach(btnConfig => {
                     const button = document.createElement('button');
@@ -2501,11 +2614,11 @@
                     if (btnConfig.class && btnConfig.class.includes('primary-button')) {
                         baseClass = 'primary-button';
                     } else if (btnConfig.style && btnConfig.style.backgroundColor === 'var(--danger-color)') {
-                        baseClass = 'primary-button';
+                        baseClass = 'primary-button'; 
                     }
-
+                    
                     button.className = `${baseClass} ${btnConfig.class || ''}`;
-                    if (btnConfig.style) {
+                    if (btnConfig.style) { 
                         Object.assign(button.style, btnConfig.style);
                     }
 
@@ -2521,12 +2634,12 @@
                     const closeModalHandler = function(event) {
                         if (event.target === modal) {
                             closeGenericModal();
-                            modal.removeEventListener('click', closeModalHandler);
+                            modal.removeEventListener('click', closeModalHandler); 
                         }
                     };
                     modal.addEventListener('click', closeModalHandler);
                 } else {
-                    modal.onclick = null;
+                    modal.onclick = null; 
                 }
                 modal.querySelectorAll('.generic-modal-close-button').forEach(btn => {
                     btn.addEventListener('click', closeGenericModal);
@@ -2536,7 +2649,7 @@
             function closeGenericModal() { document.getElementById('genericModal').classList.remove('flex'); }
 
             function openEditModal(postId) {
-                const postToEdit = state.allPostsData[postId];
+                const postToEdit = state.allPostsData[postId]; 
                 if (!postToEdit) { showGenericModal("Error", "Post no encontrado para editar.", [{ text: 'OK', action: closeGenericModal }]); return; }
 
                 if (!state.isAdmin && !(postToEdit.passwordHash && postToEdit.authorUID === auth.currentUser?.uid)) {
@@ -2545,25 +2658,25 @@
                 }
 
                 state.currentEditPostId = postId;
-                state.currentEditPostData = { ...postToEdit };
+                state.currentEditPostData = { ...postToEdit }; 
 
                 document.getElementById('editPostName').value = postToEdit.name || '';
-                document.getElementById('editPostTitle').value = postToEdit.title || '';
+                document.getElementById('editPostTitle').value = postToEdit.title || ''; 
                 document.getElementById('editPostContent').value = postToEdit.text || '';
-
+                
                 const imagePreview = document.getElementById('editImagePreview');
                 const removeCurrentImageCheckbox = document.getElementById('removeCurrentImage');
                 if (postToEdit.image) {
                     imagePreview.src = postToEdit.image;
                     imagePreview.style.display = 'block';
-                    removeCurrentImageCheckbox.parentElement.style.display = 'inline-block';
+                    removeCurrentImageCheckbox.parentElement.style.display = 'inline-block'; 
                     removeCurrentImageCheckbox.checked = false;
                 } else {
                     imagePreview.style.display = 'none';
-                    imagePreview.src = '#';
-                    removeCurrentImageCheckbox.parentElement.style.display = 'none';
+                    imagePreview.src = '#'; 
+                    removeCurrentImageCheckbox.parentElement.style.display = 'none'; 
                 }
-                document.getElementById('editFileUpload').value = '';
+                document.getElementById('editFileUpload').value = ''; 
                 document.getElementById('editFileName').textContent = '';
 
                 const passwordPromptContainer = document.getElementById('editPasswordPromptContainer');
@@ -2614,9 +2727,9 @@
                 }
 
                 updateData.name = DOMPurify.sanitize(document.getElementById('editPostName').value.trim()) || "Anónimo";
-                updateData.title = DOMPurify.sanitize(document.getElementById('editPostTitle').value.trim()) || null;
+                updateData.title = DOMPurify.sanitize(document.getElementById('editPostTitle').value.trim()) || null; 
                 updateData.text = DOMPurify.sanitize(document.getElementById('editPostContent').value.trim());
-
+                
                 const newPassword = document.getElementById('editNewPostPassword').value.trim();
                 if (newPassword) {
                     if (bcryptInstance) {
@@ -2625,9 +2738,9 @@
                         showGenericModal("Error de Contraseña", "Bcrypt no está disponible. No se pudo actualizar la contraseña.", [{ text: 'OK', action: closeGenericModal }]);
                     }
                 } else {
-                    updateData.passwordHash = originalPostData.passwordHash;
+                    updateData.passwordHash = originalPostData.passwordHash; 
                 }
-
+                
                 const fileInput = document.getElementById('editFileUpload');
                 const removeCurrentImage = document.getElementById('removeCurrentImage').checked;
 
@@ -2653,9 +2766,9 @@
                     reader.readAsDataURL(file);
                 } else {
                     if (removeCurrentImage) {
-                        updateData.image = null;
+                        updateData.image = null; 
                     } else {
-                        updateData.image = originalPostData.image;
+                        updateData.image = originalPostData.image; 
                     }
                     await finalizePostUpdate(updateData, confirmButton);
                 }
@@ -2671,17 +2784,14 @@
                     console.error("Error actualizando post:", error);
                     showGenericModal("Error de Actualización", "No se pudieron guardar los cambios en el post.", [{ text: 'OK', action: closeGenericModal }]);
                 } finally {
-                    if (buttonElement) {
+                    if (buttonElement) { 
                         buttonElement.disabled = false;
                         buttonElement.textContent = 'Guardar Cambios';
                     }
                 }
             }
 
-            // --- Funciones para el nuevo modal de Contraseña de Post/Respuesta ---
-            let currentPostPasswordModalCallback = null;
-
-            function openPostPasswordModal(isReply = false) {
+            function openPostPasswordModal(isReply = false, targetPostId = null) {
                 const modal = document.getElementById('postPasswordModal');
                 const title = document.getElementById('postPasswordModalTitle');
                 const message = document.getElementById('postPasswordModalMessage');
@@ -2693,15 +2803,15 @@
                     title.textContent = "Establecer Nombre y Contraseña";
                     message.textContent = "Establece un nombre (opcional) y una contraseña (opcional) para poder editar o borrar esta respuesta en el futuro.";
                     nameField.style.display = 'block';
-                    nameInput.value = state.tempPostName || ''; // Mantener el nombre si ya se escribió
-                    passwordInput.value = state.tempPostPassword || ''; // Mantener la contraseña si ya se escribió
+                    nameInput.value = state.tempPostName || ''; 
+                    passwordInput.value = state.tempPostPassword || ''; 
                     nameInput.focus();
                 } else {
                     title.textContent = "Establecer Contraseña del Post";
                     message.textContent = "Establece una contraseña (opcional) para poder editar o borrar este post en el futuro.";
                     nameField.style.display = 'none';
                     nameInput.value = '';
-                    passwordInput.value = state.tempPostPassword || ''; // Mantener la contraseña si ya se escribió
+                    passwordInput.value = state.tempPostPassword || ''; 
                     passwordInput.focus();
                 }
                 modal.classList.add('flex');
@@ -2709,8 +2819,13 @@
 
             function closePostPasswordModal() {
                 document.getElementById('postPasswordModal').classList.remove('flex');
-                document.getElementById('postPasswordModalNameInput').value = '';
-                document.getElementById('postPasswordModalInput').value = '';
+                if (state.scrollAfterReply) {
+                    const targetElement = document.getElementById(`post-${state.scrollAfterReply}`);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    state.scrollAfterReply = null; 
+                }
             }
 
             function confirmPostPassword() {
@@ -2722,26 +2837,26 @@
             // --- Funciones del Juego de Tarot ---
             function setupTarotGame() {
                 console.log("Configurando juego de Tarot...");
-                updateUiForView();
-                state.tarotDeck = [...tarotDeckData];
+                updateUiForView(); 
+                state.tarotDeck = [...tarotDeckData]; 
                 const spreadContainer = document.getElementById('tarotSpreadContainer');
                 const initialCardContainer = document.getElementById('tarotInitialCardContainer');
                 const cardInfoDisplay = document.getElementById('tarotCardInfoDisplay');
-
-                spreadContainer.innerHTML = '';
+                
+                spreadContainer.innerHTML = ''; 
                 if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
                 if (initialCardContainer) initialCardContainer.classList.remove('hidden');
-
+                
                 const tarotDeckCard = document.getElementById('tarotDeckCard');
                 if (tarotDeckCard) {
-                    tarotDeckCard.classList.remove('spin');
+                    tarotDeckCard.classList.remove('spin'); 
                     tarotDeckCard.style.opacity = '1';
                     tarotDeckCard.style.transform = 'rotateY(0deg) scale(1)';
                 }
                 state.tarotInitialCardFlipped = false;
             }
 
-            function shuffleArray(array) {
+            function shuffleArray(array) { 
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [array[i], array[j]] = [array[j], array[i]];
@@ -2753,10 +2868,10 @@
                 const tarotDeckCard = document.getElementById('tarotDeckCard');
                 const spreadContainer = document.getElementById('tarotSpreadContainer');
                 const cardInfoDisplay = document.getElementById('tarotCardInfoDisplay');
-
+                
                 if (tarotDeckCard) {
                     tarotDeckCard.classList.add('spin');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, 1000)); 
                     if (initialCardContainer) initialCardContainer.classList.add('hidden');
                 }
 
@@ -2764,13 +2879,13 @@
                 if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
 
                 shuffleArray(state.tarotDeck);
-                state.tarotSpread = state.tarotDeck.slice(0, 15);
+                state.tarotSpread = state.tarotDeck.slice(0, 15); 
 
                 let cardIndex = 0;
                 const rows = [5, 4, 3, 2, 1];
-
+                
                 function dealRowSequentially(rowIndex) {
-                    if (rowIndex >= rows.length) return;
+                    if (rowIndex >= rows.length) return; 
 
                     const numCardsInRow = rows[rowIndex];
                     const rowDiv = document.createElement('div');
@@ -2779,33 +2894,33 @@
 
                     function dealCardInRowSequentially(cardInRowIndex) {
                         if (cardInRowIndex >= numCardsInRow || cardIndex >= state.tarotSpread.length) {
-                            setTimeout(() => dealRowSequentially(rowIndex + 1), 100);
+                            setTimeout(() => dealRowSequentially(rowIndex + 1), 100); 
                             return;
                         }
 
                         const cardData = state.tarotSpread[cardIndex];
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'tarot-card';
-                        cardElement.dataset.cardIndex = cardIndex;
-
+                        cardElement.className = 'tarot-card'; 
+                        cardElement.dataset.cardIndex = cardIndex; 
+                        
                         cardElement.innerHTML = `
                             <div class="card-face card-back">🔮</div>
                             <div class="card-face card-front">
                                 <img src="${cardData.urlcart}" alt="${DOMPurify.sanitize(cardData.namecart)}" class="tarot-image-display"/>
                                 </div>`;
-
+                        
                         cardElement.addEventListener('click', () => flipTarotCard(cardElement, cardData));
                         rowDiv.appendChild(cardElement);
-
-                        void cardElement.offsetWidth;
-                        cardElement.classList.add('placed');
+                        
+                        void cardElement.offsetWidth; 
+                        cardElement.classList.add('placed'); 
 
                         cardIndex++;
-                        setTimeout(() => dealCardInRowSequentially(cardInRowIndex + 1), 150);
+                        setTimeout(() => dealCardInRowSequentially(cardInRowIndex + 1), 150); 
                     }
                     dealCardInRowSequentially(0);
                 }
-                dealRowSequentially(0);
+                dealRowSequentially(0); 
             }
 
             function flipTarotCard(cardElement, cardData) {
@@ -2825,7 +2940,7 @@
                         c.classList.remove('selected-for-info');
                     }
                 });
-
+                
                 cardElement.classList.add('flipped');
                 cardElement.classList.add('selected-for-info');
 
@@ -2834,9 +2949,9 @@
                 document.getElementById('tarotCardImageInfo').src = cardData.urlcart;
                 document.getElementById('tarotCardImageInfo').alt = cardData.namecart;
                 document.getElementById('tarotMeaningUpInfo').textContent = cardData.significado1cart;
-                document.getElementById('tarotMeaningRevInfo').textContent = cardData.significado2cart;
-                document.getElementById('tarotQuestionInfo').textContent = cardData.significado3cart;
-
+                document.getElementById('tarotMeaningRevInfo').textContent = cardData.significado2cart; 
+                document.getElementById('tarotQuestionInfo').textContent = cardData.significado3cart; 
+                
                 if (cardInfoDisplay) cardInfoDisplay.classList.remove('hidden');
             }
 
@@ -2845,3 +2960,4 @@
     </script>
 </body>
 </html>
+�
