@@ -2247,7 +2247,7 @@
                     // Hide all reply forms when returning to main board view
                     document.querySelectorAll('.reply-form-container').forEach(form => hideReplyForm(form));
                     // Hide all replies containers when returning to main board view
-                    document.querySelectorAll('.replies-container').forEach(container => container.classList.add('hidden'));
+                    document.querySelectorAll('.replies-container').forEach(container => container.style.display = 'none'); // Use style.display
 
                     if (postFormContainer) postFormContainer.classList.remove('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden');
@@ -2597,7 +2597,9 @@
                 const commentsButton = postElement.querySelector('.comments-button');
                 if (commentsButton) {
                     const newReplyCount = state.directChildrenCounts[newPostData.id] || 0;
-                    const isRepliesVisible = postElement.querySelector(`.replies-container[data-parent-id="${newPostData.id}"]`)?.classList.contains('hidden') === false;
+                    const repliesContainerForThisPost = postElement.querySelector(`.replies-container[data-parent-id="${newPostData.id}"]`);
+                    // Check visibility based on style.display, which is now the source of truth
+                    const isRepliesVisible = repliesContainerForThisPost ? repliesContainerForThisPost.style.display !== 'none' : false;
 
                     if (isRepliesVisible) {
                         commentsButton.textContent = `Ocultar Comentarios`;
@@ -2630,19 +2632,11 @@
                 if (depth > 3) return; // Limitar profundidad para evitar bucles infinitos y complejidad excesiva
 
                 let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
+                // repliesContainer MUST exist here, created by toggleRepliesVisibility
                 if (!repliesContainer) {
-                    repliesContainer = document.createElement('div');
-                    // Tailwind classes for styling the replies container
-                    repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
-                    repliesContainer.style.borderColor = 'var(--divider-color)';
-                    repliesContainer.dataset.parentId = parentPostId;
-                    // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
-                    // (solo si no estamos viendo un hilo específico)
-                    if (depth >= 2 && !state.viewingThreadId) { 
-                        repliesContainer.classList.add('hidden');
-                    }
-                    parentElement.appendChild(repliesContainer);
-                } 
+                    console.error(`Error: repliesContainer for post ${parentPostId} not found when loading nested replies.`);
+                    return;
+                }
 
                 let repliesData = [];
                 // Filtrar respuestas directas del post padre desde el caché global
@@ -2682,9 +2676,9 @@
                     const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
 
                     if (replyElement) {
-                        updatePostElement(replyElement, depth); // Actualizar respuesta existente
+                        updatePostElement(replyElement, replyData, depth); // Update existing reply
                     } else {
-                        replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth); // Crear nueva respuesta
+                        replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth); // Create new reply
                         applyPostEffects(replyData, replyElement);
                         currentReplyElements.set(replyData.id, replyElement);
                     }
@@ -3135,26 +3129,38 @@
                 let repliesContainer = postElement.querySelector(`.replies-container[data-parent-id="${postId}"]`);
                 const commentsButton = postElement.querySelector('.comments-button');
 
+                // If replies container doesn't exist, create it.
+                // This ensures it's always present to toggle its visibility.
                 if (!repliesContainer) {
                     repliesContainer = document.createElement('div');
                     repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
                     repliesContainer.style.borderColor = 'var(--divider-color)';
+                    repliesContainer.dataset.parentId = postId;
                     postElement.appendChild(repliesContainer);
+                    repliesContainer.style.display = 'none'; // Initially hidden
+                    console.log(`Replies container for post ${postId} created and set to display: none`);
                 }
 
-                const isHidden = repliesContainer.classList.contains('hidden');
+                // Determine current visibility based on inline style
+                const isHidden = repliesContainer.style.display === 'none';
+                console.log(`Toggle replies for post ${postId}. Current display state: ${repliesContainer.style.display}`);
 
                 if (isHidden) {
-                    repliesContainer.classList.remove('hidden');
+                    repliesContainer.style.display = 'block'; // Make visible
                     commentsButton.textContent = `Ocultar Comentarios`;
+                    console.log(`Replies container for post ${postId} is now display: block.`);
                     // Load replies only if not already loaded or if a refresh is needed
-                    if (repliesContainer.children.length === 0 || !repliesContainer.dataset.loaded) {
-                        loadNestedReplies(postId, postElement, 1); // <--- Here, depth is 1.
-                        repliesContainer.dataset.loaded = 'true'; // Mark as loaded
+                    if (!repliesContainer.dataset.loaded || repliesContainer.dataset.loaded === 'false') {
+                        console.log(`Loading nested replies for post ${postId}...`);
+                        loadNestedReplies(postId, postElement, 1);
+                        repliesContainer.dataset.loaded = 'true';
+                    } else {
+                        console.log(`Replies for post ${postId} already loaded. Skipping loadNestedReplies.`);
                     }
                 } else {
-                    repliesContainer.classList.add('hidden');
+                    repliesContainer.style.display = 'none'; // Hide
                     commentsButton.textContent = `Comentarios (${state.directChildrenCounts[postId] || 0})`;
+                    console.log(`Replies container for post ${postId} is now display: none.`);
                 }
             }
    
