@@ -1625,7 +1625,7 @@
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             const AVATARS = [ 
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
-                '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
+                '👁️', '🧠', '🦾', '�', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
             // Objeto de estado global de la aplicación
@@ -2548,7 +2548,7 @@
                     } else {
                         const newImageDiv = document.createElement('div');
                         newImageDiv.className = 'post-image-container';
-                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="${state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in"}" loading="lazy"/>`;
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="${imageClass}" loading="lazy"/>`;
                         postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
                         img = newImageDiv.querySelector('img');
                     }
@@ -2632,10 +2632,16 @@
                 if (depth > 3) return; // Limitar profundidad para evitar bucles infinitos y complejidad excesiva
 
                 let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
-                // repliesContainer MUST exist here, created by toggleRepliesVisibility
+                // If replies container doesn't exist, create it.
+                // This is crucial for thread view where it's not created by toggleRepliesVisibility.
                 if (!repliesContainer) {
-                    console.error(`Error: repliesContainer for post ${parentPostId} not found when loading nested replies.`);
-                    return;
+                    repliesContainer = document.createElement('div');
+                    repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
+                    repliesContainer.style.borderColor = 'var(--divider-color)';
+                    repliesContainer.dataset.parentId = parentPostId;
+                    parentElement.appendChild(repliesContainer);
+                    repliesContainer.style.display = 'block'; // Make visible when explicitly loading replies
+                    console.log(`DEBUG: Replies container for post ${parentPostId} created by loadNestedReplies.`);
                 }
 
                 let repliesData = [];
