@@ -1625,7 +1625,7 @@
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             const AVATARS = [ 
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
-                '👁️', '🧠', '🦾', '�', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
+                '👁️', '�', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
             // Objeto de estado global de la aplicación
@@ -1915,6 +1915,12 @@
                 // Visor de Imágenes
                 document.getElementById('closeImageViewerModal').addEventListener('click', closeImageViewerModal);
                 document.getElementById('downloadImageButton').addEventListener('click', downloadEnlargedImage);
+                // NEW: Close image viewer when clicking outside content
+                document.getElementById('imageViewerModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('imageViewerModal')) {
+                        closeImageViewerModal();
+                    }
+                });
 
                 // Delegación de eventos para posts y respuestas (mejora de rendimiento)
                 document.getElementById('postsContainer').addEventListener('click', handlePostContainerClick);
@@ -4125,3 +4131,4 @@
     </script>
 </body>
 </html>
+�
