@@ -1619,7 +1619,7 @@
         // IIFE para encapsular el código y evitar variables globales no deseadas
         (function() {
             const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
-            const ADMIN_HASH = '$2a$12$bReWATVwRiaPSgz/auV1G.FnLKPCAJR.QdN1ik5ZhVfHR1vDBhhQC'; // Contraseña de administrador hasheada
+            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vUcnVe'; // Contraseña de administrador hasheada
 
             // Emojis disponibles para posts y avatares
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
@@ -2632,10 +2632,13 @@
                 let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
                 if (!repliesContainer) {
                     repliesContainer = document.createElement('div');
+                    // Tailwind classes for styling the replies container
                     repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
                     repliesContainer.style.borderColor = 'var(--divider-color)';
                     repliesContainer.dataset.parentId = parentPostId;
-                    if (depth >= 2 && !state.viewingThreadId) { // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
+                    // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
+                    // (solo si no estamos viendo un hilo específico)
+                    if (depth >= 2 && !state.viewingThreadId) { 
                         repliesContainer.classList.add('hidden');
                     }
                     parentElement.appendChild(repliesContainer);
@@ -2679,7 +2682,7 @@
                     const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
 
                     if (replyElement) {
-                        updatePostElement(replyElement, replyData, depth); // Actualizar respuesta existente
+                        updatePostElement(replyElement, depth); // Actualizar respuesta existente
                     } else {
                         replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth); // Crear nueva respuesta
                         applyPostEffects(replyData, replyElement);
@@ -3136,10 +3139,6 @@
                     repliesContainer = document.createElement('div');
                     repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
                     repliesContainer.style.borderColor = 'var(--divider-color)';
-                    repliesContainer.dataset.parentId = postId;
-                    if (depth >= 2 && !state.viewingThreadId) { // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
-                        repliesContainer.classList.add('hidden');
-                    }
                     postElement.appendChild(repliesContainer);
                 }
 
@@ -3150,7 +3149,7 @@
                     commentsButton.textContent = `Ocultar Comentarios`;
                     // Load replies only if not already loaded or if a refresh is needed
                     if (repliesContainer.children.length === 0 || !repliesContainer.dataset.loaded) {
-                        loadNestedReplies(postId, postElement, 1);
+                        loadNestedReplies(postId, postElement, 1); // <--- Here, depth is 1.
                         repliesContainer.dataset.loaded = 'true'; // Mark as loaded
                     }
                 } else {
@@ -3611,7 +3610,6 @@
                 }
 
                 const originalPostData = state.currentEditPostData;
-                const updateData = {};
 
                 if (!state.isAdmin && originalPostData.passwordHash && originalPostData.authorUID === auth.currentUser.uid) {
                     const passwordAttempt = document.getElementById('editPostPasswordPrompt').value;
@@ -3623,6 +3621,8 @@
                     showGenericModal("Error de Permiso", "No puedes editar un post que no es tuyo sin ser administrador.", [{ text: 'OK', action: closeGenericModal }]);
                     return;
                 }
+                
+                const updateData = {}; // Initialize updateData here
 
                 updateData.name = DOMPurify.sanitize(document.getElementById('editPostName').value.trim()) || "Anónimo";
                 updateData.title = DOMPurify.sanitize(document.getElementById('editPostTitle').value.trim()) || null; 
