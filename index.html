@@ -148,23 +148,47 @@
 
         /* Información del tablero */
         #boardInfo {
-            background-color: var(--card-bg);
+            /* Imagen de fondo se establecerá dinámicamente en JS */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 200px; /* Asegura que el contenedor tenga altura para la imagen */
+            display: flex; /* Para centrar el contenido */
+            align-items: center; /* Centrado vertical */
+            justify-content: center; /* Centrado horizontal */
+            text-align: center; /* Centrar texto */
+            padding: 0; /* Eliminar padding por defecto para que el overlay cubra todo */
+            
+            background-color: var(--card-bg); /* Fallback y para bordes */
             border: 1px solid var(--border-color-light);
             border-radius: 8px;
-            padding: 1rem;
             margin-bottom: 1.25rem; /* Espacio consistente */
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            position: relative; /* Necesario para posicionar el overlay */
+            overflow: hidden; /* Asegura que el overlay y el contenido no se salgan */
+            width: 100%; /* Asegura que ocupe todo el ancho disponible del contenedor padre */
         }
-        #boardInfo h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary-color);
-            margin-bottom: 0.5rem;
+        #boardInfo .overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4); /* Capa semi-transparente */
+            border-radius: 8px; /* Coincide con el radio del contenedor */
+            z-index: 1; /* Por debajo del contenido de texto */
         }
-        #boardInfo p {
-            color: var(--text-secondary-color);
-            font-size: 0.9rem;
-            line-height: 1.4;
+        /* El content-wrapper y su contenido ahora están vacíos por petición del usuario */
+        #boardInfo .content-wrapper {
+            position: relative;
+            z-index: 2; /* Por encima del overlay */
+            padding: 1.5rem; /* Padding para el contenido de texto */
+        }
+        #boardInfo h2, #boardInfo p {
+            /* Estos elementos se ocultarán o eliminarán en el HTML/JS */
+            display: none;
+        }
+
+        /* Dark theme adjustments for boardInfo */
+        body.dark-theme #boardInfo {
+            border-color: var(--dark-border-color-light);
         }
 
         /* Tarjeta del formulario de publicación */
@@ -1232,8 +1256,16 @@
         /* Diseño responsivo */
         @media (min-width: 1024px) {
             .container {
-                padding-left: 6rem;
-                padding-right: 6rem;
+                /* Ajuste de ancho del contenedor para posts un 15% más anchos */
+                max-width: 1472px; /* 1280px * 1.15 */
+                padding-left: 1rem; /* Keep some padding */
+                padding-right: 1rem; /* Keep some padding */
+            }
+            #boardInfo {
+                /* Adjust negative margins to push it out into the new wider container */
+                margin-left: -1rem; /* Compensate for container's px-4 (1rem) */
+                margin-right: -1rem; /* Compensate for container's px-4 (1rem) */
+                /* For larger screens, if needed, further adjust. This makes it span full viewport width */
             }
             #postsContainer {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1270,7 +1302,24 @@
         <p id="boardTitle">/meta/ Tableros de la Mente</p>
     </header>
 
-    <div class="container mx-auto px-4 lg:px-24 py-2 md:py-4"> 
+    <div class="container mx-auto max-w-7xl px-4 py-2 md:py-4"> 
+        <div id="boardInfo" class="mb-8 relative overflow-hidden w-full"> 
+            <div class="overlay"></div> <div class="content-wrapper">
+                </div>
+            <div id="boardCoverUploadArea" class="absolute top-2 right-2 z-30" style="display: none;">
+                <label for="boardCoverUploadInput" class="icon-button bg-gray-700 hover:bg-gray-800 text-white opacity-80 hover:opacity-100 transition-opacity" title="Subir imagen de portada">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    </svg>
+                    <span class="sr-only">Subir portada</span>
+                </label>
+                <input type="file" id="boardCoverUploadInput" class="hidden" accept="image/*">
+                <div id="boardCoverUploadLoading" class="hidden absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+                    <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </div>
+            </div>
+        </div>
+
         <div class="board-selectors-container flex flex-wrap gap-2 mb-6 justify-center">
             <button class="board-selector active" data-board="meta" aria-label="Tablero meta">
                 /meta/
@@ -1287,12 +1336,6 @@
             <button class="board-selector" data-board="tarot" aria-label="Tablero tarot">
                 /tarot/
             </button>
-        </div>
-
-        <div id="boardInfo" class="mb-8"> 
-            <h2 class="text-xl font-semibold mb-1">/meta/ - Metaprogramación y Viaje Dimensional</h2> 
-            <p class="text-sm mb-1">Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime</p>
-            <p class="text-xs">Todos los posts son persistentes y se sincronizan en tiempo real.</p>
         </div>
 
         <div id="postFormContainer" class="post-form-card relative"> 
@@ -1583,7 +1626,7 @@
         import { 
             getFirestore, collection, addDoc, onSnapshot, 
             doc, deleteDoc, updateDoc, query, where, increment, 
-            serverTimestamp, getDoc, getDocs 
+            serverTimestamp, getDoc, getDocs, setDoc
             } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         import { 
@@ -1615,6 +1658,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
         const postsCollectionRef = collection(db, "Posts");
+        const coversCollectionRef = collection(db, "Portadas"); // Nueva colección para portadas
 
         // IIFE para encapsular el código y evitar variables globales no deseadas
         (function() {
@@ -1625,7 +1669,7 @@
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             const AVATARS = [ 
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
-                '👁️', '�', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
+                '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
             // Objeto de estado global de la aplicación
@@ -1654,15 +1698,41 @@
                 directChildrenCounts: {}, // Conteo de respuestas directas para cada post
                 imageViewerCurrentPostId: null, // ID del post cuya imagen se está viendo en el modal
                 unsubscribeImageViewer: null, // Función para desuscribirse del listener del visor de imágenes
+                unsubscribeCover: null, // Función para desuscribirse del listener de portada
             };
 
             // Datos de los tableros
             const boards = {
-                meta: { title: "/meta/ - Metaprogramación y Viaje Dimensional", description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paraleles, Estética Retro Anime", footer: "Todos los posts son persistentes y se sincronizan en tiempo real." },
-                dreams: { title: "/sueños/ - Exploración Lúcida y Oneironáutica", description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados." },
-                techno: { title: "/tecnosoma/ - Conciencia Cibernética", description: "Temas: Aumento Neural, Tecnología Cyberpunk, Interfaces Mente-Máquina", footer: "La carne es débil. La máquina está dispuesta. La mente es eterna." },
-                retro: { title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos." },
-                tarot: { title: "/tarot/ - Arcanos y Sincronicidad", description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", footer: "Las cartas revelan los ecos del alma y los susurros del destino." }
+                meta: { 
+                    title: "/meta/ - Metaprogramación y Viaje Dimensional", 
+                    description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paraleles, Estética Retro Anime", 
+                    footer: "Todos los posts son persistentes y se sincronizan en tiempo real.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/b7f01798-8ce8-427e-8a9b-36d6de9e3879.png?raw=true"
+                },
+                dreams: { 
+                    title: "/sueños/ - Exploración Lúcida y Oneironáutica", 
+                    description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", 
+                    footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/603b238d-2b79-4039-bb35-88d25f7c6d86.png?raw=true"
+                },
+                techno: { 
+                    title: "/tecnosoma/ - Conciencia Cibernética", 
+                    description: "Temas: Aumento Neural, Tecnología Cyberpunk, Interfaces Mente-Máquina", 
+                    footer: "La carne es débil. La máquina está dispuesta. La mente es eterna.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/8b0b6796-da1d-4852-8f5a-596410e901e2.png?raw=true"
+                },
+                retro: { 
+                    title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", 
+                    description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", 
+                    footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/2d19befb-3cf5-4dc3-a69a-af48c19bb1b3.png?raw=true"
+                },
+                tarot: { 
+                    title: "/tarot/ - Arcanos y Sincronicidad", 
+                    description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", 
+                    footer: "Las cartas revelan los ecos del alma y los susurros del destino.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/533a0312-1dad-4240-a231-2efbde031db2.png?raw=true"
+                }
             };
             
             // Datos de las cartas del Tarot
@@ -1801,14 +1871,10 @@
                     document.querySelectorAll('.board-selector').forEach(btn => {
                         btn.classList.toggle('active', btn.dataset.board === state.currentBoard);
                     });
-                    const boardData = boards[state.currentBoard] || boards.meta;
-                    document.getElementById('boardInfo').innerHTML = `
-                        <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
-                        <p class="text-sm mb-1">${boardData.description}</p>
-                        <p class="text-xs">${boardData.footer}</p>`;
+                    
                     document.getElementById('boardTitle').textContent = state.currentBoard === 'meta' ? 
                         "NeuroChan" : 
-                        `${boardData.title.split(' - ')[0]}`;
+                        `${boards[state.currentBoard].title.split(' - ')[0]}`; // Actualiza el título del tablero
                 }
                 
                 const previousViewingThreadId = state.viewingThreadId;
@@ -1821,6 +1887,7 @@
                     loadContentForBoard(); // Recarga el contenido si el tablero o el hilo cambian
                 }
                 updateUiForView(); // Actualiza la UI según la vista actual
+                updateBoardCoverDisplay(); // Actualiza la portada del tablero
 
                 // Scroll al post de respuesta si se navegó a un hilo específico
                 if (state.viewingThreadId && postIdFromUrl && postIdFromUrl === state.viewingThreadId) {
@@ -1858,6 +1925,7 @@
                 document.getElementById('adminLogoutButton').addEventListener('click', adminLogout); // Cerrar sesión de admin
                 setupAudioToggle(); // Alternar audio de fondo
                 setupFileUpload(); // Manejo de subida de archivos
+                document.getElementById('boardCoverUploadInput').addEventListener('change', uploadBoardCover); // Listener para subir portada
 
                 // Manejadores para los selectores de tablero
                 document.querySelectorAll('.board-selector').forEach(btn => {
@@ -2763,19 +2831,32 @@
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
-                const replyButtonHtml = `
-                    <button class="reply-button reaction-button" aria-label="Responder a este post">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                        Responder
-                    </button>
-                `;
+                // Conditional Reply Button
+                let replyButtonHtml = '';
+                if (currentPostDepth < 3) { // Allow replies up to depth 2 (creating a depth 3 post)
+                    replyButtonHtml = `
+                        <button class="reply-button reaction-button" aria-label="Responder a este post">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                            Responder
+                        </button>
+                    `;
+                }
 
-                // Comments button now toggles replies inline
-                const commentsButtonHtml = `
-                    <button class="comments-button reaction-button" aria-label="Ver comentarios">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
-                        Comentarios (<span class="count">${replyCount}</span>)
-                    </button>`;
+                // Conditional Comments Button (clickability)
+                let commentsButtonHtml = '';
+                if (currentPostDepth < 3) { // Comments button is clickable to expand/collapse up to depth 2
+                    commentsButtonHtml = `
+                        <button class="comments-button reaction-button" aria-label="Ver comentarios">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
+                            Comentarios (<span class="count">${replyCount}</span>)
+                        </button>`;
+                } else { // At depth 3 or deeper, comments button is just text
+                    commentsButtonHtml = `
+                        <span class="reaction-button" style="cursor: default; color: var(--text-secondary-color);">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
+                            Comentarios (${replyCount})
+                        </span>`;
+                }
 
 
                 const replyFormHtml = `
@@ -2874,6 +2955,12 @@
                 const submitReplyButton = replyFormContainer.querySelector('.submit-reply');
                 const replyAvatar = replyFormContainer.querySelector('.reply-avatar'); 
 
+                // If currentPostDepth is 3 or more, hide the reply form entirely
+                if (currentPostDepth >= 3) {
+                    replyFormContainer.style.display = 'none';
+                    return;
+                }
+
                 let ignoreBlurForFileUpload = false;
 
                 // Limpiar listeners anteriores para evitar duplicados si la función se llama varias veces
@@ -2964,13 +3051,17 @@
                     let initialReplyText = DOMPurify.sanitize(content);
 
                     // Lógica para respuestas en profundidad 3 (nivel 4) o más
+                    // Si currentPostDepth es 3, la nueva respuesta será de profundidad 4.
+                    // Su replyTo debe ser el padre del post de profundidad 3 (es decir, el de profundidad 2).
+                    // Su texto debe hacer referencia al post de profundidad 3.
                     if (currentPostDepth >= 3) {
-                        const parentOfLevel3Post = state.allPostsData[parentPostId];
-                        if (parentOfLevel3Post && parentOfLevel3Post.replyTo) {
-                            targetReplyTo = parentOfLevel3Post.replyTo;
-                            initialReplyText = `>>${parentPostId.slice(-4)} ${initialReplyText}`;
+                        const parentOfCurrentPost = state.allPostsData[parentPostId];
+                        if (parentOfCurrentPost && parentOfCurrentPost.replyTo) {
+                            targetReplyTo = parentOfCurrentPost.replyTo; // Apuntar al post de profundidad 2
+                            initialReplyText = `>>${parentPostId.slice(-4)} ${initialReplyText}`; // Referenciar el post de profundidad 3
                         } else {
-                            console.warn(`No se encontró el padre para el post de nivel 3 ${parentPostId} o el padre no tiene replyTo.`);
+                            console.warn(`No se encontró el padre para el post de nivel 3 ${parentPostId} o el padre no tiene replyTo. Usando parentPostId como replyTo.`);
+                            targetReplyTo = parentPostId; // Fallback al padre actual si no se encuentra el abuelo
                         }
                     }
 
@@ -3201,7 +3292,7 @@
                         toggleButton.style.color = 'var(--primary-accent-color)';
                     } else {
                         audio.pause();
-                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
+                        toggleButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
                         toggleButton.style.color = 'var(--icon-color)';
                     }
                 });
@@ -3239,15 +3330,10 @@
                 document.querySelectorAll('.board-selector').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.board === board);
                 });
-                const boardData = boards[board] || boards.meta; 
-                const boardInfoEl = document.getElementById('boardInfo');
-                boardInfoEl.innerHTML = `
-                    <h2 class="text-xl font-semibold mb-1">${boardData.title}</h2>
-                    <p class="text-sm mb-1">${boardData.description}</p>
-                    <p class="text-xs">${boardData.footer}</p>`;
+                
                 document.getElementById('boardTitle').textContent = board === 'meta' ? 
                     "NeuroChan" : 
-                    `${boardData.title.split(' - ')[0]}`;
+                    `${boards[state.currentBoard].title.split(' - ')[0]}`; // Actualiza el título del tablero
                 
                 if (updateHash) { 
                     state.viewingThreadId = null; 
@@ -3255,6 +3341,7 @@
                 } else {
                     loadContentForBoard(); 
                 }
+                updateBoardCoverDisplay(); // Asegura que la portada se actualice al cambiar de tablero
             }
 
             // Cierra la sesión de administrador
@@ -3266,6 +3353,7 @@
                 document.getElementById('settingsToggle')?.classList.remove('text-pink-400'); 
                 setupAdminPanel(); 
                 loadContentForBoard(); 
+                updateBoardCoverDisplay(); // Actualiza la visibilidad del botón de subida de portada
             }
 
             // Función genérica para reaccionar a un post
@@ -3493,13 +3581,16 @@
             function setupAdminPanel() {
                 const adminLogoutBtn = document.getElementById('adminLogoutButton');
                 const adminToggleBtn = document.getElementById('settingsToggle'); 
+                const boardCoverUploadArea = document.getElementById('boardCoverUploadArea');
 
                 if(state.isAdmin) {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-flex'; 
                     if (adminToggleBtn) adminToggleBtn.style.color = 'var(--primary-accent-color)'; 
+                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'block'; // Mostrar botón de subida de portada
                 } else {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
                     if (adminToggleBtn) adminToggleBtn.style.color = 'var(--icon-color)';
+                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'none'; // Ocultar botón de subida de portada
                 }
             }
          
@@ -3985,7 +4076,7 @@
 
                 const clonedHeartButton = heartButton.cloneNode(true);
                 const clonedFunnyButton = funnyButton.cloneNode(true);
-                const clonedAngryButton = angryButton.cloneNode(true); // Corrected line
+                const clonedAngryButton = angryButton.cloneNode(true); 
 
                 heartButton.parentNode.replaceChild(clonedHeartButton, heartButton);
                 funnyButton.parentNode.replaceChild(clonedFunnyButton, funnyButton);
@@ -4009,23 +4100,27 @@
             function closeImageViewerModal() {
                 document.getElementById('imageViewerModal').classList.remove('flex');
                 document.body.classList.remove('modal-open'); // Desbloquear scroll
+                state.imageViewerCurrentPostId = null;
                 if (state.unsubscribeImageViewer) {
-                    state.unsubscribeImageViewer(); // Desuscribirse del listener en tiempo real
+                    state.unsubscribeImageViewer(); // Desuscribirse del listener
                     state.unsubscribeImageViewer = null;
                 }
-                state.imageViewerCurrentPostId = null;
             }
 
-            // Función para descargar la imagen ampliada
+            // Descarga la imagen ampliada
             function downloadEnlargedImage() {
-                const imgElement = document.getElementById('enlargedImage');
-                const imageUrl = imgElement.src;
-                const a = document.createElement('a');
-                a.href = imageUrl;
-                a.download = `neurochan_image_${state.imageViewerCurrentPostId || 'download'}.png`; // Nombre de archivo
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                const enlargedImage = document.getElementById('enlargedImage');
+                const imageUrl = enlargedImage.src;
+                if (imageUrl && imageUrl !== '#') {
+                    const a = document.createElement('a');
+                    a.href = imageUrl;
+                    a.download = `neurochan_image_${state.imageViewerCurrentPostId || 'download'}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } else {
+                    showGenericModal("Error de Descarga", "No hay imagen para descargar.", [{ text: 'OK', action: closeGenericModal }]);
+                }
             }
 
             // Función para renderizar historias
@@ -4106,6 +4201,87 @@
                 }, { passive: true });
             }
 
+            // Función para subir la imagen de portada del tablero actual
+            async function uploadBoardCover() {
+                const fileInput = document.getElementById('boardCoverUploadInput');
+                const file = fileInput.files[0];
+                const loadingIndicator = document.getElementById('boardCoverUploadLoading');
+
+                if (!file) {
+                    showGenericModal("Atención", "Por favor, selecciona una imagen para subir.", [{ text: 'OK', action: closeGenericModal }]);
+                    return;
+                }
+
+                if (file.size > MAX_IMAGE_SIZE) {
+                    showGenericModal("Error de Archivo", "La imagen es demasiado grande. El tamaño máximo permitido es 2MB.", [{ text: 'Entendido', action: closeGenericModal }]);
+                    return;
+                }
+
+                loadingIndicator.classList.remove('hidden');
+
+                try {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        compressImage(e.target.result, async function(compressedImage) {
+                            if (compressedImage) {
+                                await setDoc(doc(coversCollectionRef, state.currentBoard), {
+                                    image: compressedImage,
+                                    timestamp: serverTimestamp(),
+                                    uploadedBy: auth.currentUser.uid
+                                });
+                                showGenericModal("Éxito", "Portada actualizada correctamente.", [{ text: 'OK', action: closeGenericModal }]);
+                            } else {
+                                showGenericModal("Error", "No se pudo procesar la imagen.", [{ text: 'OK', action: closeGenericModal }]);
+                            }
+                            loadingIndicator.classList.add('hidden');
+                            fileInput.value = ''; // Limpiar input de archivo
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                } catch (error) {
+                    console.error("Error subiendo portada:", error);
+                    showGenericModal("Error", "Ocurrió un error al subir la portada. Inténtalo de nuevo.", [{ text: 'OK', action: closeGenericModal }]);
+                    loadingIndicator.classList.add('hidden');
+                    fileInput.value = '';
+                }
+            }
+
+            // Función para actualizar la visualización de la portada del tablero
+            function updateBoardCoverDisplay() {
+                const boardInfoEl = document.getElementById('boardInfo');
+                const boardCoverUploadArea = document.getElementById('boardCoverUploadArea');
+
+                // Mostrar/ocultar el botón de subida basado en el estado de administrador
+                if (boardCoverUploadArea) {
+                    boardCoverUploadArea.style.display = state.isAdmin ? 'block' : 'none';
+                }
+
+                // Desuscribirse del listener de portada anterior
+                if (state.unsubscribeCover) {
+                    state.unsubscribeCover();
+                    state.unsubscribeCover = null;
+                }
+
+                // Establecer la imagen de portada por defecto primero
+                const boardData = boards[state.currentBoard] || boards.meta;
+                boardInfoEl.style.backgroundImage = `url('${boardData.coverImage}')`;
+
+                // Escuchar la portada personalizada desde Firestore
+                const coverDocRef = doc(coversCollectionRef, state.currentBoard);
+                state.unsubscribeCover = onSnapshot(coverDocRef, (docSnap) => {
+                    if (docSnap.exists() && docSnap.data().image) {
+                        boardInfoEl.style.backgroundImage = `url('${DOMPurify.sanitize(docSnap.data().image)}')`;
+                    } else {
+                        // Volver a la imagen por defecto si la portada personalizada se elimina o no existe
+                        boardInfoEl.style.backgroundImage = `url('${boardData.coverImage}')`;
+                    }
+                }, (error) => {
+                    console.error("Error al obtener la portada del tablero:", error);
+                    // Volver a la imagen por defecto en caso de error
+                    boardInfoEl.style.backgroundImage = `url('${boardData.coverImage}')`;
+                });
+            }
+
             // Asegurar que el scrollbar-width se calcule y aplique para evitar "jump" en el layout
             // cuando se abre un modal y se oculta el scrollbar del body.
             function setScrollbarWidth() {
@@ -4131,4 +4307,3 @@
     </script>
 </body>
 </html>
-�
