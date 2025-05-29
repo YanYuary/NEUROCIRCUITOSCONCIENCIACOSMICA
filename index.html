@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#FFFFFF" id="themeColorMeta">
-    <title>🧠 NeuroChan: Tableros de la Mente</title>
+    <title>🧠 NeuroChan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js" defer></script>
@@ -98,21 +98,29 @@
             position: sticky; /* Fija el encabezado al hacer scroll */
             top: 0;
             z-index: 100; /* Asegura que esté por encima de otros elementos */
+            display: flex; /* Para alinear elementos */
+            align-items: center; /* Centrar verticalmente */
+            justify-content: space-between; /* Espacio entre el título y otros elementos */
         }
 
-        .app-header h1 a {
+        .app-header h1 {
             font-size: 1.75rem;
             font-weight: 700;
             color: var(--primary-accent-color);
+            text-decoration: none;
+            margin-right: auto; /* Empuja el título a la izquierda */
+        }
+        .app-header h1 a {
+            color: inherit; /* Hereda el color del h1 */
             text-decoration: none;
         }
         .app-header h1 a:hover {
             opacity: 0.8;
         }
         
+        /* Subtítulo eliminado por petición del usuario */
         .app-header #boardTitle {
-            font-size: 1rem;
-            color: var(--text-secondary-color);
+            display: none;
         }
 
         /* Contenedor de selectores de tablero */
@@ -319,9 +327,9 @@
             cursor: not-allowed;
         }
 
-        /* Selector de emojis */
+        /* Selector de emojis (solo para perfil, no para texto de post) */
         .emoji-picker {
-            display: none;
+            display: none; /* Por defecto oculto */
             position: absolute;
             top: 100%;
             right: 0; 
@@ -448,6 +456,11 @@
             font-weight: 600;
             color: var(--text-primary-color);
             font-size: 0.95rem;
+            text-decoration: none; /* Asegura que no haya subrayado por defecto */
+        }
+        .post-username:hover {
+            text-decoration: underline; /* Subrayado al pasar el ratón */
+            opacity: 0.8;
         }
         .post-timestamp {
             font-size: 0.8rem;
@@ -623,7 +636,7 @@
             display: none !important;
         }
 
-        .admin-toggle, #audioToggle {
+        .admin-toggle {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color-light);
             color: var(--icon-color);
@@ -638,7 +651,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        .admin-toggle:hover, #audioToggle:hover {
+        .admin-toggle:hover {
             background-color: var(--icon-bg-hover);
             box-shadow: 0 3px 7px rgba(0,0,0,0.15);
         }
@@ -646,6 +659,23 @@
             position: fixed;
             bottom: 1rem;
             right: 1rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            color: var(--icon-color);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+         #audioToggle:hover {
+            background-color: var(--icon-bg-hover);
+            box-shadow: 0 3px 7px rgba(0,0,0,0.15);
         }
          #audioToggle svg {
             width: 20px; height: 20px;
@@ -922,7 +952,7 @@
          #themeToggle.neon-button:hover {
              background-color: var(--button-secondary-hover-bg);
              border-color: var(--border-color-strong);
-         }
+        }
 
         /* Estilos de tema oscuro para componentes específicos */
         body.dark-theme .post,
@@ -998,25 +1028,9 @@
             cursor: pointer;
         }
         
-        /* Previsualización de escritura */
+        /* Previsualización de escritura - ELIMINADO */
         #typingPreview {
-            background-color: var(--app-bg);
-            border: 1px solid var(--border-color-light);
-            padding: 0.75rem;
-            margin-top: 1rem;
-        }
-        #typingText {
-            color: var(--text-secondary-color);
-            font-style: italic;
-        }
-        .typing-effect::after { 
-            content: "|";
-            animation: blink 1s step-end infinite;
-            color: var(--text-secondary-color);
-        }
-        @keyframes blink {
-            from, to { opacity: 1; }
-            50% { opacity: 0; }
+            display: none !important; 
         }
 
         /* Estilos de búsqueda y botón aleatorio */
@@ -1257,7 +1271,7 @@
         @media (min-width: 1024px) {
             .container {
                 /* Ajuste de ancho del contenedor para posts un 15% más anchos */
-                max-width: 1472px; /* 1280px * 1.15 */
+                max-width: 1472px; /* 1280px * 1.15 */ 
                 padding-left: 1rem; /* Keep some padding */
                 padding-right: 1rem; /* Keep some padding */
             }
@@ -1297,23 +1311,40 @@
     </style>
 </head>
 <body class="min-h-screen"> 
-    <header class="app-header text-center">
-        <h1><a href="#board=meta" aria-label="Ir al tablero principal /meta/">🧠 NeuroChan</a></h1>
-        <p id="boardTitle">/meta/ Tableros de la Mente</p>
+    <header class="app-header">
+        <h1><a href="#board=social" aria-label="Ir al tablero principal /social/" id="neuroChanTitle">🧠 NeuroChan</a></h1>
+        <div class="flex items-center gap-2">
+            <button id="settingsToggle" class="admin-toggle" aria-label="Configuración">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M11.078 2.25c-.217-.065-.437-.12-.65-.173a1.75 1.75 0 00-1.946.002c-.213.053-.433.108-.65.173C5.77 3.072 4.5 5.25 4.5 7.5c0 1.97.823 3.717 2.096 4.904.284.344.468.756.528 1.186a3.5 3.5 0 00.878 2.033L9.18 16.06a1.75 1.75 0 002.64 0l.178-.445a3.5 3.5 0 00.878-2.033c.06-.43.243-.842.528-1.186C14.677 11.217 15.5 9.47 15.5 7.5c0-2.25-1.27-4.428-3.344-5.078zM10 9.5a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+            </button>
+            <button id="infoToggle" class="admin-toggle" aria-label="Información del sitio">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+            </button>
+            <button id="adminLogoutButton" class="admin-toggle" style="display: none;" aria-label="Cerrar sesión de administrador">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </button>
+        </div>
     </header>
 
     <div class="container mx-auto max-w-7xl px-4 py-2 md:py-4"> 
         <div id="boardInfo" class="mb-8 relative overflow-hidden w-full"> 
             <div class="overlay"></div> <div class="content-wrapper">
                 </div>
-            <div id="boardCoverUploadArea" class="absolute top-2 right-2 z-30" style="display: none;">
-                <label for="boardCoverUploadInput" class="icon-button bg-gray-700 hover:bg-gray-800 text-white opacity-80 hover:opacity-100 transition-opacity" title="Subir imagen de portada">
+            <div id="boardCoverUploadArea" class="absolute top-2 right-2 z-30 flex gap-2" style="display: none;">
+                <label for="boardCoverUploadInput" class="icon-button bg-gray-700 hover:bg-gray-800 text-white opacity-80 hover:opacity-100 transition-opacity" title="Subir nueva imagen de portada">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                     </svg>
                     <span class="sr-only">Subir portada</span>
                 </label>
                 <input type="file" id="boardCoverUploadInput" class="hidden" accept="image/*">
+                <button id="selectExistingCoverButton" class="icon-button bg-gray-700 hover:bg-gray-800 text-white opacity-80 hover:opacity-100 transition-opacity" title="Seleccionar portada existente">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l1.5 1.5m1.5-1.5l-1.5-1.5m1.5 1.5L2.25 15.75m6.75-6.75l1.5 1.5m1.5-1.5l-1.5-1.5m1.5 1.5L9 9m6.75-6.75l1.5 1.5m1.5-1.5l-1.5-1.5m1.5 1.5L15.75 3m6.75 6.75l1.5 1.5m1.5-1.5l-1.5-1.5m1.5 1.5L21.75 9" />
+                    </svg>
+                </button>
                 <div id="boardCoverUploadLoading" class="hidden absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
                     <svg class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </div>
@@ -1321,20 +1352,29 @@
         </div>
 
         <div class="board-selectors-container flex flex-wrap gap-2 mb-6 justify-center">
-            <button class="board-selector active" data-board="meta" aria-label="Tablero meta">
-                /meta/
+            <button class="board-selector active" data-board="social" aria-label="Tablero social">
+                /social/
             </button>
-            <button class="board-selector" data-board="dreams" aria-label="Tablero sueños">
-                /sueños/
+            <button class="board-selector" data-board="neuro" aria-label="Tablero neuro">
+                /neuro/
             </button>
-            <button class="board-selector" data-board="techno" aria-label="Tablero tecnosoma">
-                /tecnosoma/
+            <button class="board-selector" data-board="energia" aria-label="Tablero energía">
+                /energía/
             </button>
-            <button class="board-selector" data-board="retro" aria-label="Tablero retro anime">
-                /retro-anime/
+            <button class="board-selector" data-board="fungis" aria-label="Tablero fungis">
+                /fungis/
             </button>
             <button class="board-selector" data-board="tarot" aria-label="Tablero tarot">
                 /tarot/
+            </button>
+            <button class="board-selector" data-board="lucidum" aria-label="Tablero lucidum">
+                /lucidum/
+            </button>
+            <button class="board-selector" data-board="matrix" aria-label="Tablero matrix">
+                /matrix/
+            </button>
+            <button class="board-selector" data-board="guerra" aria-label="Tablero guerra">
+                /guerra/
             </button>
         </div>
 
@@ -1348,7 +1388,6 @@
                         rows="1"
                         placeholder="¿Qué estás pensando...?"
                         aria-label="Contenido del post"></textarea>
-                    <div id="emojiPicker" class="emoji-picker"></div>
                     <button id="submitPost" class="icon-button submit-button absolute bottom-2" aria-label="Enviar post">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                     </button>
@@ -1369,7 +1408,6 @@
                     </div>
                 </div>
                 <div class="post-actions-right">
-                    <button id="emojiToggle" class="icon-button" aria-label="Abrir selector de emojis">😊</button>
                     <label for="fileUpload" class="icon-button" aria-label="Subir imagen">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
                     </label>
@@ -1381,10 +1419,7 @@
                     </button>
                 </div>
             </div>
-            <div id="typingPreview" class="mt-4 p-3 hidden">
-                <p id="typingText" class="typing-effect"></p>
             </div>
-        </div>
         
         <div id="storiesContainer" class="stories-container">
             </div>
@@ -1416,20 +1451,6 @@
                     <p><strong>Pregunta Clave:</strong> <span id="tarotQuestionInfo"></span></p>
                 </div>
             </div>
-        </div>
-
-        <div class="admin-panel flex items-center gap-2">
-            <button id="settingsToggle" class="admin-toggle" aria-label="Configuración">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M11.078 2.25c-.217-.065-.437-.12-.65-.173a1.75 1.75 0 00-1.946.002c-.213.053-.433.108-.65.173C5.77 3.072 4.5 5.25 4.5 7.5c0 1.97.823 3.717 2.096 4.904.284.344.468.756.528 1.186a3.5 3.5 0 00.878 2.033L9.18 16.06a1.75 1.75 0 002.64 0l.178-.445a3.5 3.5 0 00.878-2.033c.06-.43.243-.842.528-1.186C14.677 11.217 15.5 9.47 15.5 7.5c0-2.25-1.27-4.428-3.344-5.078zM10 9.5a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
-            </button>
-            <button id="infoToggle" class="admin-toggle" aria-label="Información del sitio">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
-            </button>
-            <button id="adminLogoutButton" class="admin-toggle" style="display: none;" aria-label="Cerrar sesión de administrador">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-            </button>
         </div>
 
         <div class="fixed bottom-4 right-4">
@@ -1475,16 +1496,14 @@
     <div id="postPasswordModal" class="modal">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="postPasswordModalTitle" class="text-xl font-semibold">Establecer Contraseña</h3>
+                <h3 id="postPasswordModalTitle" class="text-xl font-semibold">Configuración de Post</h3>
                 <button id="closePostPasswordModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
             </div>
-            <p id="postPasswordModalMessage" class="mb-4 text-sm">Establece una contraseña para poder editar o borrar este post en el futuro.</p>
+            <p id="postPasswordModalMessage" class="mb-4 text-sm">Establece un nombre (opcional) y una contraseña (opcional) para poder editar o borrar este post en el futuro.</p>
             <div id="postPasswordModalNameTitleFields" class="mb-3">
                 <label for="postPasswordModalNameInput" class="block text-sm mb-1">Tu Nombre (opcional):</label>
                 <input type="text" id="postPasswordModalNameInput" class="w-full p-2 mb-3" maxlength="30" placeholder="Anónimo">
-                <label for="postPasswordModalTitleInput" class="block text-sm mb-1" id="postPasswordModalTitleLabel">Título del Post (opcional):</label>
-                <input type="text" id="postPasswordModalTitleInput" class="w-full p-2 mb-3">
-            </div>
+                </div>
             <label for="postPasswordModalInput" class="block text-sm mb-1">Contraseña (opcional):</label>
             <input type="password" id="postPasswordModalInput" class="w-full p-2 mb-4">
             <div class="modal-actions">
@@ -1615,6 +1634,33 @@
         </div>
     </div>
 
+    <div id="selectCoverModal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Seleccionar Portada Existente</h3>
+                <button id="closeSelectCoverModal" class="text-2xl font-bold leading-none hover:text-gray-700">&times;</button>
+            </div>
+            <div id="existingCoversGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-96 overflow-y-auto p-2 border border-gray-300 rounded-lg">
+                <p class="text-center text-gray-500 col-span-full">Cargando portadas...</p>
+            </div>
+            <div class="modal-actions mt-4">
+                <button id="cancelSelectCover" class="secondary-button">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmDeleteCoverModal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-xl mb-4">Confirmar Borrado de Portada</h3>
+            <p class="mb-4">¿Estás seguro de que quieres borrar esta portada? Esta acción no se puede deshacer.</p>
+            <img id="deleteCoverPreview" src="" alt="Portada a borrar" class="max-h-40 mx-auto my-3 rounded-lg border border-gray-300" style="display:none;">
+            <div class="modal-actions">
+                <button id="cancelDeleteCover" class="secondary-button">Cancelar</button>
+                <button id="confirmDeleteCover" class="primary-button" style="background-color: var(--danger-color);">Borrar</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="app-footer">
         <p>&copy; <span id="currentYear"></span> NeuroChan. Todos los derechos reservados a la Madre Tierra y sus habitantes conscientes.</p>
         <p>Un espacio para la exploración libre del Ser.</p>
@@ -1665,8 +1711,7 @@
             const MAX_IMAGE_SIZE = 4 * 1024 * 1024; // 2 MB
             const ADMIN_HASH = '$2a$12$g6.0Q/OD2nEKC6zSQlkBGuh70mJPkd9SlMVWIbWKGlYAPe0m/RcKi'; // Contraseña de administrador hasheada
 
-            // Emojis disponibles para posts y avatares
-            const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
+            // Emojis disponibles solo para avatares de perfil
             const AVATARS = [ 
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
                 '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
@@ -1674,7 +1719,7 @@
 
             // Objeto de estado global de la aplicación
             let state = {
-                currentBoard: 'meta', // Tablero actual
+                currentBoard: 'social', // Tablero actual (cambiado de 'meta' a 'social')
                 currentTheme: localStorage.getItem('neurochan_theme') || 'light', // Tema actual (claro/oscuro)
                 audioEnabled: false, // Estado del audio de fondo
                 isAdmin: localStorage.getItem('neurochan_admin') === 'true', // Estado de administrador
@@ -1691,7 +1736,7 @@
                 tarotInitialCardFlipped: false, // Estado de la carta inicial del tarot
                 tempPostPassword: null, // Contraseña temporal para un nuevo post/respuesta
                 tempPostName: null,    // Nombre temporal para un nuevo post/respuesta
-                tempPostTitle: null, // Título temporal para un nuevo post
+                tempPostTitle: null, // Título temporal para un nuevo post (ahora solo para posts principales)
                 currentPostAvatar: null, // Avatar del usuario actual para posts
                 profileEmojiPickerTarget: null, // Elemento al que se asignará el emoji del selector de perfil
                 scrollAfterReply: null, // ID del post al que hacer scroll después de una respuesta
@@ -1699,30 +1744,32 @@
                 imageViewerCurrentPostId: null, // ID del post cuya imagen se está viendo en el modal
                 unsubscribeImageViewer: null, // Función para desuscribirse del listener del visor de imágenes
                 unsubscribeCover: null, // Función para desuscribirse del listener de portada
+                allCoversData: {}, // Caché de todas las portadas subidas
+                currentCoverToDelete: null, // ID de la portada a borrar
             };
 
-            // Datos de los tableros
+            // Datos de los tableros (actualizados)
             const boards = {
-                meta: { 
-                    title: "/meta/ - Metaprogramación y Viaje Dimensional", 
+                social: { 
+                    title: "/social/ - Metaprogramación y Viaje Dimensional", 
                     description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paraleles, Estética Retro Anime", 
                     footer: "Todos los posts son persistentes y se sincronizan en tiempo real.",
                     coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/b7f01798-8ce8-427e-8a9b-36d6de9e3879.png?raw=true"
                 },
-                dreams: { 
-                    title: "/sueños/ - Exploración Lúcida y Oneironáutica", 
-                    description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", 
-                    footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados.",
-                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/603b238d-2b79-4039-bb35-88d25f7c6d86.png?raw=true"
-                },
-                techno: { 
-                    title: "/tecnosoma/ - Conciencia Cibernética", 
+                neuro: { 
+                    title: "/neuro/ - Conciencia Cibernética", 
                     description: "Temas: Aumento Neural, Tecnología Cyberpunk, Interfaces Mente-Máquina", 
                     footer: "La carne es débil. La máquina está dispuesta. La mente es eterna.",
                     coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/8b0b6796-da1d-4852-8f5a-596410e901e2.png?raw=true"
                 },
-                retro: { 
-                    title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", 
+                energia: { 
+                    title: "/energía/ - Exploración Lúcida y Oneironáutica", 
+                    description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", 
+                    footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/603b238d-2b79-4039-bb35-88d25f7c6d86.png?raw=true"
+                },
+                fungis: { 
+                    title: "/fungis/ - Nostalgia Neon y Delirio Cyber", 
                     description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", 
                     footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos.",
                     coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/2d19befb-3cf5-4dc3-a69a-af48c19bb1b3.png?raw=true"
@@ -1732,6 +1779,24 @@
                     description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", 
                     footer: "Las cartas revelan los ecos del alma y los susurros del destino.",
                     coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/533a0312-1dad-4240-a231-2efbde031db2.png?raw=true"
+                },
+                lucidum: {
+                    title: "/lucidum/ - Conciencia Lúcida",
+                    description: "Explora la lucidez y los estados alterados de conciencia.",
+                    footer: "Despierta en el sueño, despierta en la realidad.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/lucidum_cover.png?raw=true"
+                },
+                matrix: {
+                    title: "/matrix/ - Realidad y Simulación",
+                    description: "Cuestiona la naturaleza de la realidad y las simulaciones.",
+                    footer: "La píldora roja o la píldora azul.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/matrix_cover.png?raw=true"
+                },
+                guerra: {
+                    title: "/guerra/ - Conflictos Internos y Externos",
+                    description: "Debate sobre la guerra de la conciencia y los conflictos del ego.",
+                    footer: "La batalla más grande es la que se libra dentro.",
+                    coverImage: "https://raw.githubusercontent.com/YanYuary/NEUROCIRCUITOSCONCIENCIACOSMICA/main/guerra_cover.png?raw=true"
                 }
             };
             
@@ -1766,7 +1831,7 @@
             // Función que se ejecuta cuando el DOM está completamente cargado
             document.addEventListener('DOMContentLoaded', function() {
                 setupEventListeners(); // Configura todos los manejadores de eventos
-                setupEmojiPicker(); // Configura el selector de emojis para el post principal
+                // setupEmojiPicker(); // Eliminado: Emoji picker para texto de post
                 setupProfileEmojiPicker(); // Configura el selector de emojis para el avatar de perfil
                 applyInitialTheme(); // Aplica el tema guardado o por defecto
                 if (state.isAdmin) setupAdminPanel(); // Configura el panel de administrador si el usuario es admin
@@ -1871,10 +1936,6 @@
                     document.querySelectorAll('.board-selector').forEach(btn => {
                         btn.classList.toggle('active', btn.dataset.board === state.currentBoard);
                     });
-                    
-                    document.getElementById('boardTitle').textContent = state.currentBoard === 'meta' ? 
-                        "NeuroChan" : 
-                        `${boards[state.currentBoard].title.split(' - ')[0]}`; // Actualiza el título del tablero
                 }
                 
                 const previousViewingThreadId = state.viewingThreadId;
@@ -1884,7 +1945,7 @@
                 document.getElementById('threadContainer').innerHTML = '';
 
                 if (boardActuallyChanged || state.viewingThreadId !== previousViewingThreadId || !unsubscribePosts || (boardFromUrl && boardFromUrl !== 'tarot') || (boardFromUrl === 'tarot' && state.currentBoard === 'tarot') ) {
-                    loadContentForBoard(); // Recarga el contenido si el tablero o el hilo cambian
+                    loadAndRenderPostsRealtime(); // Recarga el contenido si el tablero o el hilo cambian
                 }
                 updateUiForView(); // Actualiza la UI según la vista actual
                 updateBoardCoverDisplay(); // Actualiza la portada del tablero
@@ -1926,6 +1987,7 @@
                 setupAudioToggle(); // Alternar audio de fondo
                 setupFileUpload(); // Manejo de subida de archivos
                 document.getElementById('boardCoverUploadInput').addEventListener('change', uploadBoardCover); // Listener para subir portada
+                document.getElementById('selectExistingCoverButton').addEventListener('click', openSelectCoverModal); // Nuevo: Abrir modal de selección de portada
 
                 // Manejadores para los selectores de tablero
                 document.querySelectorAll('.board-selector').forEach(btn => {
@@ -1993,6 +2055,19 @@
                 // Delegación de eventos para posts y respuestas (mejora de rendimiento)
                 document.getElementById('postsContainer').addEventListener('click', handlePostContainerClick);
                 document.getElementById('threadContainer').addEventListener('click', handlePostContainerClick);
+
+                // Nuevos manejadores para los modales de portada
+                document.getElementById('closeSelectCoverModal').addEventListener('click', closeSelectCoverModal);
+                document.getElementById('cancelSelectCover').addEventListener('click', closeSelectCoverModal);
+                document.getElementById('cancelDeleteCover').addEventListener('click', closeConfirmDeleteCoverModal);
+                document.getElementById('confirmDeleteCover').addEventListener('click', deleteSelectedCover);
+
+                // Mejoras: Click en el título de NeuroChan para recargar/ir al inicio
+                document.getElementById('neuroChanTitle').addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default link behavior
+                    window.location.hash = `board=social`; // Navigate to the main social board
+                    // handleHashChange will be triggered, which will reset thread view and reload posts
+                });
             }
 
             // Manejador de clics delegado para los posts y sus acciones
@@ -2042,37 +2117,26 @@
                 // Enlaces de respuesta (>>ID)
                 else if (target.closest('.reply-link')) {
                     event.preventDefault();
-                    viewThread(target.closest('.reply-link').dataset.postId);
+                    // Navigate to the thread of the referenced post, and then scroll to the specific reply.
+                    const referencedPostId = target.closest('.reply-link').dataset.postId;
+                    const fullReferencedPost = state.allPostsData[referencedPostId];
+                    if (fullReferencedPost) {
+                        const threadRootId = fullReferencedPost.replyTo || referencedPostId;
+                        state.scrollAfterReply = referencedPostId; // Store the ID to scroll to after thread loads
+                        window.location.hash = `board=${fullReferencedPost.board}&post=${threadRootId}`;
+                    } else {
+                        showGenericModal("Post no encontrado", "El post al que se hace referencia no pudo ser localizado.", [{ text: 'OK', action: closeGenericModal }]);
+                    }
+                }
+                // Nombre de usuario (para ver hilo)
+                else if (target.closest('.post-username')) {
+                    event.preventDefault();
+                    viewThread(postId);
                 }
             }
 
 
-            // Configura el selector de emojis para el post principal
-            function setupEmojiPicker() {
-                const emojiToggle = document.getElementById('emojiToggle');
-                const emojiPicker = document.getElementById('emojiPicker');
-                const textarea = document.getElementById('postContent');
-                EMOJIS.forEach(emoji => {
-                    const emojiBtn = document.createElement('button');
-                    emojiBtn.className = 'emoji-option';
-                    emojiBtn.textContent = emoji;
-                    emojiBtn.addEventListener('click', function() {
-                        insertAtCursor(textarea, emoji);
-                        emojiPicker.classList.remove('active');
-                        autoResizeTextarea({ target: textarea });
-                    });
-                    emojiPicker.appendChild(emojiBtn);
-                });
-                emojiToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    emojiPicker.classList.toggle('active');
-                });
-                document.addEventListener('click', function(e) {
-                    if (!emojiPicker.contains(e.target) && e.target !== emojiToggle) {
-                        emojiPicker.classList.remove('active');
-                    }
-                });
-            }
+            // setupEmojiPicker() eliminado
 
             // Configura el selector de emojis para el perfil/avatar
             function setupProfileEmojiPicker() {
@@ -2146,7 +2210,7 @@
             async function createPost() {
                 const contentInput = document.getElementById('postContent').value.trim();
                 const name = state.tempPostName || "Anónimo";
-                const title = state.tempPostTitle || null;
+                const title = state.tempPostTitle || null; // Título solo para posts principales
                 const password = state.tempPostPassword; 
                 const fileInput = document.getElementById('fileUpload');
 
@@ -2228,11 +2292,11 @@
                     document.getElementById('postContent').value = '';
                     document.getElementById('fileUpload').value = '';
                     document.getElementById('fileName').textContent = '';
-                    document.getElementById('typingPreview').classList.add('hidden');
+                    // Typing preview eliminado, no es necesario ocultarlo
                     
                     state.tempPostPassword = null; 
                     state.tempPostName = null;    
-                    state.tempPostTitle = null;
+                    state.tempPostTitle = null; // Título solo para posts principales
                     state.replyTo = null; 
                     
                     // Actualizar avatar principal
@@ -2475,7 +2539,7 @@
                 postsContainer.appendChild(fragment);
 
                 if (postsToRender.length === 0) {
-                    postsContainer.innerHTML = '<p class="text-center col-span-full">No hay transmisiones que coincidan con tu búsqueda.</p>';
+                    postsContainer.innerHTML = '<p class="text-center col-span-full text-secondary-color">No hay transmisiones que coincidan con tu búsqueda.</p>';
                 }
             }
 
@@ -2675,10 +2739,16 @@
                     // Check visibility based on style.display, which is now the source of truth
                     const isRepliesVisible = repliesContainerForThisPost ? repliesContainerForThisPost.style.display !== 'none' : false;
 
-                    if (isRepliesVisible) {
-                        commentsButton.textContent = `Ocultar Comentarios`;
+                    // Only show comments button if there are replies and depth is less than 3
+                    if (newReplyCount > 0 && currentPostDepth < 3) {
+                        commentsButton.style.display = 'inline-flex'; 
+                        if (isRepliesVisible) {
+                            commentsButton.innerHTML = `💬 Ocultar (${newReplyCount})`;
+                        } else {
+                            commentsButton.innerHTML = `💬 (${newReplyCount})`;
+                        }
                     } else {
-                        commentsButton.textContent = `Comentarios (${newReplyCount})`;
+                        commentsButton.style.display = 'none'; // Hide the button if no comments or depth >= 3
                     }
                 }
 
@@ -2748,6 +2818,10 @@
                         element.remove();
                         currentReplyElements.delete(replyId);
                     }
+                    // Actualizar el elemento existente si ya está en el DOM
+                    else {
+                        updatePostElement(element, state.allPostsData[replyId], depth);
+                    }
                 }
 
                 const fragment = document.createDocumentFragment();
@@ -2755,9 +2829,7 @@
                     let replyElement = currentReplyElements.get(replyData.id);
                     const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
 
-                    if (replyElement) {
-                        updatePostElement(replyElement, replyData, depth); // Update existing reply
-                    } else {
+                    if (!replyElement) { // Solo crear si no existe
                         replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth); // Create new reply
                         applyPostEffects(replyData, replyElement);
                         currentReplyElements.set(replyData.id, replyElement);
@@ -2773,14 +2845,8 @@
                     parentReplyCountDisplay.textContent = state.directChildrenCounts[parentPostId] || 0;
                 }
 
-                if (repliesData.length === 0) {
-                    const noRepliesMessage = document.createElement('p');
-                    noRepliesMessage.className = 'text-sm pl-4 mt-2';
-                    noRepliesMessage.style.color = 'var(--text-secondary-color)';
-                    noRepliesMessage.textContent = 'Aún no hay respuestas en este hilo.';
-                    repliesContainer.appendChild(noRepliesMessage);
-                }
-
+                // Removido: Mensaje "Aún no hay respuestas en este hilo."
+                
                 // Cargar respuestas anidadas para cada respuesta
                 for (const replyData of repliesData) {
                     const replyElement = repliesContainer.querySelector(`#post-${replyData.id}`);
@@ -2831,9 +2897,11 @@
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
-                // Conditional Reply Button
+                // Mejoras: Botón de Responder en profundidad 3, y ocultar botón de Comentarios en profundidad 3
                 let replyButtonHtml = '';
-                if (currentPostDepth < 3) { // Allow replies up to depth 2 (creating a depth 3 post)
+                // El botón "Responder" debe ser visible para posts en profundidad 0, 1, 2 y 3.
+                // Un post en profundidad 3 puede generar una respuesta que conceptualmente es profundidad 4.
+                if (currentPostDepth <= 3) {
                     replyButtonHtml = `
                         <button class="reply-button reaction-button" aria-label="Responder a este post">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
@@ -2842,20 +2910,16 @@
                     `;
                 }
 
-                // Conditional Comments Button (clickability)
                 let commentsButtonHtml = '';
-                if (currentPostDepth < 3) { // Comments button is clickable to expand/collapse up to depth 2
+                const newReplyCount = state.directChildrenCounts[post.id] || 0;
+                // El botón de "Comentarios" (💬 (count)) debe ser visible y clicable para posts en profundidad 0, 1 y 2.
+                // Para posts en profundidad 3 o más, debe estar oculto.
+                if (newReplyCount > 0 && currentPostDepth < 3) { 
                     commentsButtonHtml = `
                         <button class="comments-button reaction-button" aria-label="Ver comentarios">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
-                            Comentarios (<span class="count">${replyCount}</span>)
+                            <svg xmlns="http://www.3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
+                            💬 (<span class="count">${newReplyCount}</span>)
                         </button>`;
-                } else { // At depth 3 or deeper, comments button is just text
-                    commentsButtonHtml = `
-                        <span class="reaction-button" style="cursor: default; color: var(--text-secondary-color);">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
-                            Comentarios (${replyCount})
-                        </span>`;
                 }
 
 
@@ -2869,7 +2933,6 @@
                                     rows="1"
                                     placeholder="Escribe una respuesta..."
                                     aria-label="Contenido de la respuesta"></textarea>
-                                <div class="emoji-picker reply-emoji-picker"></div>
                                 <button class="submit-reply icon-button submit-button absolute bottom-2" aria-label="Enviar respuesta">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 16.571V11a1 1 0 112 0v5.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                                 </button>
@@ -2878,7 +2941,6 @@
                         <div class="post-actions-row">
                             <div class="post-actions-left"></div>
                             <div class="post-actions-right">
-                                <button class="emoji-toggle icon-button" aria-label="Abrir selector de emojis">😊</button>
                                 <label class="reply-file-upload-label icon-button" aria-label="Subir imagen">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
                                     <input type="file" class="reply-file-upload hidden" accept="image/*" aria-hidden="true">
@@ -2900,7 +2962,7 @@
                     <div class="post-header">
                         <div class="post-avatar">${post.avatar}</div>
                         <div class="post-userinfo">
-                            <span class="post-username">${DOMPurify.sanitize(post.name)}</span>
+                            <a href="#board=${post.board}&post=${post.id}" class="post-username">${DOMPurify.sanitize(post.name)}</a>
                             <span class="post-timestamp">${formattedTimestamp} ${post.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''}</span>
                         </div>
                     </div>
@@ -2946,8 +3008,6 @@
                 if (!replyFormContainer) return;
 
                 const replyContentTextarea = replyFormContainer.querySelector('.reply-content');
-                const replyEmojiToggle = replyFormContainer.querySelector('.emoji-toggle');
-                const replyEmojiPicker = replyFormContainer.querySelector('.reply-emoji-picker');
                 const replyFileUploadLabel = replyFormContainer.querySelector('.reply-file-upload-label');
                 const replyFileUploadInput = replyFormContainer.querySelector('.reply-file-upload');
                 const replyFileNameSpan = replyFormContainer.querySelector('.reply-file-name');
@@ -2955,8 +3015,8 @@
                 const submitReplyButton = replyFormContainer.querySelector('.submit-reply');
                 const replyAvatar = replyFormContainer.querySelector('.reply-avatar'); 
 
-                // If currentPostDepth is 3 or more, hide the reply form entirely
-                if (currentPostDepth >= 3) {
+                // Mejoras: Si currentPostDepth es 4 o más, ocultar el formulario de respuesta completamente.
+                if (currentPostDepth > 3) {
                     replyFormContainer.style.display = 'none';
                     return;
                 }
@@ -2971,7 +3031,6 @@
                 replyContentTextarea.onblur = null;
                 replyFileUploadLabel.onmousedown = null;
                 replyFileUploadInput.onchange = null;
-                replyEmojiToggle.onclick = null;
                 replyPasswordToggle.onclick = null;
                 submitReplyButton.onclick = null;
 
@@ -3006,29 +3065,6 @@
                     replyFileNameSpan.textContent = replyFileUploadInput.files[0] ? replyFileUploadInput.files[0].name : '';
                 });
 
-                replyEmojiPicker.innerHTML = ''; // Limpiar emojis anteriores
-                EMOJIS.forEach(emoji => {
-                    const emojiBtn = document.createElement('button');
-                    emojiBtn.className = 'emoji-option';
-                    emojiBtn.textContent = emoji;
-                    emojiBtn.addEventListener('click', function() {
-                        insertAtCursor(replyContentTextarea, emoji);
-                        replyEmojiPicker.classList.remove('active');
-                        autoResizeTextarea({ target: replyContentTextarea });
-                    });
-                    replyEmojiPicker.appendChild(emojiBtn);
-                });
-
-                replyEmojiToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    document.querySelectorAll('.reply-emoji-picker.active').forEach(picker => {
-                        if (picker !== replyEmojiPicker) {
-                            picker.classList.remove('active');
-                        }
-                    });
-                    replyEmojiPicker.classList.toggle('active');
-                });
-
                 replyPasswordToggle.addEventListener('click', () => openPostPasswordModal(true, parentPostId));
 
                 submitReplyButton.addEventListener('click', async () => {
@@ -3050,11 +3086,11 @@
                     let targetReplyTo = parentPostId;
                     let initialReplyText = DOMPurify.sanitize(content);
 
-                    // Lógica para respuestas en profundidad 3 (nivel 4) o más
+                    // Mejoras: Lógica para respuestas en profundidad 3 (nivel 4)
                     // Si currentPostDepth es 3, la nueva respuesta será de profundidad 4.
                     // Su replyTo debe ser el padre del post de profundidad 3 (es decir, el de profundidad 2).
                     // Su texto debe hacer referencia al post de profundidad 3.
-                    if (currentPostDepth >= 3) {
+                    if (currentPostDepth === 3) {
                         const parentOfCurrentPost = state.allPostsData[parentPostId];
                         if (parentOfCurrentPost && parentOfCurrentPost.replyTo) {
                             targetReplyTo = parentOfCurrentPost.replyTo; // Apuntar al post de profundidad 2
@@ -3070,7 +3106,7 @@
                         avatar: replyAvatar.textContent, 
                         board: state.currentBoard,
                         text: initialReplyText,
-                        title: null, 
+                        title: null, // Título no aplica para respuestas
                         image: null,
                         name: DOMPurify.sanitize(name), // Sanitizar nombre
                         passwordHash: password && bcryptInstance ? bcryptInstance.hashSync(password, 10) : null,
@@ -3150,7 +3186,7 @@
                 avatarElement.textContent = AVATARS[Math.floor(Math.random() * AVATARS.length)]; // Usar AVATARS
                 avatarElement.dataset.avatar = avatarElement.textContent;
                 state.tempPostName = null;
-                state.tempPostTitle = null;
+                state.tempPostTitle = null; // Título no aplica para respuestas
                 state.tempPostPassword = null;
                 autoResizeTextarea({ target: formContainer.querySelector('.reply-content') });
                 if (!shouldStayOpenOnBlur && !isImageViewer) {
@@ -3250,7 +3286,7 @@
 
                 if (isHidden) {
                     repliesContainer.style.display = 'block'; // Make visible
-                    commentsButton.textContent = `Ocultar Comentarios`;
+                    commentsButton.innerHTML = `💬 Ocultar (${state.directChildrenCounts[postId] || 0})`;
                     console.log(`Replies container for post ${postId} is now display: block.`);
                     // Load replies only if not already loaded or if a refresh is needed
                     if (!repliesContainer.dataset.loaded || repliesContainer.dataset.loaded === 'false') {
@@ -3262,23 +3298,13 @@
                     }
                 } else {
                     repliesContainer.style.display = 'none'; // Hide
-                    commentsButton.textContent = `Comentarios (${state.directChildrenCounts[postId] || 0})`;
+                    commentsButton.innerHTML = `💬 (${state.directChildrenCounts[postId] || 0})`;
                     console.log(`Replies container for post ${postId} is now display: none.`);
                 }
             }
    
-            // Actualiza la previsualización de escritura
-            function updateTypingEffect(text) {
-                const preview = document.getElementById('typingPreview');
-                const typingText = document.getElementById('typingText');
-                if (text.trim().length) {
-                    typingText.textContent = text.slice(0, 140);
-                    preview.classList.remove('hidden');
-                } else {
-                    preview.classList.add('hidden');
-                }
-            }
-            document.getElementById('postContent').addEventListener('input', e => updateTypingEffect(e.target.value));
+            // updateTypingEffect() eliminado
+            // document.getElementById('postContent').addEventListener('input', e => updateTypingEffect(e.target.value)); // Eliminado
             
             // Configura el botón de alternar audio
             function setupAudioToggle() {
@@ -3330,10 +3356,6 @@
                 document.querySelectorAll('.board-selector').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.board === board);
                 });
-                
-                document.getElementById('boardTitle').textContent = board === 'meta' ? 
-                    "NeuroChan" : 
-                    `${boards[state.currentBoard].title.split(' - ')[0]}`; // Actualiza el título del tablero
                 
                 if (updateHash) { 
                     state.viewingThreadId = null; 
@@ -3586,11 +3608,11 @@
                 if(state.isAdmin) {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'inline-flex'; 
                     if (adminToggleBtn) adminToggleBtn.style.color = 'var(--primary-accent-color)'; 
-                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'block'; // Mostrar botón de subida de portada
+                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'flex'; // Mostrar botones de subida de portada
                 } else {
                     if (adminLogoutBtn) adminLogoutBtn.style.display = 'none';
                     if (adminToggleBtn) adminToggleBtn.style.color = 'var(--icon-color)';
-                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'none'; // Ocultar botón de subida de portada
+                    if (boardCoverUploadArea) boardCoverUploadArea.style.display = 'none'; // Ocultar botones de subida de portada
                 }
             }
          
@@ -3806,15 +3828,15 @@
                 const message = document.getElementById('postPasswordModalMessage');
                 const nameLabel = document.querySelector('#postPasswordModalNameInput').previousElementSibling;
                 const nameInput = document.getElementById('postPasswordModalNameInput');
-                const titleLabel = document.getElementById('postPasswordModalTitleLabel');
-                const titleInput = document.getElementById('postPasswordModalTitleInput');
+                // const titleLabel = document.getElementById('postPasswordModalTitleLabel'); // Eliminado
+                const titleInput = document.getElementById('postPasswordModalTitleInput'); // Se mantiene para compatibilidad, pero oculto
                 const passwordInput = document.getElementById('postPasswordModalInput');
 
                 if (isReply) {
                     title.textContent = "Establecer Nombre y Contraseña";
                     message.textContent = "Establece un nombre (opcional) y una contraseña (opcional) para poder editar o borrar esta respuesta en el futuro.";
                     
-                    titleLabel.style.display = 'none';
+                    // titleLabel.style.display = 'none'; // Eliminado
                     titleInput.style.display = 'none';
                     titleInput.value = '';
                     
@@ -3827,7 +3849,7 @@
                     title.textContent = "Configuración de Post";
                     message.textContent = "Establece tu nombre y título (opcionales) y una contraseña (opcional) para poder editar o borrar este post en el futuro.";
                     
-                    titleLabel.style.display = 'block';
+                    // titleLabel.style.display = 'block'; // Eliminado
                     titleInput.style.display = 'block';
                     titleInput.value = state.tempPostTitle || '';
                     
@@ -3979,8 +4001,8 @@
 
                 // Si la carta ya está volteada y seleccionada, desvoltear y ocultar info
                 if (isCurrentlyFlipped && cardElement.classList.contains('selected-for-info')) {
+                    document.querySelectorAll('.tarot-card.selected-for-info').forEach(c => c.classList.remove('selected-for-info'));
                     cardElement.classList.remove('flipped');
-                    cardElement.classList.remove('selected-for-info');
                     if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
                     return;
                 }
@@ -4253,7 +4275,7 @@
 
                 // Mostrar/ocultar el botón de subida basado en el estado de administrador
                 if (boardCoverUploadArea) {
-                    boardCoverUploadArea.style.display = state.isAdmin ? 'block' : 'none';
+                    boardCoverUploadArea.style.display = state.isAdmin ? 'flex' : 'none';
                 }
 
                 // Desuscribirse del listener de portada anterior
@@ -4263,7 +4285,7 @@
                 }
 
                 // Establecer la imagen de portada por defecto primero
-                const boardData = boards[state.currentBoard] || boards.meta;
+                const boardData = boards[state.currentBoard] || boards.social; // Usar 'social' como default
                 boardInfoEl.style.backgroundImage = `url('${boardData.coverImage}')`;
 
                 // Escuchar la portada personalizada desde Firestore
@@ -4282,26 +4304,146 @@
                 });
             }
 
-            // Asegurar que el scrollbar-width se calcule y aplique para evitar "jump" en el layout
-            // cuando se abre un modal y se oculta el scrollbar del body.
-            function setScrollbarWidth() {
-                const scrollDiv = document.createElement('div');
-                scrollDiv.style.width = '100px';
-                scrollDiv.style.height = '100px';
-                scrollDiv.style.overflow = 'scroll';
-                scrollDiv.style.position = 'absolute';
-                scrollDiv.style.top = '-9999px';
-                document.body.appendChild(scrollDiv);
-                const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-                document.body.removeChild(scrollDiv);
-                document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+            // Abre el modal para seleccionar portadas existentes
+            async function openSelectCoverModal() {
+                if (!state.isAdmin) {
+                    showGenericModal("No Autorizado", "Debes ser administrador para realizar esta acción.", [{ text: 'OK', action: closeGenericModal }]);
+                    return;
+                }
+
+                const grid = document.getElementById('existingCoversGrid');
+                grid.innerHTML = '<p class="text-center text-gray-500 col-span-full">Cargando portadas...</p>';
+                document.getElementById('selectCoverModal').classList.add('flex');
+                document.body.classList.add('modal-open');
+
+                try {
+                    const querySnapshot = await getDocs(coversCollectionRef);
+                    state.allCoversData = {}; // Limpiar caché
+                    grid.innerHTML = ''; // Limpiar mensaje de carga
+
+                    if (querySnapshot.empty) {
+                        grid.innerHTML = '<p class="text-center text-gray-500 col-span-full">No hay portadas subidas aún.</p>';
+                        return;
+                    }
+
+                    querySnapshot.forEach(docSnap => {
+                        const coverData = { id: docSnap.id, ...docSnap.data() };
+                        state.allCoversData[coverData.id] = coverData;
+
+                        const coverItem = document.createElement('div');
+                        coverItem.className = 'relative group cursor-pointer rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200';
+                        coverItem.innerHTML = `
+                            <img src="${DOMPurify.sanitize(coverData.image)}" alt="Portada de ${DOMPurify.sanitize(coverData.id)}" class="w-full h-32 object-cover"/>
+                            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-sm font-semibold p-2 text-center">
+                                /${DOMPurify.sanitize(coverData.id)}/
+                            </div>
+                            <button data-cover-id="${coverData.id}" class="delete-cover-button absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200" title="Eliminar portada">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.927a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.679-.114 1.022-.165m-1.022.165L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.679-.114 1.022-.165M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.927a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.679-.114 1.022-.165" />
+                                </svg>
+                            </button>
+                        `;
+                        coverItem.addEventListener('click', () => selectExistingCover(coverData.id));
+                        coverItem.querySelector('.delete-cover-button').addEventListener('click', (e) => {
+                            e.stopPropagation(); // Evita que se seleccione la portada al hacer clic en borrar
+                            openConfirmDeleteCoverModal(coverData.id);
+                        });
+                        grid.appendChild(coverItem);
+                    });
+                } catch (error) {
+                    console.error("Error al cargar portadas existentes:", error);
+                    grid.innerHTML = '<p class="text-center text-red-500 col-span-full">Error al cargar portadas.</p>';
+                }
             }
 
-            // Llamar a la función para establecer el ancho del scrollbar al cargar
-            setScrollbarWidth();
+            // Cierra el modal de selección de portadas
+            function closeSelectCoverModal() {
+                document.getElementById('selectCoverModal').classList.remove('flex');
+                document.body.classList.remove('modal-open');
+            }
 
-            // Listener para el evento resize del window, para reajustar el ancho del scrollbar si cambia
-            window.addEventListener('resize', setScrollbarWidth);
+            // Selecciona una portada existente y la aplica al tablero actual
+            async function selectExistingCover(coverId) {
+                const coverData = state.allCoversData[coverId];
+                if (coverData) {
+                    try {
+                        await setDoc(doc(coversCollectionRef, state.currentBoard), {
+                            image: coverData.image,
+                            timestamp: serverTimestamp(),
+                            uploadedBy: auth.currentUser.uid // O el UID del usuario que subió la original
+                        });
+                        showGenericModal("Éxito", `Portada del tablero /${state.currentBoard}/ actualizada con la imagen de /${coverId}/.`, [{ text: 'OK', action: closeGenericModal }]);
+                        closeSelectCoverModal();
+                    } catch (error) {
+                        console.error("Error al aplicar portada existente:", error);
+                        showGenericModal("Error", "No se pudo aplicar la portada seleccionada.", [{ text: 'OK', action: closeGenericModal }]);
+                    }
+                } else {
+                    showGenericModal("Error", "Portada seleccionada no encontrada.", [{ text: 'OK', action: closeGenericModal }]);
+                }
+            }
+
+            // Abre el modal para confirmar el borrado de una portada
+            function openConfirmDeleteCoverModal(coverId) {
+                state.currentCoverToDelete = coverId;
+                const coverData = state.allCoversData[coverId];
+                if (coverData && coverData.image) {
+                    document.getElementById('deleteCoverPreview').src = DOMPurify.sanitize(coverData.image);
+                    document.getElementById('deleteCoverPreview').style.display = 'block';
+                } else {
+                    document.getElementById('deleteCoverPreview').style.display = 'none';
+                }
+                document.getElementById('confirmDeleteCoverModal').classList.add('flex');
+                document.body.classList.add('modal-open');
+            }
+
+            // Cierra el modal de confirmación de borrado de portada
+            function closeConfirmDeleteCoverModal() {
+                state.currentCoverToDelete = null;
+                document.getElementById('confirmDeleteCoverModal').classList.remove('flex');
+                document.body.classList.remove('modal-open');
+                document.getElementById('deleteCoverPreview').style.display = 'none';
+            }
+
+            // Elimina la portada seleccionada de Firestore
+            async function deleteSelectedCover() {
+                if (!state.currentCoverToDelete) {
+                    showGenericModal("Error", "No hay portada seleccionada para borrar.", [{ text: 'OK', action: closeGenericModal }]);
+                    return;
+                }
+                if (!state.isAdmin) {
+                    showGenericModal("No Autorizado", "Debes ser administrador para borrar portadas.", [{ text: 'OK', action: closeGenericModal }]);
+                    return;
+                }
+
+                try {
+                    await deleteDoc(doc(coversCollectionRef, state.currentCoverToDelete));
+                    showGenericModal("Éxito", "Portada eliminada correctamente.", [{ text: 'OK', action: closeGenericModal }]);
+                    closeConfirmDeleteCoverModal();
+                    openSelectCoverModal(); // Recargar la lista de portadas
+                } catch (error) {
+                    console.error("Error al borrar portada:", error);
+                    showGenericModal("Error", "No se pudo borrar la portada.", [{ text: 'OK', action: closeGenericModal }]);
+                }
+            }
+
+            // Asegurar que el scrollbar-width se calcule y aplique para evitar "jump" en el layout
+            // cuando se abre un modal y se oculta
+            function getScrollbarWidth() {
+                const outer = document.createElement('div');
+                outer.style.visibility = 'hidden';
+                outer.style.overflow = 'scroll'; // Force scrollbars to appear
+                outer.style.msOverflowStyle = 'scrollbar'; // For IE
+                document.body.appendChild(outer);
+                const inner = document.createElement('div');
+                outer.appendChild(inner);
+                const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+                outer.parentNode.removeChild(outer);
+                return scrollbarWidth;
+            }
+
+            // Set the scrollbar width as a CSS variable
+            document.documentElement.style.setProperty('--scrollbar-width', `${getScrollbarWidth()}px`);
 
         })(); // Cierre de la IIFE
     </script>
