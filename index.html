@@ -1618,8 +1618,8 @@
 
         // IIFE para encapsular el código y evitar variables globales no deseadas
         (function() {
-            const MAX_IMAGE_SIZE = 3 * 1024 * 1024; // 2 MB
-            const ADMIN_HASH = '$2a$12$bReWATVwRiaPSgz/auV1G.FnLKPCAJR.QdN1ik5ZhVfHR1vDBhhQC'; // Contraseña de administrador hasheada
+            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
+            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vUcnVe'; // Contraseña de administrador hasheada
 
             // Emojis disponibles para posts y avatares
             const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
@@ -1709,12 +1709,11 @@
                 // Listener de autenticación de Firebase
                 onAuthStateChanged(auth, (user) => {
                     if (user) { 
-                        console.log("Usuario autenticado anónimamente:", user.uid); 
+                        // Autenticación anónima exitosa, no es necesario loguear en consola para usuarios anónimos
                         handleHashChange(); // Carga el contenido basado en el hash de la URL
                     } else {
-                        console.log("Usuario no autenticado, intentando autenticación anónima...");
+                        // Intenta iniciar sesión anónimamente si no hay usuario autenticado
                         signInAnonymously(auth).catch((error) => {
-                            console.error("Error en autenticación anónima:", error);
                             let userMessage = 'Error de conexión. Intenta recargar.';
                             const loadingMessageElement = document.getElementById('loadingMessage');
 
@@ -2292,7 +2291,7 @@
                 }
 
                 if (!auth.currentUser) {
-                    console.log("Esperando autenticación para cargar posts...");
+                    // No es necesario loguear, pero se mantiene el mensaje de carga
                     if (loadingMessage) {
                         loadingMessage.textContent = 'Esperando conexión segura...';
                          loadingMessage.classList.remove('hidden');
@@ -3138,6 +3137,9 @@
                     repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
                     repliesContainer.style.borderColor = 'var(--divider-color)';
                     repliesContainer.dataset.parentId = postId;
+                    if (depth >= 2 && !state.viewingThreadId) { // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
+                        repliesContainer.classList.add('hidden');
+                    }
                     postElement.appendChild(repliesContainer);
                 }
 
