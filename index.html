@@ -10,35 +10,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js" defer></script>
     
     <style>
-        /* Importación de fuentes para una tipografía moderna y legible */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-        /* Definición de variables CSS para un sistema de diseño flexible y temático */
         :root {
-            /* Colores del tema claro */
-            --app-bg: #F0F2F5; /* Fondo de la aplicación */
-            --card-bg: #FFFFFF; /* Fondo de tarjetas y componentes */
-            --text-primary-color: #050505; /* Color de texto principal */
-            --text-secondary-color: #65676B; /* Color de texto secundario (descripciones, timestamps) */
-            --text-tertiary-color: #8A8D91; /* Color de texto terciario (notas pequeñas, IDs) */
-            --border-color-light: #CED0D4; /* Borde ligero */
-            --border-color-strong: #BCC0C4; /* Borde más fuerte */
-            --divider-color: #E4E6EB; /* Líneas divisorias */
-            
-            /* Colores corporativos actualizados (púrpura vibrante) */
-            --primary-accent-color: #6a0dad; /* Color principal de acento (botones, enlaces, títulos) */
-            --primary-accent-hover-color: #590bb3; /* Color de acento al pasar el ratón */
-            --danger-color: #E02C4A; /* Color para acciones peligrosas (borrar) */
-            --success-color: #31A24C; /* Color para acciones exitosas (tú, guardado) */
-            --icon-color: #606770; /* Color por defecto de los iconos */
-            --icon-bg-hover: #E4E6EB; /* Fondo de icono al pasar el ratón */
-            --button-secondary-bg: #E4E6EB; /* Fondo de botón secundario */
-            --button-secondary-text: #050505; /* Texto de botón secundario */
-            --button-secondary-hover-bg: #D8DADF; /* Fondo de botón secundario al pasar el ratón */
-            --link-color: var(--primary-accent-color); /* Color de enlaces */
+            --app-bg: #F0F2F5; 
+            --card-bg: #FFFFFF;
+            --text-primary-color: #050505; 
+            --text-secondary-color: #65676B; 
+            --text-tertiary-color: #8A8D91; 
+            --border-color-light: #CED0D4; 
+            --border-color-strong: #BCC0C4;
+            --divider-color: #E4E6EB;
+            /* Colores corporativos actualizados */
+            --primary-accent-color: #6a0dad; 
+            --primary-accent-hover-color: #590bb3;
+            --danger-color: #E02C4A; 
+            --success-color: #31A24C; 
+            --icon-color: #606770;
+            --icon-bg-hover: #E4E6EB;
+            --button-secondary-bg: #E4E6EB;
+            --button-secondary-text: #050505;
+            --button-secondary-hover-bg: #D8DADF;
+            --link-color: var(--primary-accent-color);
 
-            /* Colores del tema oscuro (ajustados para contraste y estética) */
             --dark-app-bg: #18191A;
             --dark-card-bg: #242526;
             --dark-text-primary-color: #E4E6EB;
@@ -52,12 +47,8 @@
             --dark-button-secondary-bg: #3A3B3C;
             --dark-button-secondary-text: #E4E6EB;
             --dark-button-secondary-hover-bg: #4E5052;
-
-            /* Variable para compensar el ancho del scrollbar en modales */
-            --scrollbar-width: 0px;
         }
 
-        /* Aplicación del tema oscuro mediante una clase en el body */
         body.dark-theme {
             --app-bg: var(--dark-app-bg);
             --card-bg: var(--dark-card-bg);
@@ -74,30 +65,27 @@
             --button-secondary-hover-bg: var(--dark-button-secondary-hover-bg);
         }
 
-        /* Estilos base del cuerpo */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--app-bg);
             color: var(--text-primary-color);
-            overflow-x: hidden; /* Previene scroll horizontal no deseado */
-            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Transición suave de tema */
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
         
-        /* Nuevo: Evitar el scroll del body cuando un modal está abierto */
+        /* New: Prevent scrolling when modal is open */
         body.modal-open {
             overflow: hidden;
-            padding-right: var(--scrollbar-width); /* Compensa el ancho del scrollbar */
         }
 
-        /* Encabezado de la aplicación */
         .app-header {
             background-color: var(--card-bg);
             padding: 0.75rem 1rem;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             margin-bottom: 1.5rem;
-            position: sticky; /* Fija el encabezado al hacer scroll */
+            position: sticky;
             top: 0;
-            z-index: 100; /* Asegura que esté por encima de otros elementos */
+            z-index: 100;
         }
 
         .app-header h1 a {
@@ -115,19 +103,18 @@
             color: var(--text-secondary-color);
         }
 
-        /* Contenedor de selectores de tablero */
         .board-selectors-container {
-            margin-bottom: 1.75rem; /* Más espacio */
+            margin-bottom: 1.5rem;
         }
 
         .board-selector {
             font-weight: 500;
             padding: 0.625rem 1rem;
-            border-radius: 9999px; /* Botones más redondeados */
+            border-radius: 9999px; /* More rounded */
             border: 1px solid var(--border-color-light);
             background-color: var(--card-bg);
             color: var(--text-secondary-color);
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
         }
 
         .board-selector:hover {
@@ -146,13 +133,12 @@
             border-color: var(--primary-accent-hover-color);
         }
 
-        /* Información del tablero */
         #boardInfo {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color-light);
             border-radius: 8px;
             padding: 1rem;
-            margin-bottom: 1.25rem; /* Espacio consistente */
+            margin-bottom: 1rem; /* Reduced vertical space */
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         #boardInfo h2 {
@@ -167,14 +153,13 @@
             line-height: 1.4;
         }
 
-        /* Tarjeta del formulario de publicación */
         .post-form-card {
             background-color: var(--card-bg);
-            border: 1.5px solid var(--border-color-light);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-color-light); /* Slightly thicker border */
+            border-radius: 12px; /* More rounded corners */
             padding: 1.5rem;
-            margin-bottom: 1.25rem; /* Espacio consistente */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 1rem; /* Reduced vertical space */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Stronger shadow */
         }
 
         .post-form-card .input-field {
@@ -191,9 +176,9 @@
             color: var(--text-secondary-color);
         }
         .post-form-card .input-field:focus {
-            outline: none; /* Eliminar outline por defecto */
+            outline: none;
             border-color: var(--primary-accent-color);
-            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2); /* Sombra de enfoque */
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
         }
 
         .post-input-area {
@@ -206,7 +191,7 @@
         }
 
         .post-input-area .relative.flex-grow {
-            position: relative;
+            position: relative; /* Ensure positioning context for absolute button */
         }
 
         .post-input-area textarea {
@@ -215,14 +200,15 @@
             border: 1px solid var(--border-color-light);
             color: var(--text-primary-color);
             border-radius: 20px;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1rem; /* Adjusted padding for better button alignment */
             font-size: 0.95rem;
             resize: none;
             min-height: 40px;
             line-height: 1.3;
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-            padding-right: calc(1rem + 36px + 1rem); /* Espacio para el botón de enviar */
+            /* Adjusted padding-right for button alignment */
+            padding-right: calc(1rem + 36px + 1rem); /* 1rem default padding, 36px button width, 1rem space */
         }
         .post-input-area textarea::placeholder {
             color: var(--text-secondary-color);
@@ -237,16 +223,15 @@
             box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
         }
 
-        /* Fila de acciones del post */
         .post-actions-row {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            align-items: center; /* Align items vertically in the middle */
+            justify-content: space-between; /* Distribute items with space between */
             gap: 0.5rem;
             margin-top: 0.75rem;
             padding-top: 0.75rem;
             border-top: 1px solid var(--divider-color);
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
         .post-actions-left, .post-actions-right {
             display: flex;
@@ -254,10 +239,9 @@
             gap: 0.5rem;
         }
         .post-actions-right {
-            margin-left: auto;
+            margin-left: auto; /* Push to the right */
         }
 
-        /* Botones de icono */
         .icon-button {
             background-color: var(--button-secondary-bg);
             color: var(--icon-color);
@@ -268,8 +252,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            position: relative;
+            transition: background-color 0.2s, color 0.2s;
+            position: relative; /* For tooltip */
         }
         .icon-button:hover {
             background-color: var(--button-secondary-hover-bg);
@@ -282,9 +266,10 @@
         .icon-button.submit-button {
             background-color: var(--primary-accent-color);
             color: #FFFFFF;
-            right: 1rem;
+            right: 1rem; /* Aligned with textarea padding */
+            /* Vertically center the button within the textarea's padding */
             transform: translateY(-50%);
-            top: 50%;
+            top: 50%; /* Position relative to the middle of the textarea container */
         }
         .icon-button.submit-button:hover {
             background-color: var(--primary-accent-hover-color);
@@ -295,7 +280,6 @@
             cursor: not-allowed;
         }
 
-        /* Selector de emojis */
         .emoji-picker {
             display: none;
             position: absolute;
@@ -326,7 +310,6 @@
             background-color: var(--icon-bg-hover);
         }
 
-        /* Etiqueta de subida de archivo */
         .file-upload-label {
             display: inline-flex;
             align-items: center;
@@ -347,7 +330,7 @@
             margin-right: 0.5rem;
         }
 
-        /* Botones primarios y secundarios */
+
         .primary-button {
             background-color: var(--primary-accent-color);
             color: #FFFFFF;
@@ -355,7 +338,7 @@
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             border: none;
-            transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.2s;
             cursor: pointer;
         }
         .primary-button:hover {
@@ -372,7 +355,7 @@
             padding: 0.75rem 1.5rem;
             border-radius: 6px;
             border: 1px solid var(--border-color-light);
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            transition: background-color 0.2s, border-color 0.2s;
             cursor: pointer;
         }
         .secondary-button:hover {
@@ -380,20 +363,19 @@
             border-color: var(--border-color-strong);
         }
 
-        /* Estilos de un post individual */
         .post {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color-light);
             border-radius: 8px;
-            margin-bottom: 0.75rem; /* Espacio consistente */
+            margin-bottom: 0.5rem; /* Reduced vertical space */
             padding: 1rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             transition: box-shadow 0.2s;
-            animation: fadeIn 0.4s ease-out; /* Animación de entrada */
+            animation: fadeIn 0.5s ease-out; 
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -433,23 +415,24 @@
         .post .post-title { 
             font-size: 1.15rem; 
             font-weight: 600;
-            color: var(--primary-accent-color);
+            color: var(--primary-accent-color); /* Matches NeuroChan title color */
             margin-bottom: 0.5rem;
         }
         .post-title-link {
-            text-decoration: none;
+            text-decoration: none; /* No underline */
             color: inherit;
         }
         .post-title-link:hover {
-            opacity: 0.8;
-            text-decoration: underline; /* Subrayado al pasar el ratón */
+            opacity: 0.8; /* Subtle hover effect */
+            text-decoration: none; /* Ensure no underline on hover */
         }
+
 
         .post-content { 
             font-family: 'Inter', sans-serif; 
             color: var(--text-primary-color);
             font-size: 0.95rem;
-            line-height: 1.6; /* Ajustado para mejor legibilidad */
+            line-height: 1.5;
             word-wrap: break-word;
             margin-bottom: 0.75rem;
         }
@@ -459,32 +442,32 @@
             border-radius: 6px;
             margin-top: 0.75rem;
             border: 1px solid var(--border-color-light);
-            cursor: zoom-in;
+            cursor: zoom-in; /* Indicate clickability */
         }
         .post-image-container { 
             margin: 0.75rem 0;
         }
-        /* Imágenes en el tablero principal: ancho completo */
+        /* Main board images: full width, no gaps */
         #postsContainer .post-image-container img {
             width: 100%; 
             height: auto;
             max-height: 500px; 
-            object-fit: cover;
+            object-fit: cover; /* Ensures image fills container */
             border-radius: 8px;
             border: 1px solid var(--border-color-light);
             cursor: zoom-in;
         }
-        /* Imágenes en vista de hilo: tamaño normal, no estiradas */
+        /* Thread view images: normal size, not stretched */
         #threadContainer .post-image-container img {
-            max-width: 100%;
+            max-width: 100%; /* Ensure it doesn't overflow */
             height: auto;
-            object-fit: contain;
+            object-fit: contain; /* Show full image, even if it leaves space */
             border-radius: 8px;
             border: 1px solid var(--border-color-light);
             cursor: zoom-in;
         }
 
-        /* Acciones del post (reacciones, comentarios) */
+
         .post-actions {
             display: flex;
             justify-content: space-between; 
@@ -503,7 +486,7 @@
             font-size: 0.9rem;
             display: inline-flex;
             align-items: center;
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            transition: background-color 0.2s, color 0.2s;
         }
         .reaction-button svg { 
             width: 18px;
@@ -525,7 +508,6 @@
             background-color: rgba(224, 44, 74, 0.1);
         }
 
-        /* Estilos generales de modales */
         .modal {
             display: none; 
             position: fixed;
@@ -584,7 +566,6 @@
             gap: 0.5rem;
         }
 
-        /* Panel de administración y botones flotantes */
         .admin-panel {
             position: fixed;
             top: 1rem;
@@ -593,7 +574,7 @@
             display: flex; 
             gap: 0.5rem; 
         }
-        /* Ocultar panel de administración y audio cuando el modal está abierto */
+        /* Hide admin panel and audio toggle when modal is open */
         body.modal-open .admin-panel,
         body.modal-open #audioToggle {
             display: none !important;
@@ -612,7 +593,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: background-color 0.2s, box-shadow 0.2s;
         }
         .admin-toggle:hover, #audioToggle:hover {
             background-color: var(--icon-bg-hover);
@@ -636,8 +617,40 @@
          #adminLogoutButton.admin-toggle:hover {
              background-color: rgba(224, 44, 74, 0.1);
          }
+        #settingsToggle { 
+        }
 
-        /* Indicador de respuesta */
+
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0; 
+            width: 280px; 
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 0.75rem; 
+            z-index: 50;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); 
+            gap: 0.25rem; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .emoji-picker.active {
+            display: grid;
+        }
+        .emoji-option {
+            font-size: 1.5rem; 
+            cursor: pointer;
+            text-align: center;
+            padding: 0.25rem; 
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .emoji-option:hover {
+            background-color: var(--icon-bg-hover);
+        }
+
         .reply-indicator {
             border-left: 3px solid var(--primary-accent-color);
             padding-left: 1rem; 
@@ -658,7 +671,6 @@
             color: var(--primary-accent-hover-color);
         }
 
-        /* Tooltips */
         .tooltip .tooltip-text {
             visibility: hidden;
             background-color: #333; 
@@ -688,7 +700,7 @@
             color: var(--text-secondary-color);
         }
 
-        /* Estilos para el juego de Tarot */
+        /* Estilos para el juego de Tarot (modernizado) */
         #tarotGameContainer {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color-light);
@@ -732,6 +744,7 @@
             100% { transform: rotateY(360deg) scale(0.5); opacity: 0; }
         }
 
+
         #tarotSpreadContainer {
             display: flex;
             flex-direction: column;
@@ -760,11 +773,8 @@
             transform: translateY(20px); 
         }
          .tarot-card.placed { 
-            animation: cardDealFadeIn 0.4s ease-out forwards; /* Nueva animación para la colocación */
-        }
-        @keyframes cardDealFadeIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .tarot-card:hover {
@@ -843,7 +853,6 @@
             color: var(--text-primary-color);
          }
 
-        /* Pie de página */
         footer {
             text-align: center;
             padding: 2rem 1rem;
@@ -860,7 +869,7 @@
             text-decoration: underline;
         }
 
-        /* Limpieza de estilos "neon" y "glitch" */
+        /* Clases de utilidad y limpieza de estilos "neon" y "glitch" */
         .glitch, .neon-text:not(.post-title), .neon-border, .neon-button, .crt-effect, .fractal-bg,
         .dream-glow, .tech-glow, .dimension-glow, .transmission-effect {
             animation: none !important;
@@ -900,7 +909,6 @@
              border-color: var(--border-color-strong);
          }
 
-        /* Estilos de tema oscuro para componentes específicos */
         body.dark-theme .post,
         body.dark-theme .post-form-card,
         body.dark-theme #boardInfo,
@@ -912,7 +920,7 @@
         body.dark-theme #tarotGameContainer,
         body.dark-theme #tarotCardInfoDisplay,
         body.dark-theme .image-viewer-content,
-        body.dark-theme .stories-container {
+        body.dark-theme .stories-container { /* Dark theme for stories container */
             border-color: var(--dark-border-color-light);
         }
         body.dark-theme .post-form-card .input-field,
@@ -945,7 +953,6 @@
              border-color: var(--dark-border-color-strong);
          }
 
-        /* Mejoras en el enfoque visual para accesibilidad */
         button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible:not([tabindex="-1"]) {
             outline: 2px solid var(--primary-accent-color);
             outline-offset: 2px;
@@ -955,10 +962,9 @@
         .post-form-card textarea:focus-visible,
         .modal-content input:focus-visible,
         .modal-content textarea:focus-visible {
-            outline: none; /* Eliminar el outline por defecto para usar nuestro box-shadow */
+            outline: none; 
         }
 
-        /* Avatar */
         .avatar { 
             filter: none; 
             width: 40px;
@@ -974,7 +980,6 @@
             cursor: pointer;
         }
         
-        /* Previsualización de escritura */
         #typingPreview {
             background-color: var(--app-bg);
             border: 1px solid var(--border-color-light);
@@ -994,22 +999,24 @@
             from, to { opacity: 1; }
             50% { opacity: 0; }
         }
+        [aria-hidden="true"] { 
+        }
 
-        /* Estilos de búsqueda y botón aleatorio */
+        /* Search and Random Post Button Styling */
         .search-input-container {
             display: flex;
             align-items: center;
             flex-grow: 1;
             gap: 0.5rem;
-            transition: width 0.3s ease-out, opacity 0.3s ease-out;
-            width: 0;
+            transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            width: 0; /* Hidden by default */
             opacity: 0;
             overflow: hidden;
-            flex-shrink: 1;
+            flex-shrink: 1; /* Allow it to shrink */
         }
 
         .search-input-container.active {
-            width: 100%;
+            width: 100%; /* Take full width when active */
             opacity: 1;
         }
 
@@ -1022,7 +1029,7 @@
             padding: 0.625rem 1rem;
             font-size: 0.9rem;
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-            min-width: 100px;
+            min-width: 100px; /* Ensure it's not too small when active */
         }
         #postSearchInput::placeholder {
             color: var(--text-secondary-color);
@@ -1035,7 +1042,7 @@
         }
 
         #randomPostButton {
-            font-size: 1.2rem;
+            font-size: 1.2rem; /* Make emoji visible */
             padding: 0.5rem;
             width: 36px;
             height: 36px;
@@ -1070,7 +1077,7 @@
             border-color: var(--dark-border-color-strong);
         }
 
-        /* Tooltip para el botón aleatorio */
+        /* Tooltip for random button */
         .tooltip-random {
             position: relative;
             display: inline-block;
@@ -1085,7 +1092,7 @@
             padding: 5px 8px;
             position: absolute;
             z-index: 1;
-            bottom: 125%;
+            bottom: 125%; /* Position above the button */
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
@@ -1099,22 +1106,22 @@
             opacity: 1;
         }
 
-        /* Estilos específicos del modal de visualización de imágenes */
+        /* Image Viewer Modal Specific Styles */
         .modal-content.image-viewer-content {
-            max-width: 90vw;
+            max-width: 90vw; /* Wider for images */
             max-height: 90vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 1rem;
             position: relative;
-            overflow-y: auto;
-            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling if content overflows vertically */
+            box-sizing: border-box; /* Include padding in width/height */
         }
 
         #enlargedImage {
             max-width: 100%;
-            max-height: 70vh;
+            max-height: 70vh; /* Leave space for details and reactions */
             object-fit: contain;
             border-radius: 8px;
             border: 1px solid var(--border-color-light);
@@ -1142,12 +1149,12 @@
         .image-viewer-content .close-button:hover {
             background: rgba(0, 0, 0, 0.6);
         }
-        /* Botón de descarga */
+        /* New: Download button styling */
         .image-viewer-content #downloadImageButton {
-            right: 2.5rem;
+            right: 2.5rem; /* Position next to close button */
         }
         
-        /* Contenedor de reacciones en el visor de imágenes */
+        /* Image viewer reactions container */
         #imageViewerReactionsContainer {
             width: 100%;
             display: flex;
@@ -1156,53 +1163,49 @@
             padding-top: 0.75rem;
             border-top: 1px solid var(--divider-color);
             margin-top: 1rem;
-            background-color: var(--card-bg);
-            border: 1.5px solid var(--border-color-light);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: var(--card-bg); /* Match post-form-card background */
+            border: 1.5px solid var(--border-color-light); /* Match post-form-card border */
+            border-radius: 12px; /* Match post-form-card border-radius */
+            padding: 1.5rem; /* Match post-form-card padding */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Match post-form-card shadow */
         }
         body.dark-theme #imageViewerReactionsContainer {
             background-color: var(--dark-card-bg);
             border-color: var(--dark-border-color-strong);
         }
 
-        /* Estilos de Historias */
+        /* Stories styles */
         #storiesContainer {
             display: flex;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
-            gap: 0.75rem;
-            padding: 0.5rem 0.5rem;
-            margin-bottom: 1.25rem; /* Espacio consistente */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scroll-snap-type: x mandatory; /* Snap to items */
+            gap: 0.75rem; /* Space between stories */
+            padding: 0.5rem 0.5rem; /* Vertical padding and slight horizontal padding */
+            margin-bottom: 1rem; /* Reduced vertical space */
             border-radius: 12px;
             background-color: var(--card-bg);
             border: 1.5px solid var(--border-color-light);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            cursor: grab; /* Indica que es arrastrable */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
-        #storiesContainer.active {
-            cursor: grabbing; /* Indica que se está arrastrando */
-        }
-        #storiesContainer::-webkit-scrollbar {
+        #storiesContainer::-webkit-scrollbar { /* Hide scrollbar for Webkit browsers */
             display: none;
         }
 
         .story-item {
-            flex-shrink: 0;
-            width: 80px;
-            height: 120px;
+            flex-shrink: 0; /* Prevent shrinking */
+            width: 80px; /* Fixed width */
+            height: 120px; /* Taller than wide */
             border-radius: 8px;
             overflow: hidden;
             position: relative;
             cursor: pointer;
-            scroll-snap-align: start;
-            border: 2px solid transparent;
+            scroll-snap-align: start; /* Snap point */
+            border: 2px solid transparent; /* For hover effect */
             transition: border-color 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for stories */
         }
         .story-item:hover {
             border-color: var(--primary-accent-color);
@@ -1210,8 +1213,8 @@
         .story-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.8);
+            object-fit: cover; /* Cover the container */
+            filter: brightness(0.8); /* Slightly darken for text readability */
         }
         .story-author-name {
             position: absolute;
@@ -1225,36 +1228,38 @@
             padding: 0.25rem 0;
             background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            word-break: break-word;
-            white-space: normal;
+            word-break: break-word; /* Allow long names to break */
+            white-space: normal; /* Allow text to wrap */
         }
 
-        /* Diseño responsivo */
-        @media (min-width: 1024px) {
+        /* Responsive grid for posts container */
+        @media (min-width: 1024px) { /* lg breakpoint */
             .container {
-                padding-left: 6rem;
-                padding-right: 6rem;
+                padding-left: 6rem; /* Wider margins for desktop */
+                padding-right: 6rem; /* Wider margins for desktop */
             }
             #postsContainer {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* Two columns on desktop */
             }
         }
-        @media (max-width: 1023px) {
+        @media (max-width: 1023px) { /* Below lg breakpoint (mobile/tablet) */
             .container {
-                padding-left: 0;
-                padding-right: 0;
+                padding-left: 0; /* No padding on mobile */
+                padding-right: 0; /* No padding on mobile */
             }
             #postsContainer {
-                grid-template-columns: repeat(1, minmax(0, 1fr));
-                gap: 0;
+                grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column on mobile/tablet */
+                gap: 0; /* No gap between posts on mobile */
             }
+            /* Ensure posts themselves have no horizontal padding on mobile */
             .post {
-                border-radius: 0;
+                border-radius: 0; /* No rounded corners on mobile edges */
                 margin-left: 0;
                 margin-right: 0;
             }
+            /* Ensure post-form-card and storiesContainer have no horizontal padding on mobile */
             .post-form-card, #storiesContainer, #boardInfo {
-                border-radius: 0;
+                border-radius: 0; /* No rounded corners on mobile edges */
                 margin-left: 0;
                 margin-right: 0;
             }
@@ -1368,7 +1373,7 @@
                 <h3 id="tarotCardNameInfo" class="text-xl font-semibold text-center mb-3"></h3>
                 <img id="tarotCardImageInfo" src="#" alt="Carta del Tarot Seleccionada" class="mx-auto my-3 max-h-60 rounded"/>
                 <div class="text-sm space-y-2">
-                    <p><strong>Posición:</strong> <span id="tarotPositionInfo"></span></p> <p><strong>Significado (Derecha):</strong> <span id="tarotMeaningUpInfo"></span></p>
+                    <p><strong>Significado (Derecha):</strong> <span id="tarotMeaningUpInfo"></span></p>
                     <p><strong>Significado (Invertida):</strong> <span id="tarotMeaningRevInfo"></span></p>
                     <p><strong>Pregunta Clave:</strong> <span id="tarotQuestionInfo"></span></p>
                 </div>
@@ -1578,7 +1583,7 @@
     </footer>
 
     <script type="module">
-        // Importación de módulos de Firebase
+        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
             getFirestore, collection, addDoc, onSnapshot, 
@@ -1590,7 +1595,6 @@
             getAuth, signInAnonymously, onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
-        // Carga de bcrypt.js de forma robusta
         let bcryptInstance;
         if (typeof bcrypt !== 'undefined') {
             bcryptInstance = bcrypt;
@@ -1600,7 +1604,6 @@
             console.error("Bcrypt.js no está cargado. Las funciones de contraseña no funcionarán.");
         }
         
-        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDQ6q9KkYS0To-BJEjxQSQUyQ65C6wam6o",
             authDomain: "neurocircuitos.firebaseapp.com",
@@ -1616,60 +1619,56 @@
         const auth = getAuth(app);
         const postsCollectionRef = collection(db, "Posts");
 
-        // IIFE para encapsular el código y evitar variables globales no deseadas
         (function() {
-            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
-            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vUcnVe'; // Contraseña de administrador hasheada
+            const MAX_IMAGE_SIZE = 3 * 1024 * 1024; 
+            const ADMIN_HASH = '$2a$12$WOw1y6eWAuHGhRJp7Q/P.uuE4mnnkscCmCAWTQig6/FijJlJ5EhYm'; 
 
-            // Emojis disponibles para posts y avatares
-            const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
-            const AVATARS = [ 
+            const EMOJIS = ['😀','😂','🤣','❤️','😍','🤯','😎','👁️','🤖', '🦾', '🦿', '🧬', '🔭','👾','👻','👹','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
+            
+            let state = {
+                currentBoard: 'meta',
+                currentTheme: localStorage.getItem('neurochan_theme') || 'light', 
+                audioEnabled: false,
+                isAdmin: localStorage.getItem('neurochan_admin') === 'true',
+                replyTo: null, 
+                currentDeletePostId: null,
+                allPostsData: {}, 
+                allRootPosts: [], // Store all root posts for current board
+                currentEditPostId: null, 
+                currentEditPostData: null, 
+                viewingThreadId: null,
+                tarotDeck: [], 
+                tarotSpread: [], 
+                tarotCardInfoVisible: false, 
+                tarotInitialCardFlipped: false, 
+                tempPostPassword: null, 
+                tempPostName: null,    
+                tempPostTitle: null,
+                currentPostAvatar: null, 
+                profileEmojiPickerTarget: null,
+                scrollAfterReply: null,
+                directChildrenCounts: {},
+                imageViewerCurrentPostId: null, // New state for image viewer
+                unsubscribeImageViewer: null, // New unsubscribe for image viewer
+            };
+
+            const avatars = [ 
                 '👾', '🤖', '👹', '👻', '💀', '👽', '🎮', '🕹️', '🔮', '🧿',
                 '👁️', '🧠', '🦾', '🦿', '🧬', '🔭', '🛸', '🌌', '🌀', '🌠'
             ];
 
-            // Objeto de estado global de la aplicación
-            let state = {
-                currentBoard: 'meta', // Tablero actual
-                currentTheme: localStorage.getItem('neurochan_theme') || 'light', // Tema actual (claro/oscuro)
-                audioEnabled: false, // Estado del audio de fondo
-                isAdmin: localStorage.getItem('neurochan_admin') === 'true', // Estado de administrador
-                replyTo: null, // ID del post al que se está respondiendo
-                currentDeletePostId: null, // ID del post a borrar
-                allPostsData: {}, // Caché de todos los posts cargados
-                allRootPosts: [], // Posts raíz del tablero actual (para búsqueda y aleatorio)
-                currentEditPostId: null, // ID del post en edición
-                currentEditPostData: null, // Datos del post en edición
-                viewingThreadId: null, // ID del post raíz del hilo que se está viendo
-                tarotDeck: [], // Mazo de tarot
-                tarotSpread: [], // Cartas en la tirada de tarot
-                tarotCardInfoVisible: false, // Visibilidad de la información de la carta de tarot
-                tarotInitialCardFlipped: false, // Estado de la carta inicial del tarot
-                tempPostPassword: null, // Contraseña temporal para un nuevo post/respuesta
-                tempPostName: null,    // Nombre temporal para un nuevo post/respuesta
-                tempPostTitle: null, // Título temporal para un nuevo post
-                currentPostAvatar: null, // Avatar del usuario actual para posts
-                profileEmojiPickerTarget: null, // Elemento al que se asignará el emoji del selector de perfil
-                scrollAfterReply: null, // ID del post al que hacer scroll después de una respuesta
-                directChildrenCounts: {}, // Conteo de respuestas directas para cada post
-                imageViewerCurrentPostId: null, // ID del post cuya imagen se está viendo en el modal
-                unsubscribeImageViewer: null, // Función para desuscribirse del listener del visor de imágenes
-            };
-
-            // Datos de los tableros
             const boards = {
-                meta: { title: "/meta/ - Metaprogramación y Viaje Dimensional", description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paraleles, Estética Retro Anime", footer: "Todos los posts son persistentes y se sincronizan en tiempo real." },
+                meta: { title: "/meta/ - Metaprogramación y Viaje Dimensional", description: "Temas: Neurocircuitos, Egocuerpos, Realidades Paralelas, Estética Retro Anime", footer: "Todos los posts son persistentes y se sincronizan en tiempo real." },
                 dreams: { title: "/sueños/ - Exploración Lúcida y Oneironáutica", description: "Temas: Control de Sueños, Hipnagogia, Sueños Compartidos, Proyección Astral", footer: "El mundo de los sueños es tan real como el de la vigilia. Los límites son delgados." },
                 techno: { title: "/tecnosoma/ - Conciencia Cibernética", description: "Temas: Aumento Neural, Tecnología Cyberpunk, Interfaces Mente-Máquina", footer: "La carne es débil. La máquina está dispuesta. La mente es eterna." },
                 retro: { title: "/retro-anime/ - Nostalgia Neon y Delirio Cyber", description: "Temas: Anime Clásico, Retro-Futurismo, Estética Cyberpunk", footer: "Fantasmas en la máquina. Recuerdos en la estática. Sueños en los datos." },
                 tarot: { title: "/tarot/ - Arcanos y Sincronicidad", description: "Temas: Lecturas de Tarot, Simbolismo Arcano, Adivinación, Conexión Espiritual", footer: "Las cartas revelan los ecos del alma y los susurros del destino." }
             };
             
-            // Datos de las cartas del Tarot
             const tarotDeckData = [
                 { cartnumber: 0, namecart: "The Fool", significado1cart: "Inicio, potencial ilimitado, fe en el camino", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 1, namecart: "The Magician", significado1cart: "Voluntad consciente, capacidad de manifestar", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/1.BOTA_Tarot_The-Magician.jpg" },
-                { cartnumber: 2, namecart: "High Priestess", significado1cart: "Intuición, misterios velados, sabiduría interna", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surgen y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/2.BOTA_Tarot_The-High-Priestess.jpg" },
+                { cartnumber: 2, namecart: "High Priestess", significado1cart: "Intuición, misterios velados, sabiduría interna", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surjan y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/2.BOTA_Tarot_The-High-Priestess.jpg" },
                 { cartnumber: 3, namecart: "The Empress", significado1cart: "Creatividad, fertilidad, abundancia", significado2cart: "Circuit 4 – Socio‑sexual: pertenencia e identidad", significado3cart: "Comparte tu interpretación con alguien cercano y observa la resonancia mutua.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/3.BOTA_Tarot_The-Empress.jpg" },
                 { cartnumber: 4, namecart: "The Emperor", significado1cart: "Estructura, autoridad, disciplina", significado2cart: "Circuit 5 – Neuro‑somático: éxtasis corporal, bienestar", significado3cart: "Haz respiración consciente moviendo el cuerpo con la imagen presente ante ti.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/4-bota_tarot_the-emperor.jpg" },
                 { cartnumber: 5, namecart: "The Hierophant", significado1cart: "Tradición, guía espiritual, aprendizaje", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2020/08/5.BOTA_Tarot_The-Hierophant.jpg" },
@@ -1677,7 +1676,7 @@
                 { cartnumber: 7, namecart: "The Chariot", significado1cart: "Dominio de fuerzas, autodirección", significado2cart: "Circuit 8 – Cuántico‑noético: trascendencia, unidad", significado3cart: "Realiza una sesión de meditación profunda (theta) sosteniendo la carta en la mano.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/7-bota_tarot_the-chariot.jpg" },
                 { cartnumber: 8, namecart: "Strength", significado1cart: "Valor, autocontrol emocional, compasión", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://video-genesis.com/NFT/wp-content/uploads/2023/11/0foolStrength-BOTAtarot.jpg" },
                 { cartnumber: 9, namecart: "The Hermit", significado1cart: "Búsqueda interior, introspección, retiro", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/9-bota_tarot_the-hermit.jpg" },
-                { cartnumber: 10, namecart: "Wheel of Fortune", significado1cart: "Cambio cíclico, destino, oportunidad", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surgen y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/10-bota_tarot_wheel-of-fortune.jpg" },
+                { cartnumber: 10, namecart: "Wheel of Fortune", significado1cart: "Cambio cíclico, destino, oportunidad", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surjan y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/10-bota_tarot_wheel-of-fortune.jpg" },
                 { cartnumber: 11, namecart: "Justice", significado1cart: "Equilibrio, causa‑efecto, verdad", significado2cart: "Circuit 4 – Socio‑sexual: pertenencia e identidad", significado3cart: "Comparte tu interpretación con alguien cercano y observa la resonancia mutua.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/11-bota_tarot_justice.jpg" },
                 { cartnumber: 12, namecart: "The Hanged Man", significado1cart: "Entrega, nueva perspectiva, sacrificio", significado2cart: "Circuit 5 – Neuro‑somático: éxtasis corporal, bienestar", significado3cart: "Haz respiración consciente moviendo el cuerpo con la imagen presente ante ti.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/12-bota_tarot_the-hanged-man.jpg" },
                 { cartnumber: 13, namecart: "Death", significado1cart: "Transformación radical, fin y renacimiento", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/13-bota_tarot_death.jpg" },
@@ -1685,35 +1684,33 @@
                 { cartnumber: 15, namecart: "The Devil", significado1cart: "Apegos, sombra, liberación de cadenas", significado2cart: "Circuit 8 – Cuántico‑noético: trascendencia, unidad", significado3cart: "Realiza una sesión de meditación profunda (theta) sosteniendo la carta en la mano.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/15-bota_tarot_the-devil.jpg" },
                 { cartnumber: 16, namecart: "The Tower", significado1cart: "Colapso de estructuras falsas, revelación", significado2cart: "Circuit 1 – Biosupervivencia: seguridad, confiar en la vida", significado3cart: "Visualiza una luz cálida en tu ombligo mientras contemplas la carta y respira profundo.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/16-bota_tarot_the-tower.jpg" },
                 { cartnumber: 17, namecart: "The Star", significado1cart: "Esperanza, inspiración, fluidez", significado2cart: "Circuit 2 – Emocional/Territorial: energía, poder personal", significado3cart: "Siente cómo la emoción que evoca la imagen sube por tu plexo y afírmala con un gesto.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/17-bota_tarot_the-star.jpg" },
-                { cartnumber: 18, namecart: "The Moon", significado1cart: "Inconsciente, ilusión, prueba emocional", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surgen y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/18-bota_tarot_the-moon.jpg" },
+                { cartnumber: 18, namecart: "The Moon", significado1cart: "Inconsciente, ilusión, prueba emocional", significado2cart: "Circuit 3 – Simbólico/Racional: lenguaje y lógica", significado3cart: "Toma la carta, escribe tres símbolos o palabras que surjan y observa sus conexiones.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/18-bota_tarot_the-moon.jpg" },
                 { cartnumber: 19, namecart: "The Sun", significado1cart: "Claridad, vitalidad, realización", significado2cart: "Circuit 4 – Socio‑sexual: pertenencia e identidad", significado3cart: "Comparte tu interpretación con alguien cercano y observa la resonancia mutua.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/19-bota_tarot_the-sun.jpg" },
                 { cartnumber: 20, namecart: "Judgement", significado1cart: "Llamado superior, resurrección, integración", significado2cart: "Circuit 5 – Neuro‑somático: éxtasis corporal, bienestar", significado3cart: "Haz respiración consciente moviendo el cuerpo con la imagen presente ante ti.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/20-bota_tarot_judgement.jpg" },
                 { cartnumber: 21, namecart: "The World", significado1cart: "Plenitud, cierre de ciclo, maestría", significado2cart: "Circuit 6 – Neuro‑eléctrico: intuición, visión holística", significado3cart: "Medita 10 minutos con la carta frente al entrecejo, dejando llegar flashes intuitivos.", urlcart: "https://www.esotericmeanings.com/wp-content/uploads/2016/07/21-bota_tarot_the-world.jpg" }
             ];
 
-            let unsubscribePosts = null; // Variable para almacenar la función de desuscripción de Firestore
+            let unsubscribePosts = null; 
 
-            // Función que se ejecuta cuando el DOM está completamente cargado
             document.addEventListener('DOMContentLoaded', function() {
-                setupEventListeners(); // Configura todos los manejadores de eventos
-                setupEmojiPicker(); // Configura el selector de emojis para el post principal
-                setupProfileEmojiPicker(); // Configura el selector de emojis para el avatar de perfil
-                applyInitialTheme(); // Aplica el tema guardado o por defecto
-                if (state.isAdmin) setupAdminPanel(); // Configura el panel de administrador si el usuario es admin
-                document.getElementById('currentYear').textContent = new Date().getFullYear(); // Actualiza el año en el pie de página
+                setupEventListeners();
+                setupEmojiPicker();
+                setupProfileEmojiPicker();
+                applyInitialTheme(); 
+                if (state.isAdmin) setupAdminPanel();
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-                // Carga el avatar guardado o elige uno aleatorio
-                state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || AVATARS[Math.floor(Math.random() * AVATARS.length)];
+                state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || avatars[Math.floor(Math.random() * avatars.length)];
                 document.getElementById('mainPostAvatar').textContent = state.currentPostAvatar;
 
-                // Listener de autenticación de Firebase
                 onAuthStateChanged(auth, (user) => {
                     if (user) { 
-                        // Autenticación anónima exitosa, no es necesario loguear en consola para usuarios anónimos
-                        handleHashChange(); // Carga el contenido basado en el hash de la URL
+                        console.log("Usuario autenticado anónimamente:", user.uid); 
+                        handleHashChange(); 
                     } else {
-                        // Intenta iniciar sesión anónimamente si no hay usuario autenticado
+                        console.log("Usuario no autenticado, intentando autenticación anónima...");
                         signInAnonymously(auth).catch((error) => {
+                            console.error("Error en autenticación anónima:", error);
                             let userMessage = 'Error de conexión. Intenta recargar.';
                             const loadingMessageElement = document.getElementById('loadingMessage');
 
@@ -1728,10 +1725,9 @@
                         });
                     }
                 });
-                window.addEventListener('hashchange', handleHashChange); // Escucha cambios en el hash de la URL
+                window.addEventListener('hashchange', handleHashChange);
             });
 
-            // Muestra el área de inicio de sesión de administrador en el modal de configuración
             function showAdminLoginInSettings() {
                 document.getElementById('adminLoginModalButton').style.display = 'none';
                 document.getElementById('adminLogoutFromSettingsButton').style.display = 'none'; 
@@ -1739,7 +1735,6 @@
                 document.getElementById('adminPasswordSettingsInput').focus();
             }
 
-            // Oculta el área de inicio de sesión de administrador en el modal de configuración
             function hideAdminLoginInSettings() {
                 document.getElementById('adminPasswordInputAreaSettings').style.display = 'none';
                 document.getElementById('adminPasswordSettingsInput').value = '';
@@ -1752,7 +1747,6 @@
                 }
             }
 
-            // Maneja el cierre de sesión de administrador desde el modal de configuración
             function handleAdminLogoutFromSettings() {
                 adminLogout(); 
                 document.getElementById('adminLoginModalButton').style.display = 'block';
@@ -1760,7 +1754,6 @@
                 closeSettingsModal(); 
             }
 
-            // Verifica la contraseña de administrador desde el modal de configuración
             function verifyAdminPasswordFromSettings() { 
                 const password = document.getElementById('adminPasswordSettingsInput').value; 
                 if (bcryptInstance && bcryptInstance.compareSync(password, ADMIN_HASH)) {
@@ -1769,13 +1762,12 @@
                     closeSettingsModal();
                     setupAdminPanel();
                     showGenericModal("Acceso Concedido", "Has iniciado sesión como administrador.", [{ text: 'OK', action: closeGenericModal }]);
-                    loadContentForBoard(); // Recarga el contenido para aplicar cambios de admin
+                    loadContentForBoard(); 
                 } else {
                     showGenericModal("Acceso Denegado", "La contraseña de administrador es incorrecta.", [{ text: 'Intentar de Nuevo', action: () => { document.getElementById('adminPasswordSettingsInput').focus(); document.getElementById('adminPasswordSettingsInput').value = ''; } }, { text: 'Cancelar', action: closeGenericModal }]);
                 }
             }
 
-            // Aplica el tema inicial al cargar la página
             function applyInitialTheme() {
                 if (localStorage.getItem('neurochan_theme') === 'dark') {
                     document.body.classList.add('dark-theme');
@@ -1784,10 +1776,9 @@
                     document.body.classList.remove('dark-theme'); 
                     document.getElementById('themeColorMeta').setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-bg').trim());
                 }
-                updateThemeButtonText(); // Actualiza el texto del botón de tema
+                updateThemeButtonText();
             }
             
-            // Maneja los cambios en el hash de la URL para navegación
             function handleHashChange() {
                 const hash = window.location.hash.substring(1); 
                 const params = new URLSearchParams(hash);
@@ -1818,18 +1809,17 @@
                 document.getElementById('threadContainer').innerHTML = '';
 
                 if (boardActuallyChanged || state.viewingThreadId !== previousViewingThreadId || !unsubscribePosts || (boardFromUrl && boardFromUrl !== 'tarot') || (boardFromUrl === 'tarot' && state.currentBoard === 'tarot') ) {
-                    loadContentForBoard(); // Recarga el contenido si el tablero o el hilo cambian
+                    loadContentForBoard();
                 }
-                updateUiForView(); // Actualiza la UI según la vista actual
+                updateUiForView(); 
 
-                // Scroll al post de respuesta si se navegó a un hilo específico
                 if (state.viewingThreadId && postIdFromUrl && postIdFromUrl === state.viewingThreadId) {
                     setTimeout(() => {
                         const opPostElement = document.querySelector(`#post-${state.viewingThreadId}`);
                         if (opPostElement) {
                             const replyForm = opPostElement.querySelector('.reply-form-container');
                             if (replyForm) {
-                                // Do not show reply form here, it's only for the 'Responder' button
+                                showReplyForm(replyForm, true);
                             }
                         }
                         if (state.scrollAfterReply) {
@@ -1843,42 +1833,34 @@
                 }
             }
 
-            // Carga el contenido específico para el tablero actual
             function loadContentForBoard() {
                 if (state.currentBoard === 'tarot') {
-                    setupTarotGame(); // Inicia el juego de Tarot
+                    setupTarotGame();
                 } else {
-                    loadAndRenderPostsRealtime(); // Carga y renderiza posts en tiempo real
+                    loadAndRenderPostsRealtime();
                 }
             }
 
-            // Configura todos los manejadores de eventos de la aplicación
-            function setupEventListeners() {
-                document.getElementById('submitPost').addEventListener('click', createPost); // Enviar post principal
-                document.getElementById('adminLogoutButton').addEventListener('click', adminLogout); // Cerrar sesión de admin
-                setupAudioToggle(); // Alternar audio de fondo
-                setupFileUpload(); // Manejo de subida de archivos
 
-                // Manejadores para los selectores de tablero
+            function setupEventListeners() {
+                document.getElementById('submitPost').addEventListener('click', createPost);
+                document.getElementById('adminLogoutButton').addEventListener('click', adminLogout);
+                setupAudioToggle();
+                setupFileUpload();
+
                 document.querySelectorAll('.board-selector').forEach(btn => {
                     btn.addEventListener('click', function() {
                         changeBoard(btn.dataset.board);
                     });
                 });
 
-                // Manejadores para el modal de borrado
                 document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
                 document.getElementById('confirmDelete').addEventListener('click', deletePostWithPassword);
-                
-                // Manejadores para el modal de información
                 document.getElementById('infoToggle').addEventListener('click', openInfoModal);
                 document.getElementById('closeInfoModal').addEventListener('click', closeInfoModal);
-                
-                // Manejadores para el modal de edición
                 document.getElementById('confirmEdit').addEventListener('click', () => confirmEdit()); 
                 document.getElementById('cancelEdit').addEventListener('click', closeEditModal);
 
-                // Manejadores para el modal de configuración
                 document.getElementById('settingsToggle').addEventListener('click', openSettingsModal);
                 document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
                 document.getElementById('themeToggleModalButton').addEventListener('click', toggleTheme);
@@ -1886,23 +1868,18 @@
                 document.getElementById('adminLogoutFromSettingsButton').addEventListener('click', handleAdminLogoutFromSettings);
                 document.getElementById('confirmAdminLoginSettings').addEventListener('click', verifyAdminPasswordFromSettings);
                 document.getElementById('cancelAdminLoginSettings').addEventListener('click', hideAdminLoginInSettings);
-                
-                // Manejador para el botón de barajar Tarot
                 document.getElementById('shuffleTarotButton').addEventListener('click', shuffleAndDealTarot);
 
-                // Manejadores para el modal de contraseña de post
                 document.getElementById('postPasswordToggle').addEventListener('click', () => openPostPasswordModal(false));
                 document.getElementById('closePostPasswordModal').addEventListener('click', closePostPasswordModal);
                 document.getElementById('cancelPostPassword').addEventListener('click', cancelPostPassword);
                 document.getElementById('confirmPostPassword').addEventListener('click', confirmPostPassword);
 
-                // Manejador para cambiar el avatar principal
                 document.getElementById('mainPostAvatar').addEventListener('click', () => openProfileEmojiPicker(document.getElementById('mainPostAvatar')));
 
-                // Auto-redimensionamiento del textarea principal
                 document.getElementById('postContent').addEventListener('input', autoResizeTextarea);
 
-                // Búsqueda y Post Aleatorio
+                // Search and Random Post
                 document.getElementById('searchToggle').addEventListener('click', toggleSearchInput);
                 document.getElementById('postSearchInput').addEventListener('input', filterPosts);
                 document.getElementById('postSearchInput').addEventListener('blur', (e) => {
@@ -1912,68 +1889,11 @@
                 });
                 document.getElementById('randomPostButton').addEventListener('click', viewRandomPost);
 
-                // Visor de Imágenes
+                // Image Viewer
                 document.getElementById('closeImageViewerModal').addEventListener('click', closeImageViewerModal);
                 document.getElementById('downloadImageButton').addEventListener('click', downloadEnlargedImage);
-
-                // Delegación de eventos para posts y respuestas (mejora de rendimiento)
-                document.getElementById('postsContainer').addEventListener('click', handlePostContainerClick);
-                document.getElementById('threadContainer').addEventListener('click', handlePostContainerClick);
             }
 
-            // Manejador de clics delegado para los posts y sus acciones
-            function handlePostContainerClick(event) {
-                const target = event.target;
-                const postId = target.closest('.post')?.dataset.id; // Encuentra el ID del post padre
-                if (!postId) return; // Si no hay post, salir
-
-                // Reacciones
-                if (target.closest('.heart-reaction-button')) {
-                    reaccionarCorazon(postId);
-                } else if (target.closest('.funny-reaction-button')) {
-                    reaccionarMeDiverte(postId);
-                } else if (target.closest('.angry-reaction-button')) {
-                    reaccionarMeEnoja(postId);
-                } 
-                // Botón de Responder
-                else if (target.closest('.reply-button')) {
-                    replyToPost(postId);
-                } 
-                // Botón de Borrar
-                else if (target.closest('.delete-button')) {
-                    const post = state.allPostsData[postId];
-                    if (post) {
-                        if (state.isAdmin) deletePostFirestore(postId);
-                        else openDeleteModal(postId, post.passwordHash);
-                    }
-                } 
-                // Botón de Editar
-                else if (target.closest('.edit-button')) {
-                    openEditModal(postId);
-                } 
-                // Botón de Comentarios (desplegar/ocultar comentarios en el tablero)
-                else if (target.closest('.comments-button')) {
-                    const postElement = target.closest('.post');
-                    toggleRepliesVisibility(postId, postElement);
-                } 
-                // Imagen del post (para abrir visor)
-                else if (target.closest('.post-image-container img')) {
-                    openImageViewerModal(postId);
-                } 
-                // Título del post (para ver hilo)
-                else if (target.closest('.post-title-link')) {
-                    event.preventDefault(); // Prevenir navegación por defecto del enlace
-                    viewThread(postId);
-                } 
-                // Enlaces de respuesta (>>ID)
-                else if (target.closest('.reply-link')) {
-                    event.preventDefault();
-                    viewThread(target.closest('.reply-link').dataset.postId);
-                }
-            }
-
-
-            // Configura el selector de emojis para el post principal
             function setupEmojiPicker() {
                 const emojiToggle = document.getElementById('emojiToggle');
                 const emojiPicker = document.getElementById('emojiPicker');
@@ -2000,13 +1920,12 @@
                 });
             }
 
-            // Configura el selector de emojis para el perfil/avatar
             function setupProfileEmojiPicker() {
                 const profileEmojiGrid = document.getElementById('profileEmojiGrid');
                 const profileEmojiPickerModal = document.getElementById('profileEmojiPickerModal');
                 const closeProfileEmojiPickerModal = document.getElementById('closeProfileEmojiPickerModal');
 
-                AVATARS.forEach(emoji => { // Usar AVATARS para el selector de perfil
+                EMOJIS.forEach(emoji => {
                     const emojiBtn = document.createElement('button');
                     emojiBtn.className = 'emoji-option';
                     emojiBtn.textContent = emoji;
@@ -2024,34 +1943,28 @@
                             }
                         }
                         profileEmojiPickerModal.classList.remove('flex');
-                        document.body.classList.remove('modal-open'); // Cerrar modal-open
                     });
                     profileEmojiGrid.appendChild(emojiBtn);
                 });
 
                 closeProfileEmojiPickerModal.addEventListener('click', () => {
                     profileEmojiPickerModal.classList.remove('flex');
-                    document.body.classList.remove('modal-open'); // Cerrar modal-open
                     state.profileEmojiPickerTarget = null;
                 });
 
                 profileEmojiPickerModal.addEventListener('click', (e) => {
                     if (e.target === profileEmojiPickerModal) {
                         profileEmojiPickerModal.classList.remove('flex');
-                        document.body.classList.remove('modal-open'); // Cerrar modal-open
                         state.profileEmojiPickerTarget = null;
                     }
                 });
             }
 
-            // Abre el modal del selector de emojis de perfil
             function openProfileEmojiPicker(targetElement) {
                 state.profileEmojiPickerTarget = targetElement;
                 document.getElementById('profileEmojiPickerModal').classList.add('flex');
-                document.body.classList.add('modal-open'); // Abre modal-open
             }
 
-            // Inserta texto en la posición del cursor en un textarea
             function insertAtCursor(textarea, text) {
                 const startPos = textarea.selectionStart;
                 const endPos = textarea.selectionEnd;
@@ -2061,14 +1974,12 @@
                 textarea.focus();
             }
 
-            // Auto-redimensiona un textarea según su contenido
             function autoResizeTextarea(event) {
                 const textarea = event.target;
                 textarea.style.height = 'auto';
                 textarea.style.height = textarea.scrollHeight + 'px';
             }
 
-            // Crea un nuevo post
             async function createPost() {
                 const contentInput = document.getElementById('postContent').value.trim();
                 const name = state.tempPostName || "Anónimo";
@@ -2097,10 +2008,10 @@
                     authorUID: auth.currentUser.uid, 
                     avatar: state.currentPostAvatar, 
                     board: state.currentBoard,
-                    text: DOMPurify.sanitize(contentInput), // Sanitizar contenido
-                    title: title ? DOMPurify.sanitize(title) : null, // Sanitizar título
+                    text: DOMPurify.sanitize(contentInput),
+                    title: title ? DOMPurify.sanitize(title) : null, 
                     image: null,
-                    name: DOMPurify.sanitize(name), // Sanitizar nombre
+                    name: name,
                     passwordHash: password && bcryptInstance ? bcryptInstance.hashSync(password, 10) : null,
                     heartCount: 0,
                     funnyCount: 0,
@@ -2144,13 +2055,11 @@
                 }
             }
             
-            // Completa la creación del post en Firestore
             async function completePostCreationFirestore(postData) {
                 try {
                     const docRef = await addDoc(postsCollectionRef, postData);
                     console.log("Post creado con ID: ", docRef.id);
                     
-                    // Limpiar formulario y estado temporal
                     document.getElementById('postContent').value = '';
                     document.getElementById('fileUpload').value = '';
                     document.getElementById('fileName').textContent = '';
@@ -2161,11 +2070,9 @@
                     state.tempPostTitle = null;
                     state.replyTo = null; 
                     
-                    // Actualizar avatar principal
-                    state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || AVATARS[Math.floor(Math.random() * AVATARS.length)];
+                    state.currentPostAvatar = localStorage.getItem('neurochan_profile_avatar') || avatars[Math.floor(Math.random() * avatars.length)];
                     document.getElementById('mainPostAvatar').textContent = state.currentPostAvatar;
 
-                    // Ajustar altura del textarea
                     const postContentTextarea = document.getElementById('postContent');
                     postContentTextarea.style.height = 'auto';
                     postContentTextarea.style.height = postContentTextarea.scrollHeight + 'px';
@@ -2182,7 +2089,6 @@
                 }
             }
 
-            // Comprime una imagen antes de subirla
             function compressImage(imageData, callback) {
                 const img = new Image();
                 img.onload = function() {
@@ -2195,7 +2101,7 @@
                     else { if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; } }
                     canvas.width = width; canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8); // Comprime a JPEG con calidad 0.8
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                     console.log("DEBUG: Image compressed. Data URL length:", compressedDataUrl.length);
                     callback(compressedDataUrl);
                 };
@@ -2206,7 +2112,6 @@
                 img.src = imageData;
             }
             
-            // Actualiza la interfaz de usuario según la vista actual (tablero principal, hilo, tarot)
             function updateUiForView() {
                 const postsContainer = document.getElementById('postsContainer');
                 const threadContainer = document.getElementById('threadContainer');
@@ -2225,43 +2130,38 @@
                     threadContainer.classList.add('hidden');
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden'); 
-                    if (searchToggle) searchToggle.style.display = 'none';
-                    if (searchInputContainer) searchInputContainer.classList.remove('active');
-                    if (randomPostButton) randomPostButton.style.display = 'none';
-                    if (storiesContainer) storiesContainer.classList.add('hidden');
+                    if (searchToggle) searchToggle.style.display = 'none'; // Hide search toggle
+                    if (searchInputContainer) searchInputContainer.classList.remove('active'); // Hide search input
+                    if (randomPostButton) randomPostButton.style.display = 'none'; // Hide random button
+                    if (storiesContainer) storiesContainer.classList.add('hidden'); // Hide stories
                     tarotGameContainer.classList.remove('hidden');
                 } else if (state.viewingThreadId) {
                     postsContainer.classList.add('hidden');
                     threadContainer.classList.remove('hidden');
                     if (postFormContainer) postFormContainer.classList.add('hidden');
                     if (boardInfoSection) boardInfoSection.classList.add('hidden');
-                    if (searchToggle) searchToggle.style.display = 'none';
-                    if (searchInputContainer) searchInputContainer.classList.remove('active');
-                    if (randomPostButton) randomPostButton.style.display = 'none';
-                    if (storiesContainer) storiesContainer.classList.add('hidden');
+                    if (searchToggle) searchToggle.style.display = 'none'; // Hide search toggle
+                    if (searchInputContainer) searchInputContainer.classList.remove('active'); // Hide search input
+                    if (randomPostButton) randomPostButton.style.display = 'none'; // Hide random button
+                    if (storiesContainer) storiesContainer.classList.add('hidden'); // Hide stories
                     tarotGameContainer.classList.add('hidden');
                 } else {
                     postsContainer.classList.remove('hidden');
                     threadContainer.classList.add('hidden');
                     threadContainer.innerHTML = ''; 
-                    // Hide all reply forms when returning to main board view
-                    document.querySelectorAll('.reply-form-container').forEach(form => hideReplyForm(form));
-                    // Hide all replies containers when returning to main board view
-                    document.querySelectorAll('.replies-container').forEach(container => container.classList.add('hidden'));
-
                     if (postFormContainer) postFormContainer.classList.remove('hidden');
                     if (boardInfoSection) boardInfoSection.classList.remove('hidden');
-                    if (searchToggle) searchToggle.style.display = 'inline-flex';
-                    if (randomPostButton) randomPostButton.style.display = 'inline-flex';
-                    if (storiesContainer) storiesContainer.classList.remove('hidden');
+                    if (searchToggle) searchToggle.style.display = 'inline-flex'; // Show search toggle
+                    if (randomPostButton) randomPostButton.style.display = 'inline-flex'; // Show random button
+                    if (storiesContainer) storiesContainer.classList.remove('hidden'); // Show stories
                     tarotGameContainer.classList.add('hidden');
                     mainPostContentTextarea.placeholder = "¿Qué estás pensando...?";
                 }
             }
 
-            // Calcula el conteo de todos los descendientes para cada post
+            // Helper function to calculate all descendant counts for a given set of posts
             function populateDirectCounts(allPosts, tempRepliesByParent) {
-                state.directChildrenCounts = {}; // Reiniciar conteos
+                state.directChildrenCounts = {}; // Reset counts
                 function countDescendantsRecursive(postId) {
                     let count = 0;
                     const directReplies = tempRepliesByParent[postId] || [];
@@ -2277,7 +2177,6 @@
                 });
             }
 
-            // Carga y renderiza los posts en tiempo real usando onSnapshot
             function loadAndRenderPostsRealtime() {
                 const loadingMessage = document.getElementById('loadingMessage');
                 if (loadingMessage) {
@@ -2286,12 +2185,12 @@
                 }
 
                 if (unsubscribePosts) {
-                    unsubscribePosts(); // Desuscribirse del listener anterior
+                    unsubscribePosts();
                     unsubscribePosts = null; 
                 }
 
                 if (!auth.currentUser) {
-                    // No es necesario loguear, pero se mantiene el mensaje de carga
+                    console.log("Esperando autenticación para cargar posts...");
                     if (loadingMessage) {
                         loadingMessage.textContent = 'Esperando conexión segura...';
                          loadingMessage.classList.remove('hidden');
@@ -2299,70 +2198,121 @@
                     return;
                 }
                 
-                updateUiForView(); // Asegura que la vista sea correcta antes de cargar
+                updateUiForView(); 
 
-                const postsCollectionQuery = query(postsCollectionRef, where("board", "==", state.currentBoard));
+                const postsContainer = document.getElementById('postsContainer'); 
+                if (state.viewingThreadId) {
+                    // Get the board of the thread's root post
+                    const threadRootPostRef = doc(db, "Posts", state.viewingThreadId);
+                    getDoc(threadRootPostRef).then(rootDocSnap => {
+                        if (rootDocSnap.exists()) {
+                            const threadBoard = rootDocSnap.data().board;
+                            const q = query(postsCollectionRef, where("board", "==", threadBoard)); // Query all posts on the same board
+                            unsubscribePosts = onSnapshot(q, (querySnapshot) => {
+                                state.allPostsData = {}; // Clear previous data
+                                querySnapshot.forEach(docSnap => {
+                                    const postData = { id: docSnap.id, ...docSnap.data() };
+                                    state.allPostsData[postData.id] = postData;
+                                });
 
-                unsubscribePosts = onSnapshot(postsCollectionQuery, (querySnapshot) => {
-                    state.allPostsData = {}; // Limpiar datos anteriores
-                    let ops = []; // Para posts raíz
-                    querySnapshot.forEach(docSnap => {
-                        const postData = { id: docSnap.id, ...docSnap.data() };
-                        state.allPostsData[postData.id] = postData;
-                        if (!postData.replyTo) { // Si es un post raíz
-                            ops.push(postData);
-                        }
-                    });
+                                const tempRepliesByParentForThread = {};
+                                Object.values(state.allPostsData).forEach(p => {
+                                    if (p.replyTo) {
+                                        if (!tempRepliesByParentForThread[p.replyTo]) tempRepliesByParentForThread[p.replyTo] = [];
+                                        tempRepliesByParentForThread[p.replyTo].push(p);
+                                    }
+                                });
+                                populateDirectCounts(Object.values(state.allPostsData), tempRepliesByParentForThread);
 
-                    const tempRepliesByParentForCounts = {};
-                    Object.values(state.allPostsData).forEach(p => {
-                        if (p.replyTo) {
-                            if (!tempRepliesByParentForCounts[p.replyTo]) tempRepliesByParentForCounts[p.replyTo] = [];
-                            tempRepliesByParentForCounts[p.replyTo].push(p);
-                        }
-                    });
+                                const threadContainer = document.getElementById('threadContainer');
+                                threadContainer.innerHTML = ''; // Clear existing thread content
 
-                    populateDirectCounts(Object.values(state.allPostsData), tempRepliesByParentForCounts);
-
-                    // Ordenar posts raíz por timestamp (más reciente primero)
-                    ops.sort((a, b) => {
-                        const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
-                        const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
-                        return timeB - timeA;
-                    });
-
-                    state.allRootPosts = [...ops]; // Almacenar para búsqueda y botón aleatorio
-
-                    if (state.viewingThreadId) {
-                        const threadContainer = document.getElementById('threadContainer');
-                        threadContainer.innerHTML = ''; // Limpiar contenido del hilo
-
-                        const opPostData = state.allPostsData[state.viewingThreadId];
-                        if (opPostData) {
-                            const totalCount = state.directChildrenCounts[opPostData.id] || 0;
-                            const opElement = createPostElement(opPostData, true, totalCount, 0);
-                            threadContainer.appendChild(opElement);
-                            applyPostEffects(opPostData, opElement);
-                            loadNestedReplies(opPostData.id, opElement, 1);
+                                const opPostData = state.allPostsData[state.viewingThreadId];
+                                if (opPostData) {
+                                    const totalCount = state.directChildrenCounts[opPostData.id] || 0;
+                                    const opElement = createPostElement(opPostData, true, totalCount, 0);
+                                    threadContainer.appendChild(opElement);
+                                    applyPostEffects(opPostData, opElement);
+                                    loadNestedReplies(opPostData.id, opElement, 1); // This will now read from state.allPostsData
+                                } else {
+                                    threadContainer.innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
+                                }
+                                if (loadingMessage) loadingMessage.classList.add('hidden');
+                            }, (error) => {
+                                console.error(`Error obteniendo posts para el hilo ${state.viewingThreadId}:`, error);
+                                if (loadingMessage) {
+                                    loadingMessage.textContent = 'Error al cargar el hilo. Revisa la consola.';
+                                    loadingMessage.classList.remove('hidden');
+                                }
+                            });
                         } else {
-                            threadContainer.innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
+                            console.error(`Root post ${state.viewingThreadId} not found.`);
+                            document.getElementById('threadContainer').innerHTML = '<p class="text-center text-red-400">Este post no existe o fue eliminado.</p>';
+                            if (loadingMessage) loadingMessage.classList.add('hidden');
                         }
-                    } else {
-                        renderFilteredPosts(ops); // Renderizar posts iniciales
-                        renderStories(); // Renderizar historias
-                    }
+                    }).catch(error => {
+                        console.error("Error fetching thread root post:", error);
+                        document.getElementById('threadContainer').innerHTML = '<p class="text-center text-red-400">Error al cargar el hilo.</p>';
+                        if (loadingMessage) loadingMessage.classList.add('hidden');
+                    });
+                } else { // Main board view
+                    const q = query(postsCollectionRef, where("board", "==", state.currentBoard), where("replyTo", "==", null));
+                    unsubscribePosts = onSnapshot(q, (querySnapshot) => {
+                        let ops = []; // Renamed from allBoardPosts to ops for clarity as these are root posts
+                        querySnapshot.forEach(docSnap => {
+                            ops.push({ id: docSnap.id, ...docSnap.data() });
+                        });
 
-                    if (loadingMessage) loadingMessage.classList.add('hidden');
-                }, (error) => {
-                    console.error("Error obteniendo posts del tablero:", error);
-                    if (loadingMessage) {
-                        loadingMessage.textContent = 'Error al cargar posts. Revisa la consola.';
-                        loadingMessage.classList.remove('hidden');
-                    }
-                });
+                        // Fetch all posts for the current board to calculate all reply counts
+                        // This is crucial for both main board and thread view to keep state.allPostsData updated
+                        getDocs(query(postsCollectionRef, where("board", "==", state.currentBoard)))
+                            .then(fullBoardSnapshot => {
+                                state.allPostsData = {}; // Clear previous data
+                                fullBoardSnapshot.forEach(docSnap => {
+                                    const postData = { id: docSnap.id, ...docSnap.data() };
+                                    state.allPostsData[postData.id] = postData;
+                                });
+
+                                const tempRepliesByParentForCounts = {};
+                                Object.values(state.allPostsData).forEach(p => {
+                                    if (p.replyTo) {
+                                        if (!tempRepliesByParentForCounts[p.replyTo]) tempRepliesByParentForCounts[p.replyTo] = [];
+                                        tempRepliesByParentForCounts[p.replyTo].push(p);
+                                    }
+                                });
+
+                                populateDirectCounts(Object.values(state.allPostsData), tempRepliesByParentForCounts);
+
+                                ops.sort((a, b) => {
+                                    const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
+                                    const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
+                                    return timeB - timeA;
+                                });
+
+                                state.allRootPosts = [...ops]; // Store for search and random button
+
+                                renderFilteredPosts(ops); // Render initial posts (no filter)
+                                renderStories(); // Render stories after posts are loaded
+
+                                if (loadingMessage) loadingMessage.classList.add('hidden');
+                            })
+                            .catch(error => {
+                                console.error("Error obteniendo todos los posts para contar respuestas:", error);
+                                if (loadingMessage) {
+                                    loadingMessage.textContent = 'Error al cargar posts. Revisa la consola.';
+                                    loadingMessage.classList.remove('hidden');
+                                }
+                            });
+                    }, (error) => {
+                        console.error("Error obteniendo posts del tablero:", error);
+                        if (loadingMessage) {
+                            loadingMessage.textContent = 'Error al cargar posts. Revisa la consola.';
+                            loadingMessage.classList.remove('hidden');
+                        }
+                    });
+                }
             }
 
-            // Renderiza posts filtrados (usado por la búsqueda)
             function renderFilteredPosts(postsToRender) {
                 const postsContainer = document.getElementById('postsContainer');
                 const currentOpElements = new Map();
@@ -2374,7 +2324,6 @@
 
                 const newOpIds = new Set(postsToRender.map(op => op.id));
 
-                // Eliminar posts que ya no deben estar presentes
                 for (const [postId, element] of currentOpElements) {
                     if (!newOpIds.has(postId)) {
                         element.remove();
@@ -2382,22 +2331,22 @@
                     }
                 }
 
-                const fragment = document.createDocumentFragment(); // Usar DocumentFragment para inserciones eficientes
+                const fragment = document.createDocumentFragment();
                 postsToRender.forEach(opData => {
                     let opElement = currentOpElements.get(opData.id);
                     const totalCount = state.directChildrenCounts[opData.id] || 0;
 
                     if (opElement) {
-                        updatePostElement(opElement, opData, 0); // Actualizar post existente
+                        updatePostElement(opElement, opData, 0);
                     } else {
-                        opElement = createPostElement(opData, false, totalCount, 0); // Crear nuevo post
+                        opElement = createPostElement(opData, false, totalCount, 0);
                         applyPostEffects(opData, opElement);
                         currentOpElements.set(opData.id, opElement);
                     }
                     fragment.appendChild(opElement);
                 });
                 
-                postsContainer.innerHTML = ''; // Limpiar antes de añadir el fragmento
+                postsContainer.innerHTML = '';
                 postsContainer.appendChild(fragment);
 
                 if (postsToRender.length === 0) {
@@ -2405,7 +2354,6 @@
                 }
             }
 
-            // Filtra posts según el término de búsqueda
             function filterPosts() {
                 const searchTerm = document.getElementById('postSearchInput').value.toLowerCase();
                 if (searchTerm === '') {
@@ -2421,7 +2369,6 @@
                 renderFilteredPosts(filteredPosts);
             }
 
-            // Navega a un post aleatorio
             function viewRandomPost() {
                 if (state.allRootPosts.length > 0) {
                     const randomIndex = Math.floor(Math.random() * state.allRootPosts.length);
@@ -2432,7 +2379,6 @@
                 }
             }
 
-            // Alterna la visibilidad del input de búsqueda
             function toggleSearchInput() {
                 const searchInputContainer = document.querySelector('.search-input-container');
                 const searchInput = document.getElementById('postSearchInput');
@@ -2441,11 +2387,11 @@
                     searchInput.focus();
                 } else {
                     searchInput.value = '';
-                    filterPosts(); // Limpiar filtro al ocultar
+                    filterPosts(); // Clear filter when hiding
                 }
             }
 
-            // Formatea el timestamp de un post
+
             function formatPostTimestamp(timestamp) {
                 const postDate = timestamp?.toDate ? timestamp.toDate() : (timestamp ? new Date(timestamp) : new Date());
                 const today = new Date();
@@ -2461,7 +2407,6 @@
                 }
             }
 
-            // Actualiza un elemento de post existente con nuevos datos
             function updatePostElement(postElement, newPostData, currentPostDepth = 0) {
                 const avatarElement = postElement.querySelector('.post-avatar');
                 if (avatarElement && avatarElement.textContent !== newPostData.avatar) {
@@ -2483,7 +2428,6 @@
                     }
                 }
 
-                // Lógica para el título
                 const titleElement = postElement.querySelector('.post-title');
                 if (newPostData.title) {
                     let titleLink = postElement.querySelector('.post-title-link');
@@ -2496,19 +2440,21 @@
                         newTitleEl.className = 'post-title';
                         newTitleEl.innerHTML = `<a href="#board=${newPostData.board}&post=${newPostData.id}" class="post-title-link">${DOMPurify.sanitize(newPostData.title)}</a>`;
                         postElement.insertBefore(newTitleEl, postElement.querySelector('.post-content') || postElement.querySelector('.post-image-container') || postElement.querySelector('.post-actions'));
-                        // Event listener for title link is handled by delegation in handlePostContainerClick
+                        newTitleEl.querySelector('.post-title-link').addEventListener('click', (e) => {
+                            e.preventDefault();
+                            viewThread(newPostData.id);
+                        });
                     }
                 } else if (titleElement) {
                     titleElement.remove();
                 }
 
-                // Lógica para el contenido de texto
                 const contentTextElement = postElement.querySelector('.post-content');
+                // Corrected: Define textContent from newPostData.text
                 const postTextContent = typeof newPostData.text === 'string' ? newPostData.text : '';
-                let newSanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
+                const newSanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
                 
-                // Reemplazar referencias >>ID con enlaces
-                newSanitizedText = newSanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
+                const newTextWithLinks = newSanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
                     const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
                     const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard;
@@ -2517,38 +2463,41 @@
                 });
 
                 if (contentTextElement) {
-                    if (contentTextElement.innerHTML !== newSanitizedText) { // Comparar con el nuevo texto sanitizado
-                        contentTextElement.innerHTML = newSanitizedText;
+                    if (contentTextElement.innerHTML !== newTextWithLinks) {
+                        contentTextElement.innerHTML = newTextWithLinks;
                     }
                 } else if (newPostData.text) {
                     const newTextEl = document.createElement('div');
                     newTextEl.className = 'post-content text-sm mb-2 mt-1';
-                    newTextEl.innerHTML = newSanitizedText;
+                    newTextEl.innerHTML = newTextWithLinks;
                     postElement.insertBefore(newTextEl, postElement.querySelector('.post-image-container') || postElement.querySelector('.post-actions'));
                 }
 
-                // Lógica para la imagen
                 const imageContainer = postElement.querySelector('.post-image-container');
                 if (newPostData.image) {
                     let img = null;
                     if (imageContainer) {
                         img = imageContainer.querySelector('img');
                         if (img) {
+                            console.log(`Updating image for post ${newPostData.id}. Current src: ${img.src.substring(0, 50)}..., New image present: ${!!newPostData.image}`);
                             if (img.src !== DOMPurify.sanitize(newPostData.image)) {
                                 img.src = DOMPurify.sanitize(newPostData.image);
                             }
                         } else {
+                            console.log(`Adding new img to existing image container for post ${newPostData.id}.`);
                             img = document.createElement('img');
                             img.src = DOMPurify.sanitize(newPostData.image);
                             img.alt = "Imagen del post";
+                            // Apply class based on view (main board vs thread)
                             img.className = state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in";
-                            img.loading = "lazy"; // Lazy loading
                             imageContainer.appendChild(img);
                         }
                     } else {
+                        console.log(`Adding new image container for post ${newPostData.id}.`);
                         const newImageDiv = document.createElement('div');
                         newImageDiv.className = 'post-image-container';
-                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="${state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in"}" loading="lazy"/>`;
+                        // Apply class based on view (main board vs thread)
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="${state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in"}"/>`;
                         postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
                         img = newImageDiv.querySelector('img');
                     }
@@ -2556,10 +2505,10 @@
                         img.onclick = () => openImageViewerModal(newPostData.id);
                     }
                 } else if (imageContainer) {
+                    console.log(`Removing image container for post ${newPostData.id}.`);
                     imageContainer.remove();
                 }
 
-                // Actualizar conteos de reacciones
                 const heartCountSpan = postElement.querySelector('.heart-reaction-button .count');
                 if (heartCountSpan && parseInt(heartCountSpan.textContent) !== (newPostData.heartCount || 0)) {
                     heartCountSpan.textContent = newPostData.heartCount || 0;
@@ -2573,7 +2522,6 @@
                     angryCountSpan.textContent = newPostData.angryCount || 0;
                 }
 
-                // Actualizar estado activo de los botones de reacción
                 const userUID = auth.currentUser?.uid;
                 const reactedBy = newPostData.reactedBy || {};
                 const userReactions = reactedBy[userUID] || [];
@@ -2585,7 +2533,6 @@
                 const angryButton = postElement.querySelector('.angry-reaction-button');
                 if (angryButton) angryButton.classList.toggle('active', userReactions.includes('me enoja'));
 
-                // Visibilidad de botones de eliminar y editar
                 const deleteButton = postElement.querySelector('.delete-button');
                 const editButton = postElement.querySelector('.edit-button');
                 const canShowEditButton = state.isAdmin || (newPostData.passwordHash && newPostData.authorUID === auth.currentUser?.uid);
@@ -2593,23 +2540,18 @@
                 if (deleteButton) deleteButton.style.display = canShowEditButton ? 'inline-flex' : 'none';
                 if (editButton) editButton.style.display = canShowEditButton ? 'inline-flex' : 'none';
 
-                // Actualizar conteo de comentarios
                 const commentsButton = postElement.querySelector('.comments-button');
                 if (commentsButton) {
                     const newReplyCount = state.directChildrenCounts[newPostData.id] || 0;
-                    const isRepliesVisible = postElement.querySelector(`.replies-container[data-parent-id="${newPostData.id}"]`)?.classList.contains('hidden') === false;
-
-                    if (isRepliesVisible) {
-                        commentsButton.textContent = `Ocultar Comentarios`;
-                    } else {
-                        commentsButton.textContent = `Comentarios (${newReplyCount})`;
+                    const currentReplyCountText = commentsButton.textContent;
+                    if (!currentReplyCountText.includes(`(${newReplyCount})`)) {
+                         commentsButton.textContent = `Comentarios (${newReplyCount})`;
                     }
                 }
 
-                // Visibilidad del ID del post
                 const postIDSpan = postElement.querySelector('.post-id-display');
                 if (postIDSpan) {
-                    if (currentPostDepth >= 2) {
+                    if (currentPostDepth >= 2) { // Show ID for replies at depth 2 (level 3) or deeper
                         postIDSpan.textContent = `ID: ${newPostData.id.slice(-4)}`;
                         postIDSpan.style.display = 'inline';
                     } else {
@@ -2617,7 +2559,7 @@
                     }
                 }
 
-                // Configurar formulario de respuesta (si existe)
+
                 const replyFormContainer = postElement.querySelector('.reply-form-container');
                 if (replyFormContainer) {
                     const isThisPostTheThreadParent = currentPostDepth === 0 && state.viewingThreadId === newPostData.id;
@@ -2625,9 +2567,9 @@
                 }
             }
 
-            // Carga respuestas anidadas de forma recursiva
+
             async function loadNestedReplies(parentPostId, parentElement, depth) {
-                if (depth > 3) return; // Limitar profundidad para evitar bucles infinitos y complejidad excesiva
+                if (depth > 3) return;
 
                 let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
                 if (!repliesContainer) {
@@ -2635,25 +2577,25 @@
                     repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
                     repliesContainer.style.borderColor = 'var(--divider-color)';
                     repliesContainer.dataset.parentId = parentPostId;
-                    if (depth >= 2 && !state.viewingThreadId) { // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
+                    if (depth >= 2) {
                         repliesContainer.classList.add('hidden');
                     }
                     parentElement.appendChild(repliesContainer);
                 } 
 
                 let repliesData = [];
-                // Filtrar respuestas directas del post padre desde el caché global
+                // Filter directly from state.allPostsData
                 Object.values(state.allPostsData).forEach(p => {
                     if (p.replyTo === parentPostId) {
                         repliesData.push(p);
                     }
                 });
 
-                // Ordenar respuestas de más reciente a más antigua
+                // Sort replies from most recent to oldest
                 repliesData.sort((a,b) => {
                     const timeA = a.timestamp?.toDate ? a.timestamp.toDate().getTime() : (a.timestamp ? new Date(a.timestamp).getTime() : 0);
                     const timeB = b.timestamp?.toDate ? b.timestamp.toDate().getTime() : (b.timestamp ? new Date(b.timestamp).getTime() : 0);
-                    return timeB - timeA; // Orden descendente
+                    return timeB - timeA; // Descending order (most recent first)
                 });
 
                 const currentReplyElements = new Map();
@@ -2665,7 +2607,6 @@
 
                 const newReplyIds = new Set(repliesData.map(reply => reply.id));
 
-                // Eliminar respuestas que ya no existen
                 for (const [replyId, element] of currentReplyElements) {
                     if (!newReplyIds.has(replyId)) {
                         element.remove();
@@ -2679,9 +2620,9 @@
                     const directChildrenCountForReply = state.directChildrenCounts[replyData.id] || 0;
 
                     if (replyElement) {
-                        updatePostElement(replyElement, replyData, depth); // Actualizar respuesta existente
+                        updatePostElement(replyElement, replyData, depth);
                     } else {
-                        replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth); // Crear nueva respuesta
+                        replyElement = createPostElement(replyData, false, directChildrenCountForReply, depth);
                         applyPostEffects(replyData, replyElement);
                         currentReplyElements.set(replyData.id, replyElement);
                     }
@@ -2692,9 +2633,10 @@
                 repliesContainer.appendChild(fragment);
 
                 const parentReplyCountDisplay = parentElement.querySelector('.comments-button .count');
-                if (parentReplyCountDisplay && !state.viewingThreadId) { // Only update count if not in thread view
+                if (parentReplyCountDisplay) {
                     parentReplyCountDisplay.textContent = state.directChildrenCounts[parentPostId] || 0;
                 }
+
 
                 if (repliesData.length === 0) {
                     const noRepliesMessage = document.createElement('p');
@@ -2704,7 +2646,6 @@
                     repliesContainer.appendChild(noRepliesMessage);
                 }
 
-                // Cargar respuestas anidadas para cada respuesta
                 for (const replyData of repliesData) {
                     const replyElement = repliesContainer.querySelector(`#post-${replyData.id}`);
                     if (replyElement) {
@@ -2713,12 +2654,9 @@
                 }
             }
 
-            // Aplica efectos visuales a un post (actualmente vacío, pero extensible)
             function applyPostEffects(post, element) {
-                // Aquí se podrían añadir animaciones o efectos específicos para posts
             }
 
-            // Crea un elemento DOM para un post
             function createPostElement(post, isThreadParent = false, replyCount = 0, currentPostDepth = 0) {
                 const postElement = document.createElement('div');
                 postElement.className = `post p-4 rounded-lg mb-4`; 
@@ -2735,10 +2673,9 @@
                 
                 const titleHtml = post.title ? 
                     `<h4 class="post-title"><a href="#board=${post.board}&post=${post.id}" class="post-title-link">${DOMPurify.sanitize(post.title)}</a></h4>` : '';
-                const postTextContent = typeof post.text === 'string' ? post.text : '';
+                const postTextContent = typeof post.text === 'string' ? post.text : ''; // Corrected: Define postTextContent
                 let sanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
                 
-                // Reemplazar referencias >>ID con enlaces
                 sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
                     const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
@@ -2749,8 +2686,10 @@
 
                 const contentTextHtml = post.text ? `<div class="post-content text-sm mb-2 mt-1">${sanitizedText}</div>` : '';
                 
+                console.log(`Creating post element for ID: ${post.id}, isReply: ${!!post.replyTo}, Image present: ${!!post.image}, Image data type: ${typeof post.image}`);
+                // Conditional class for image based on view
                 const imageClass = state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in";
-                const contentImageHtml = post.image ? `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="${imageClass}" loading="lazy"/></div>` : ''; // Lazy loading
+                const contentImageHtml = post.image ? `<div class="post-image-container"><img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="${imageClass}"/></div>` : '';
 
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
@@ -2761,12 +2700,11 @@
                     </button>
                 `;
 
-                // Comments button now toggles replies inline
-                const commentsButtonHtml = `
-                    <button class="comments-button reaction-button" aria-label="Ver comentarios">
+                const commentsButtonHtml = (!state.viewingThreadId && !post.replyTo) || (state.viewingThreadId && post.replyTo && currentPostDepth < 3) ? 
+                    `<button class="comments-button reaction-button" aria-label="Ver comentarios">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
                         Comentarios (<span class="count">${replyCount}</span>)
-                    </button>`;
+                    </button>` : '';
 
 
                 const replyFormHtml = `
@@ -2803,7 +2741,7 @@
                     </div>
                 `;
 
-                // Determinar si el ID debe mostrarse según la profundidad
+                // Determine if ID should be displayed based on depth
                 const displayId = currentPostDepth >= 2 ? `inline` : `none`;
 
                 postElement.innerHTML = `
@@ -2841,20 +2779,82 @@
                     ${replyFormHtml} 
                 `;
 
-                // No adjuntar listeners aquí, se manejarán por delegación en handlePostContainerClick
+                if (isThreadParent) {
+                    const replyFormContainer = postElement.querySelector('.reply-form-container');
+                    showReplyForm(replyFormContainer);
+                }
 
-                // Configurar el formulario de respuesta para este post
-                // The reply form is initially hidden, so no need to call showReplyForm here
-                setupReplyForm(postElement, post.id, false, currentPostDepth); // Pass false for shouldStayOpenOnBlur
+                const heartButton = postElement.querySelector('.heart-reaction-button');
+                if (heartButton) {
+                    heartButton.addEventListener('click', () => reaccionarCorazon(post.id));
+                }
+                
+                const funnyButton = postElement.querySelector('.funny-reaction-button');
+                if (funnyButton) {
+                    funnyButton.addEventListener('click', () => reaccionarMeDiverte(post.id));
+                }
+
+                const angryButton = postElement.querySelector('.angry-reaction-button');
+                if (angryButton) {
+                    angryButton.addEventListener('click', () => reaccionarMeEnoja(post.id));
+                }
+                
+                const replyBtn = postElement.querySelector('.reply-button');
+                if (replyBtn) {
+                    replyBtn.addEventListener('click', () => replyToPost(post.id));
+                }
+                
+                const deleteBtn = postElement.querySelector('.delete-button');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => {
+                        if (state.isAdmin) deletePostFirestore(post.id);
+                        else openDeleteModal(post.id, post.passwordHash); 
+                    });
+                }
+                const editBtn = postElement.querySelector('.edit-button');
+                if (editBtn) {
+                    editBtn.addEventListener('click', () => openEditModal(post.id));
+                }
+
+                postElement.querySelectorAll('.reply-link').forEach(link => {
+                    link.addEventListener('mouseenter', () => showReplyPreview(link.dataset.postId, link));
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        viewThread(link.dataset.postId); 
+                    });
+                });
+
+                const commentsBtn = postElement.querySelector('.comments-button');
+                if (commentsBtn) {
+                    commentsBtn.addEventListener('click', () => {
+                        if (state.viewingThreadId) { // If already in a thread, toggle visibility of replies
+                            const container = postElement.querySelector(
+                                `.replies-container[data-parent-id="${post.id}"]`
+                            );
+                            if (container) container.classList.toggle('hidden');
+                        } else { // If on main board, view the thread
+                            viewThread(post.id);
+                        }
+                    });
+                }
+
+                // Add click listener for images
+                const postImage = postElement.querySelector('.post-image-container img');
+                if (postImage) {
+                    postImage.addEventListener('click', () => openImageViewerModal(post.id));
+                }
+
+                const shouldStayOpen = isThreadParent || (post.replyTo === null);
+                setupReplyForm(postElement, post.id, shouldStayOpen, currentPostDepth);
 
                 return postElement;
             }
 
-            // Configura el formulario de respuesta para un post específico
             function setupReplyForm(postElement, parentPostId, shouldStayOpenOnBlur = false, currentPostDepth = 0, isImageViewer = false) {
                 const replyFormContainer = postElement.querySelector('.reply-form-container');
                 if (!replyFormContainer) return;
 
+                // Obtener referencias directas a los elementos dentro del formulario de respuesta
                 const replyContentTextarea = replyFormContainer.querySelector('.reply-content');
                 const replyEmojiToggle = replyFormContainer.querySelector('.emoji-toggle');
                 const replyEmojiPicker = replyFormContainer.querySelector('.reply-emoji-picker');
@@ -2868,7 +2868,6 @@
                 let ignoreBlurForFileUpload = false;
 
                 // Limpiar listeners anteriores para evitar duplicados si la función se llama varias veces
-                // Esto es crucial cuando se re-renderizan o actualizan elementos dinámicamente
                 replyAvatar.onclick = null;
                 replyContentTextarea.oninput = null;
                 replyContentTextarea.onfocus = null;
@@ -2879,8 +2878,9 @@
                 replyPasswordToggle.onclick = null;
                 submitReplyButton.onclick = null;
 
+
                 // Re-adjuntar listeners a los elementos existentes
-                replyAvatar.textContent = replyAvatar.dataset.avatar || AVATARS[Math.floor(Math.random() * AVATARS.length)]; // Usar AVATARS
+                replyAvatar.textContent = replyAvatar.dataset.avatar || avatars[Math.floor(Math.random() * avatars.length)];
                 replyAvatar.addEventListener('click', () => openProfileEmojiPicker(replyAvatar));
 
                 replyContentTextarea.addEventListener('input', autoResizeTextarea);
@@ -2936,6 +2936,7 @@
                 replyPasswordToggle.addEventListener('click', () => openPostPasswordModal(true, parentPostId));
 
                 submitReplyButton.addEventListener('click', async () => {
+                    // Obtener las referencias más actuales de los elementos dentro del handler
                     const currentReplyContentTextarea = replyFormContainer.querySelector('.reply-content');
                     const currentReplyFileUploadInput = replyFormContainer.querySelector('.reply-file-upload');
 
@@ -2943,6 +2944,7 @@
                     const name = state.tempPostName || "Anónimo"; 
                     const password = state.tempPostPassword; 
                     const file = currentReplyFileUploadInput.files[0];
+                    console.log("DEBUG: Submit Reply Clicked. File object:", file);
 
                     if (!content && !file) {
                         showGenericModal("Atención", "El contenido de la respuesta no puede estar vacío si no adjuntas una imagen.", [{ text: 'Entendido', action: closeGenericModal }]);
@@ -2954,7 +2956,6 @@
                     let targetReplyTo = parentPostId;
                     let initialReplyText = DOMPurify.sanitize(content);
 
-                    // Lógica para respuestas en profundidad 3 (nivel 4) o más
                     if (currentPostDepth >= 3) {
                         const parentOfLevel3Post = state.allPostsData[parentPostId];
                         if (parentOfLevel3Post && parentOfLevel3Post.replyTo) {
@@ -2972,7 +2973,7 @@
                         text: initialReplyText,
                         title: null, 
                         image: null,
-                        name: DOMPurify.sanitize(name), // Sanitizar nombre
+                        name: name,
                         passwordHash: password && bcryptInstance ? bcryptInstance.hashSync(password, 10) : null,
                         heartCount: 0,
                         funnyCount: 0,
@@ -2995,8 +2996,10 @@
                             }
                             const reader = new FileReader();
                             reader.onload = async function(e) {
+                                console.log("DEBUG: FileReader onload. Result length:", e.target.result ? e.target.result.length : "null");
                                 compressImage(e.target.result, async function(compressedImage) {
                                     newReplyData.image = compressedImage;
+                                    console.log("DEBUG: Reply image after compression (base64 length):", newReplyData.image ? newReplyData.image.length : "null");
                                     await addDoc(postsCollectionRef, newReplyData);
                                     resetReplyForm(replyFormContainer, replyAvatar, shouldStayOpenOnBlur, isImageViewer);
                                 });
@@ -3009,12 +3012,14 @@
                             };
                             reader.readAsDataURL(file);
                         } else {
+                            console.log("DEBUG: No file for reply, sending without image.");
                             await addDoc(postsCollectionRef, newReplyData);
                             resetReplyForm(replyFormContainer, replyAvatar, shouldStayOpenOnBlur, isImageViewer);
                         }
                             if (state.viewingThreadId) {
                                 const opElement = document.querySelector(`#post-${state.viewingThreadId}`);
                                 if (opElement) {
+                                    console.log(`Respuesta añadida en hilo ${state.viewingThreadId}, refrescando respuestas anidadas del OP.`);
                                     // Re-fetch all posts for the board to update counts correctly
                                     const allPostsInBoard = [];
                                     const qAllBoardPosts = query(postsCollectionRef, where("board", "==", state.currentBoard));
@@ -3028,7 +3033,7 @@
                                             tempRepliesByParentForThread[p.replyTo].push(p);
                                         }
                                     });
-                                    populateDirectCounts(allPostsInBoard, tempRepliesByParentForThread);
+                                    populateDirectCounts(allPostsInBoard, tempRepliesByParentForThread); // Populate counts for all relevant posts
                                     await loadNestedReplies(state.viewingThreadId, opElement, 1);
                                 }
                             }
@@ -3042,12 +3047,11 @@
                 });
             }
 
-            // Resetea el formulario de respuesta
             function resetReplyForm(formContainer, avatarElement, shouldStayOpenOnBlur, isImageViewer = false) {
                 formContainer.querySelector('.reply-content').value = '';
                 formContainer.querySelector('.reply-file-upload').value = '';
                 formContainer.querySelector('.reply-file-name').textContent = '';
-                avatarElement.textContent = AVATARS[Math.floor(Math.random() * AVATARS.length)]; // Usar AVATARS
+                avatarElement.textContent = avatars[Math.floor(Math.random() * avatars.length)]; 
                 avatarElement.dataset.avatar = avatarElement.textContent;
                 state.tempPostName = null;
                 state.tempPostTitle = null;
@@ -3058,16 +3062,12 @@
                 }
             }
 
-            // Muestra el formulario de respuesta
             function showReplyForm(formContainer, autoFocus = false) {
-                // Hide all other reply forms if not in thread view
-                if (!state.viewingThreadId) {
-                    document.querySelectorAll('.reply-form-container').forEach(form => {
-                        if (form !== formContainer) {
-                            hideReplyForm(form);
-                        }
-                    });
-                }
+                document.querySelectorAll('.reply-form-container').forEach(form => {
+                    if (form !== formContainer) {
+                        hideReplyForm(form);
+                    }
+                });
                 formContainer.style.display = 'block';
                 if (autoFocus) {
                     formContainer.querySelector('.reply-content').focus();
@@ -3075,12 +3075,11 @@
                 autoResizeTextarea({ target: formContainer.querySelector('.reply-content') });
             }
 
-            // Oculta el formulario de respuesta
             function hideReplyForm(formContainer) {
                 formContainer.style.display = 'none';
             }
 
-            // Muestra una previsualización de la respuesta al pasar el ratón sobre un enlace >>ID
+
             function showReplyPreview(postId, element) {
                 const post = state.allPostsData[postId]; 
                 if (!post) {
@@ -3103,7 +3102,6 @@
                 }
             }
 
-            // Prepara el formulario de respuesta para un post específico
             function replyToPost(postId) {
                 state.scrollAfterReply = postId; 
 
@@ -3115,51 +3113,14 @@
                     }
                 } else {
                     console.error(`Post element with ID ${postId} not found for reply.`);
-                    // If the post is not in the current view (e.g., we are on the main board and the post is a nested reply)
-                    // Navigate to the post's thread so it loads, then show the reply form.
-                    // This case should ideally not happen with the new comments toggle.
                     window.location.hash = `board=${state.currentBoard}&post=${state.viewingThreadId || postId}`;
                 }
             }
 
-            // Navega a la vista de hilo de un post
             function viewThread(postId) {
                 window.location.hash = `board=${state.currentBoard}&post=${postId}`;
             }
-
-            // Toggles the visibility of replies for a given post within the main board view
-            function toggleRepliesVisibility(postId, postElement) {
-                let repliesContainer = postElement.querySelector(`.replies-container[data-parent-id="${postId}"]`);
-                const commentsButton = postElement.querySelector('.comments-button');
-
-                if (!repliesContainer) {
-                    repliesContainer = document.createElement('div');
-                    repliesContainer.className = `replies-container ml-4 md:ml-8 mt-4 space-y-4 border-l-2 pl-4`;
-                    repliesContainer.style.borderColor = 'var(--divider-color)';
-                    repliesContainer.dataset.parentId = postId;
-                    if (depth >= 2 && !state.viewingThreadId) { // Ocultar respuestas de profundidad 2 o más por defecto en el tablero principal
-                        repliesContainer.classList.add('hidden');
-                    }
-                    postElement.appendChild(repliesContainer);
-                }
-
-                const isHidden = repliesContainer.classList.contains('hidden');
-
-                if (isHidden) {
-                    repliesContainer.classList.remove('hidden');
-                    commentsButton.textContent = `Ocultar Comentarios`;
-                    // Load replies only if not already loaded or if a refresh is needed
-                    if (repliesContainer.children.length === 0 || !repliesContainer.dataset.loaded) {
-                        loadNestedReplies(postId, postElement, 1);
-                        repliesContainer.dataset.loaded = 'true'; // Mark as loaded
-                    }
-                } else {
-                    repliesContainer.classList.add('hidden');
-                    commentsButton.textContent = `Comentarios (${state.directChildrenCounts[postId] || 0})`;
-                }
-            }
    
-            // Actualiza la previsualización de escritura
             function updateTypingEffect(text) {
                 const preview = document.getElementById('typingPreview');
                 const typingText = document.getElementById('typingText');
@@ -3172,7 +3133,6 @@
             }
             document.getElementById('postContent').addEventListener('input', e => updateTypingEffect(e.target.value));
             
-            // Configura el botón de alternar audio
             function setupAudioToggle() {
                 const audio = document.getElementById('bgAudio');
                 const toggleButton = document.getElementById('audioToggle');
@@ -3190,7 +3150,6 @@
                 });
             }
             
-            // Configura la subida de archivos (imágenes)
             function setupFileUpload() {
                 const fileInput = document.getElementById('fileUpload');
                 fileInput.addEventListener('change', () => {
@@ -3216,7 +3175,6 @@
                 });
             }
         
-            // Cambia el tablero activo
             function changeBoard(board, updateHash = true) {
                 state.currentBoard = board;
                 document.querySelectorAll('.board-selector').forEach(btn => {
@@ -3240,7 +3198,6 @@
                 }
             }
 
-            // Cierra la sesión de administrador
             function adminLogout() {
                 state.isAdmin = false;
                 localStorage.removeItem('neurochan_admin');
@@ -3251,7 +3208,6 @@
                 loadContentForBoard(); 
             }
 
-            // Función genérica para reaccionar a un post
             async function reactWith(postId, reactionType, reactionField) {
                 if (!auth.currentUser) {
                     showGenericModal("Error de Autenticación", "Debes estar conectado para reaccionar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
@@ -3287,12 +3243,10 @@
                 }
             }
 
-            // Funciones específicas para cada tipo de reacción
             function reaccionarCorazon(postId) { reactWith(postId, 'corazón', 'heartCount'); }
             function reaccionarMeDiverte(postId) { reactWith(postId, 'me diverte', 'funnyCount'); }
             function reaccionarMeEnoja(postId) { reactWith(postId, 'me enoja', 'angryCount'); }
 
-            // Alterna el tema de la aplicación (claro/oscuro)
             function toggleTheme() {
                 if (document.body.classList.contains('dark-theme')) {
                     state.currentTheme = 'light'; 
@@ -3303,7 +3257,6 @@
                 saveThemePreference();
             }
 
-            // Actualiza el texto del botón de tema en el modal
             function updateThemeButtonText() {
                 const themeToggle = document.getElementById('themeToggleModalButton'); 
                 if (document.body.classList.contains('dark-theme')) {
@@ -3313,12 +3266,10 @@
                 }
             }
             
-            // Guarda la preferencia de tema en localStorage
             function saveThemePreference() {
                 localStorage.setItem('neurochan_theme', state.currentTheme);
             }
             
-            // Aplica el tema actual a la página
             function applyCurrentTheme() {
                 if (state.currentTheme === 'dark') {
                     document.body.classList.add('dark-theme');
@@ -3330,7 +3281,7 @@
                 updateThemeButtonText();
             }
 
-            // Borra un post y sus respuestas asociadas
+
             async function deletePostFirestore(postId) {
                  if (!auth.currentUser) {
                     showGenericModal("Error de Autenticación", "Debes estar conectado para borrar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
@@ -3344,27 +3295,23 @@
                         { text: 'Cancelar', class: 'secondary-button', action: closeGenericModal },
                         { text: 'Borrar Definitivamente', class: 'primary-button', style: {backgroundColor: 'var(--danger-color)'}, action: async () => {
                             try { 
-                                // Borrar respuestas anidadas recursivamente
-                                const deleteNestedReplies = async (parentId) => {
-                                    const repliesQuery = query(postsCollectionRef, where("replyTo", "==", parentId));
-                                    const repliesSnapshot = await getDocs(repliesQuery);
-                                    const deletePromises = [];
-                                    for (const docReply of repliesSnapshot.docs) {
-                                        await deleteNestedReplies(docReply.id); // Llamada recursiva
-                                        deletePromises.push(deleteDoc(docReply.ref));
-                                    }
-                                    await Promise.all(deletePromises);
-                                };
+                                const repliesQuery = query(postsCollectionRef, where("replyTo", "==", postId));
+                                const repliesSnapshot = await getDocs(repliesQuery);
+                                const deletePromises = [];
+                                repliesSnapshot.forEach(docReply => { 
+                                    deletePromises.push(deleteDoc(docReply.ref));
+                                });
+                                await Promise.all(deletePromises);
+                                console.log(`Borradas ${deletePromises.length} respuestas para el post ${postId}`);
 
-                                await deleteNestedReplies(postId); // Iniciar borrado recursivo desde el post principal
-                                await deleteDoc(doc(db, "Posts", postId)); // Borrar el post principal
-                                
+                                await deleteDoc(doc(db, "Posts", postId));
                                 closeGenericModal(); 
                                 if (state.viewingThreadId === postId) {
-                                    window.location.hash = `board=${state.currentBoard}`; // Volver al tablero si se borra el post del hilo
+                                    window.location.hash = `board=${state.currentBoard}`;
                                 } else if (state.viewingThreadId) {
                                     const opElement = document.querySelector(`#post-${state.viewingThreadId}`);
                                     if (opElement) {
+                                        console.log(`Post ${postId} o sus respuestas borradas en hilo ${state.viewingThreadId}, refrescando respuestas anidadas del OP.`);
                                         // Re-fetch all posts for the board to update counts correctly
                                         const allPostsInBoard = [];
                                         const qAllBoardPosts = query(postsCollectionRef, where("board", "==", state.currentBoard));
@@ -3378,7 +3325,7 @@
                                                 tempRepliesByParentForThread[p.replyTo].push(p);
                                             }
                                         });
-                                        populateDirectCounts(allPostsInBoard, tempRepliesByParentForThread);
+                                        populateDirectCounts(allPostsInBoard, tempRepliesByParentForThread); // Populate counts for all relevant posts
                                         await loadNestedReplies(state.viewingThreadId, opElement, 1);
                                     }
                                 }
@@ -3392,26 +3339,21 @@
             
             let currentPostPasswordHash = null;
 
-            // Abre el modal de confirmación de borrado
             function openDeleteModal(postId, passwordHash) {
                 state.currentDeletePostId = postId;
                 currentPostPasswordHash = passwordHash; 
                 document.getElementById('deleteModal').classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
                 document.getElementById('deletePasswordInput').value = '';
                 document.getElementById('deletePasswordInput').focus();
             }
 
-            // Cierra el modal de confirmación de borrado
             function closeDeleteModal() {
                 state.currentDeletePostId = null;
                 currentPostPasswordHash = null;
                 document.getElementById('deleteModal').classList.remove('flex');
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
                 document.getElementById('deletePasswordInput').value = '';
             }
 
-            // Borra un post después de verificar la contraseña
             async function deletePostWithPassword() {
                 if (!auth.currentUser) {
                     showGenericModal("Error de Autenticación", "Debes estar conectado para borrar. Por favor, recarga la página.", [{ text: 'Entendido', action: closeGenericModal }]);
@@ -3433,18 +3375,9 @@
                 }
             }
 
-            // Abre el modal de información
-            function openInfoModal() { 
-                document.getElementById('infoModal').classList.add('flex'); 
-                document.body.classList.add('modal-open'); // Bloquear scroll
-            }
-            // Cierra el modal de información
-            function closeInfoModal() { 
-                document.getElementById('infoModal').classList.remove('flex'); 
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
-            }
+            function openInfoModal() { document.getElementById('infoModal').classList.add('flex'); }
+            function closeInfoModal() { document.getElementById('infoModal').classList.remove('flex'); }
             
-            // Abre el modal de configuración
             function openSettingsModal() {
                 const adminLoginBtn = document.getElementById('adminLoginModalButton');
                 const adminLogoutBtn = document.getElementById('adminLogoutFromSettingsButton');
@@ -3460,19 +3393,15 @@
                 adminPasswordArea.style.display = 'none'; 
                 document.getElementById('adminPasswordSettingsInput').value = ''; 
                 document.getElementById('settingsModal').classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
             }
-            // Cierra el modal de configuración
             function closeSettingsModal() { 
                 document.getElementById('settingsModal').classList.remove('flex'); 
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
                 const adminPasswordArea = document.getElementById('adminPasswordInputAreaSettings');
                 if (adminPasswordArea) adminPasswordArea.style.display = 'none';
                 const adminLoginBtn = document.getElementById('adminLoginModalButton');
                 if (adminLoginBtn && !state.isAdmin) adminLoginBtn.style.display = 'block';
             }
             
-            // Configura la visibilidad del panel de administración
             function setupAdminPanel() {
                 const adminLogoutBtn = document.getElementById('adminLogoutButton');
                 const adminToggleBtn = document.getElementById('settingsToggle'); 
@@ -3486,7 +3415,6 @@
                 }
             }
          
-            // Muestra un modal genérico con un título, mensaje y botones personalizables
             function showGenericModal(title, message, buttons = [{ text: 'OK', action: closeGenericModal }], closeModalOnClickOutside = true) {
                 const modal = document.getElementById('genericModal');
                 document.getElementById('genericModalTitle').textContent = title;
@@ -3517,7 +3445,6 @@
                 });
 
                 modal.classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
 
                 if (closeModalOnClickOutside) {
                     const closeModalHandler = function(event) {
@@ -3535,13 +3462,8 @@
                 });
             }
 
-            // Cierra el modal genérico
-            function closeGenericModal() { 
-                document.getElementById('genericModal').classList.remove('flex'); 
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
-            }
+            function closeGenericModal() { document.getElementById('genericModal').classList.remove('flex'); }
 
-            // Abre el modal de edición de posts
             function openEditModal(postId) {
                 const postToEdit = state.allPostsData[postId]; 
                 if (!postToEdit) { showGenericModal("Error", "Post no encontrado para editar.", [{ text: 'OK', action: closeGenericModal }]); return; }
@@ -3583,13 +3505,10 @@
                 }
                 document.getElementById('editNewPostPassword').value = '';
                 document.getElementById('editModal').classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
             }
 
-            // Cierra el modal de edición
             function closeEditModal() {
                 document.getElementById('editModal').classList.remove('flex');
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
                 state.currentEditPostId = null;
                 state.currentEditPostData = null;
                 document.getElementById('editPostName').value = '';
@@ -3603,7 +3522,6 @@
                 document.getElementById('removeCurrentImage').checked = false;
             }
 
-            // Confirma y guarda los cambios de edición de un post
             async function confirmEdit() {
                 if (!state.currentEditPostId || !state.currentEditPostData || !auth.currentUser) {
                     showGenericModal("Error", "No se puede editar el post en este momento.", [{ text: 'OK', action: closeGenericModal }]);
@@ -3672,7 +3590,6 @@
                 }
             }
 
-            // Finaliza la actualización del post en Firestore
             async function finalizePostUpdate(updateData, buttonElement) {
                 try {
                     updateData.lastEdited = serverTimestamp();
@@ -3690,7 +3607,6 @@
                 }
             }
 
-            // Abre el modal para establecer contraseña de post/respuesta
             function openPostPasswordModal(isReply = false, targetPostId = null) {
                 const modal = document.getElementById('postPasswordModal');
                 const title = document.getElementById('postPasswordModalTitle');
@@ -3729,13 +3645,10 @@
                     nameInput.focus();
                 }
                 modal.classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
             }
 
-            // Cierra el modal de contraseña de post/respuesta
             function closePostPasswordModal() {
                 document.getElementById('postPasswordModal').classList.remove('flex');
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
                 if (state.scrollAfterReply) {
                     const targetElement = document.getElementById(`post-${state.scrollAfterReply}`);
                     if (targetElement) {
@@ -3745,7 +3658,6 @@
                 }
             }
 
-            // Confirma la configuración de contraseña de post/respuesta
             function confirmPostPassword() {
                 state.tempPostName = document.getElementById('postPasswordModalNameInput').value.trim();
                 state.tempPostTitle = document.getElementById('postPasswordModalTitleInput').value.trim();
@@ -3753,7 +3665,6 @@
                 closePostPasswordModal();
             }
 
-            // Cancela la configuración de contraseña de post/respuesta
             function cancelPostPassword() {
                 state.tempPostName = null;
                 state.tempPostTitle = null;
@@ -3762,7 +3673,6 @@
             }
 
             // --- Funciones del Juego de Tarot ---
-            // Configura el juego de Tarot
             function setupTarotGame() {
                 console.log("Configurando juego de Tarot...");
                 updateUiForView(); 
@@ -3784,7 +3694,6 @@
                 state.tarotInitialCardFlipped = false;
             }
 
-            // Baraja un array (mazo de cartas)
             function shuffleArray(array) { 
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -3792,7 +3701,6 @@
                 }
             }
 
-            // Baraja y reparte las cartas del Tarot
             async function shuffleAndDealTarot() {
                 const initialCardContainer = document.getElementById('tarotInitialCardContainer');
                 const tarotDeckCard = document.getElementById('tarotDeckCard');
@@ -3800,8 +3708,8 @@
                 const cardInfoDisplay = document.getElementById('tarotCardInfoDisplay');
                 
                 if (tarotDeckCard) {
-                    tarotDeckCard.classList.add('spin'); // Inicia animación de barajado
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // Espera a que termine la animación
+                    tarotDeckCard.classList.add('spin');
+                    await new Promise(resolve => setTimeout(resolve, 1000)); 
                     if (initialCardContainer) initialCardContainer.classList.add('hidden');
                 }
 
@@ -3809,22 +3717,13 @@
                 if (cardInfoDisplay) cardInfoDisplay.classList.add('hidden');
 
                 shuffleArray(state.tarotDeck);
-                state.tarotSpread = state.tarotDeck.slice(0, 15); // Seleccionar 15 cartas para la tirada piramidal
+                state.tarotSpread = state.tarotDeck.slice(0, 15); 
 
                 let cardIndex = 0;
-                const rows = [5, 4, 3, 2, 1]; // Número de cartas por fila en la pirámide
+                const rows = [5, 4, 3, 2, 1];
                 
-                // Descripciones de las posiciones de las cartas en la tirada piramidal
-                const tarotPositions = [
-                    ["Conciencia Pura", "Yo Superior", "Potencial Infinito", "Vacío Cuántico", "Fuente Primordial"], // Fila 5
-                    ["Pasado Profundo", "Lección Actual", "Obstáculo Oculto", "Recurso Interno"], // Fila 4
-                    ["Acción Presente", "Influencia Externa", "Resultado Inminente"], // Fila 3
-                    ["Esperanza Futura", "Miedo Latente"], // Fila 2
-                    ["Esencia del Tema"] // Fila 1
-                ];
-
                 function dealRowSequentially(rowIndex) {
-                    if (rowIndex >= rows.length) return; // Si ya se han repartido todas las filas, salir
+                    if (rowIndex >= rows.length) return; 
 
                     const numCardsInRow = rows[rowIndex];
                     const rowDiv = document.createElement('div');
@@ -3833,7 +3732,7 @@
 
                     function dealCardInRowSequentially(cardInRowIndex) {
                         if (cardInRowIndex >= numCardsInRow || cardIndex >= state.tarotSpread.length) {
-                            setTimeout(() => dealRowSequentially(rowIndex + 1), 100); // Pasar a la siguiente fila
+                            setTimeout(() => dealRowSequentially(rowIndex + 1), 100); 
                             return;
                         }
 
@@ -3841,8 +3740,7 @@
                         const cardElement = document.createElement('div');
                         cardElement.className = 'tarot-card'; 
                         cardElement.dataset.cardIndex = cardIndex; 
-                        cardElement.dataset.position = tarotPositions[rowIndex][cardInRowIndex]; // Almacenar la posición
-
+                        
                         cardElement.innerHTML = `
                             <div class="card-face card-back">🔮</div>
                             <div class="card-face card-front">
@@ -3852,23 +3750,21 @@
                         cardElement.addEventListener('click', () => flipTarotCard(cardElement, cardData));
                         rowDiv.appendChild(cardElement);
                         
-                        void cardElement.offsetWidth; // Forzar reflow para la animación
-                        cardElement.classList.add('placed'); // Iniciar animación de colocación
+                        void cardElement.offsetWidth; 
+                        cardElement.classList.add('placed'); 
 
                         cardIndex++;
-                        setTimeout(() => dealCardInRowSequentially(cardInRowIndex + 1), 150); // Repartir la siguiente carta en la fila
+                        setTimeout(() => dealCardInRowSequentially(cardInRowIndex + 1), 150); 
                     }
                     dealCardInRowSequentially(0);
                 }
-                dealRowSequentially(0); // Iniciar el reparto desde la primera fila
+                dealRowSequentially(0); 
             }
 
-            // Voltea una carta del Tarot y muestra su información
             function flipTarotCard(cardElement, cardData) {
                 const isCurrentlyFlipped = cardElement.classList.contains('flipped');
                 const cardInfoDisplay = document.getElementById('tarotCardInfoDisplay');
 
-                // Si la carta ya está volteada y seleccionada, desvoltear y ocultar info
                 if (isCurrentlyFlipped && cardElement.classList.contains('selected-for-info')) {
                     cardElement.classList.remove('flipped');
                     cardElement.classList.remove('selected-for-info');
@@ -3876,7 +3772,6 @@
                     return;
                 }
 
-                // Desvoltear cualquier otra carta que esté volteada
                 document.querySelectorAll('.tarot-card.flipped').forEach(c => {
                     if (c !== cardElement) {
                         c.classList.remove('flipped');
@@ -3884,15 +3779,13 @@
                     }
                 });
                 
-                // Voltear la carta actual y marcarla como seleccionada
                 cardElement.classList.add('flipped');
                 cardElement.classList.add('selected-for-info');
 
-                // Actualizar la información en el panel de detalles
+
                 document.getElementById('tarotCardNameInfo').textContent = cardData.namecart;
                 document.getElementById('tarotCardImageInfo').src = cardData.urlcart;
-                document.getElementById('tarotCardImageInfo').alt = DOMPurify.sanitize(cardData.namecart);
-                document.getElementById('tarotPositionInfo').textContent = cardElement.dataset.position || 'N/A'; // Mostrar la posición
+                document.getElementById('tarotCardImageInfo').alt = cardData.namecart;
                 document.getElementById('tarotMeaningUpInfo').textContent = cardData.significado1cart;
                 document.getElementById('tarotMeaningRevInfo').textContent = cardData.significado2cart; 
                 document.getElementById('tarotQuestionInfo').textContent = cardData.significado3cart; 
@@ -3900,7 +3793,6 @@
                 if (cardInfoDisplay) cardInfoDisplay.classList.remove('hidden');
             }
 
-            // Actualiza la UI de reacciones en el visor de imágenes
             function updateImageViewerReactionsUI(postData) {
                 const reactionsContainer = document.getElementById('imageViewerReactionsContainer');
                 if (!reactionsContainer) return;
@@ -3922,7 +3814,6 @@
                 if (angryButton) angryButton.classList.toggle('active', userReactions.includes('me enoja'));
             }
 
-            // Abre el modal de visualización de imágenes
             function openImageViewerModal(postId) {
                 const post = state.allPostsData[postId];
                 if (!post || !post.image) {
@@ -3937,176 +3828,140 @@
                 const reactionsContainer = modal.querySelector('#imageViewerReactionsContainer');
 
                 enlargedImage.src = DOMPurify.sanitize(post.image);
-                enlargedImage.alt = `Imagen de post por ${DOMPurify.sanitize(post.name)}`; // Sanitizar nombre en alt
+                enlargedImage.alt = `Imagen de post por ${post.name}`;
 
-                // Actualizar conteos de reacciones y estados activos inicialmente
+                // Update reaction counts and active states initially
                 updateImageViewerReactionsUI(post);
 
-                // Configurar listener en tiempo real para el post específico
+                // Setup real-time listener for the specific post
                 if (state.unsubscribeImageViewer) {
-                    state.unsubscribeImageViewer(); // Desuscribirse de cualquier listener anterior
+                    state.unsubscribeImageViewer(); // Unsubscribe from any previous listener
                 }
                 state.unsubscribeImageViewer = onSnapshot(doc(db, "Posts", postId), (docSnap) => {
                     if (docSnap.exists()) {
                         const updatedPostData = { id: docSnap.id, ...docSnap.data() };
-                        state.allPostsData[updatedPostData.id] = updatedPostData; // Mantener estado global actualizado
-                        updateImageViewerReactionsUI(updatedPostData); // Actualizar UI del modal
+                        state.allPostsData[updatedPostData.id] = updatedPostData; // Keep global state updated
+                        updateImageViewerReactionsUI(updatedPostData); // Update modal UI
                     } else {
-                        console.log("Post para el visor de imágenes ya no existe.");
-                        closeImageViewerModal(); // Cerrar modal si el post es borrado
+                        console.log("Post for image viewer no longer exists.");
+                        closeImageViewerModal(); // Close modal if post is deleted
                     }
                 }, (error) => {
-                    console.error("Error escuchando post del visor de imágenes:", error);
+                    console.error("Error listening to image viewer post:", error);
                 });
 
-                // Asegurar que los botones de reacción en el modal tengan los listeners correctos
-                // Clonar y reemplazar para eliminar listeners antiguos y adjuntar nuevos
+                // Ensure reaction buttons in modal have correct listeners
+                // Get current references
                 let heartButton = reactionsContainer.querySelector('.heart-reaction-button');
                 let funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
                 let angryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
+                // Clone and replace to remove old listeners
                 const clonedHeartButton = heartButton.cloneNode(true);
                 const clonedFunnyButton = funnyButton.cloneNode(true);
-                const clonedAngryButton = angryButton.cloneNode(true); // Corrected line
+                const clonedAngryButton = angryButton.cloneNode(true);
 
-                heartButton.parentNode.replaceChild(clonedHeartButton, heartButton);
-                funnyButton.parentNode.replaceChild(clonedFunnyButton, funnyButton);
-                angryButton.parentNode.replaceChild(clonedAngryButton, angryButton);
+                heartButton.replaceWith(clonedHeartButton);
+                funnyButton.replaceWith(clonedFunnyButton);
+                angryButton.replaceWith(clonedAngryButton);
 
-                // Re-assign references to the new cloned buttons
-                heartButton = clonedHeartButton;
-                funnyButton = clonedFunnyButton;
-                angryButton = clonedAngryButton;
+                // Get new references after cloning
+                heartButton = reactionsContainer.querySelector('.heart-reaction-button');
+                funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
+                angryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
-                // Add event listeners to the new buttons
-                heartButton.addEventListener('click', () => reaccionarCorazon(state.imageViewerCurrentPostId));
-                funnyButton.addEventListener('click', () => reaccionarMeDiverte(state.imageViewerCurrentPostId));
-                angryButton.addEventListener('click', () => reaccionarMeEnoja(state.imageViewerCurrentPostId));
+                // Add new listeners
+                heartButton.addEventListener('click', () => reaccionarCorazon(postId));
+                funnyButton.addEventListener('click', () => reaccionarMeDiverte(postId));
+                angryButton.addEventListener('click', () => reaccionarMeEnoja(postId));
 
                 modal.classList.add('flex');
-                document.body.classList.add('modal-open'); // Bloquear scroll
+                document.body.classList.add('modal-open'); // Prevent background scrolling
             }
 
-            // Cierra el modal de visualización de imágenes
             function closeImageViewerModal() {
                 document.getElementById('imageViewerModal').classList.remove('flex');
-                document.body.classList.remove('modal-open'); // Desbloquear scroll
+                document.body.classList.remove('modal-open'); // Re-enable background scrolling
+                state.imageViewerCurrentPostId = null;
                 if (state.unsubscribeImageViewer) {
-                    state.unsubscribeImageViewer(); // Desuscribirse del listener en tiempo real
+                    state.unsubscribeImageViewer(); // Unsubscribe when closing
                     state.unsubscribeImageViewer = null;
                 }
-                state.imageViewerCurrentPostId = null;
             }
 
-            // Función para descargar la imagen ampliada
             function downloadEnlargedImage() {
-                const imgElement = document.getElementById('enlargedImage');
-                const imageUrl = imgElement.src;
-                const a = document.createElement('a');
-                a.href = imageUrl;
-                a.download = `neurochan_image_${state.imageViewerCurrentPostId || 'download'}.png`; // Nombre de archivo
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                const enlargedImage = document.getElementById('enlargedImage');
+                const imageUrl = enlargedImage.src;
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                // Attempt to get a reasonable filename, default to a generic one
+                const filename = `neurochan_image_${state.imageViewerCurrentPostId || 'download'}.png`; 
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
 
-            // Función para renderizar historias
             function renderStories() {
                 const storiesContainer = document.getElementById('storiesContainer');
-                storiesContainer.innerHTML = ''; // Limpiar historias existentes
+                storiesContainer.innerHTML = ''; // Clear existing stories
 
-                // Filtrar posts con imágenes del estado global
-                const imagePostsForStories = Object.values(state.allPostsData).filter(post => post.image);
+                const postsWithImages = state.allRootPosts.filter(post => post.image);
+                
+                if (postsWithImages.length === 0) {
+                    storiesContainer.classList.add('hidden');
+                    return;
+                } else {
+                    storiesContainer.classList.remove('hidden');
+                }
 
-                // Limitar el número de historias si hay demasiadas, o mostrar todas si son pocas
-                const maxStories = 20; // Limitar a un número razonable para el carrusel
-                const storiesToRender = imagePostsForStories.slice(0, maxStories);
-
-                storiesToRender.forEach(post => {
+                postsWithImages.forEach(post => {
                     const storyItem = document.createElement('div');
                     storyItem.className = 'story-item';
-                    storyItem.dataset.id = post.id;
+                    storyItem.dataset.postId = post.id;
                     storyItem.innerHTML = `
-                        <img src="${DOMPurify.sanitize(post.image)}" alt="Historia de ${DOMPurify.sanitize(post.name)}" class="story-image"/>
+                        <img src="${DOMPurify.sanitize(post.image)}" alt="Story image from ${DOMPurify.sanitize(post.name)}" class="story-image"/>
                         <div class="story-author-name">${DOMPurify.sanitize(post.name)}</div>
                     `;
-                    // Añadir un listener para abrir el hilo del post correspondiente
-                    storyItem.addEventListener('click', () => {
-                        viewThread(post.id); // Ahora lleva al hilo del post
-                    });
+                    storyItem.addEventListener('click', () => viewThread(post.id));
                     storiesContainer.appendChild(storyItem);
                 });
-
-                // Implementar arrastre para el scroll horizontal
-                let isDragging = false;
-                let startX;
-                let scrollLeft;
-
-                storiesContainer.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    storiesContainer.classList.add('active');
-                    startX = e.pageX - storiesContainer.offsetLeft;
-                    scrollLeft = storiesContainer.scrollLeft;
-                });
-
-                storiesContainer.addEventListener('mouseleave', () => {
-                    isDragging = false;
-                    storiesContainer.classList.remove('active');
-                });
-
-                storiesContainer.addEventListener('mouseup', () => {
-                    isDragging = false;
-                    storiesContainer.classList.remove('active');
-                });
-
-                storiesContainer.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    e.preventDefault();
-                    const x = e.pageX - storiesContainer.offsetLeft;
-                    const walk = (x - startX) * 2; // Multiplicador para velocidad de scroll
-                    storiesContainer.scrollLeft = scrollLeft - walk;
-                });
-
-                // Adaptar arrastre para dispositivos táctiles
-                storiesContainer.addEventListener('touchstart', (e) => {
-                    isDragging = true;
-                    storiesContainer.classList.add('active');
-                    startX = e.touches[0].pageX - storiesContainer.offsetLeft;
-                    scrollLeft = storiesContainer.scrollLeft;
-                }, { passive: true }); // Usar { passive: true } para mejorar el rendimiento del scroll
-
-                storiesContainer.addEventListener('touchend', () => {
-                    isDragging = false;
-                    storiesContainer.classList.remove('active');
-                });
-
-                storiesContainer.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    const x = e.touches[0].pageX - storiesContainer.offsetLeft;
-                    const walk = (x - startX) * 2;
-                    storiesContainer.scrollLeft = scrollLeft - walk;
-                }, { passive: true });
             }
 
-            // Asegurar que el scrollbar-width se calcule y aplique para evitar "jump" en el layout
-            // cuando se abre un modal y se oculta el scrollbar del body.
-            function setScrollbarWidth() {
-                const scrollDiv = document.createElement('div');
-                scrollDiv.style.width = '100px';
-                scrollDiv.style.height = '100px';
-                scrollDiv.style.overflow = 'scroll';
-                scrollDiv.style.position = 'absolute';
-                scrollDiv.style.top = '-9999px';
-                document.body.appendChild(scrollDiv);
-                const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-                document.body.removeChild(scrollDiv);
-                document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
-            }
+            // Implement horizontal scrolling for stories container (mouse drag)
+            let isDragging = false;
+            let startX;
+            let scrollLeft;
 
-            // Llamar a la función para establecer el ancho del scrollbar al cargar
-            setScrollbarWidth();
+            const storiesContainer = document.getElementById('storiesContainer');
 
-            // Listener para el evento resize del window, para reajustar el ancho del scrollbar si cambia
-            window.addEventListener('resize', setScrollbarWidth);
+            storiesContainer.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                storiesContainer.classList.add('active');
+                startX = e.pageX - storiesContainer.offsetLeft;
+                scrollLeft = storiesContainer.scrollLeft;
+            });
 
-        })(); // Cierre de la IIFE
+            storiesContainer.addEventListener('mouseleave', () => {
+                isDragging = false;
+                storiesContainer.classList.remove('active');
+            });
+
+            storiesContainer.addEventListener('mouseup', () => {
+                isDragging = false;
+                storiesContainer.classList.remove('active');
+            });
+
+            storiesContainer.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - storiesContainer.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll-fastness
+                storiesContainer.scrollLeft = scrollLeft - walk;
+            });
+
+             console.log("Script principal IIFE ejecutado completamente.");
+        })();
+    </script>
+</body>
+</html>
