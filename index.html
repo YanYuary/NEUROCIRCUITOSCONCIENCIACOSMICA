@@ -1620,10 +1620,10 @@
         const postsCollectionRef = collection(db, "Posts");
 
         (function() {
-            const MAX_IMAGE_SIZE = 2 * 1024 * 1024; 
-            const ADMIN_HASH = '$2a$12$gN31vHGzyvonWERy0c9K6ubv/LRrh6IJmzWgXYlJ8eJJ4vUcnVe'; 
+            const MAX_IMAGE_SIZE = 3 * 1024 * 1024; 
+            const ADMIN_HASH = '$2a$12$WOw1y6eWAuHGhRJp7Q/P.uuE4mnnkscCmCAWTQig6/FijJlJ5EhYm'; 
 
-            const EMOJIS = ['😀','😂','🤣','🥲','😍','🤯','😎','🤖','👾','👻','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
+            const EMOJIS = ['😀','😂','🤣','❤️','😍','🤯','😎','👁️','🤖', '🦾', '🦿', '🧬', '🔭','👾','👻','👹','💀','👽','🚀','🛸','🌀','🧠','🌌','🔮','🔥','⚡','🌈','🎮','📺'];
             
             let state = {
                 currentBoard: 'meta',
@@ -2450,7 +2450,9 @@
                 }
 
                 const contentTextElement = postElement.querySelector('.post-content');
-                const newSanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
+                // Corrected: Define textContent from newPostData.text
+                const postTextContent = typeof newPostData.text === 'string' ? newPostData.text : '';
+                const newSanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
                 
                 const newTextWithLinks = newSanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
@@ -2495,12 +2497,12 @@
                         const newImageDiv = document.createElement('div');
                         newImageDiv.className = 'post-image-container';
                         // Apply class based on view (main board vs thread)
-                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(post.image)}" alt="Imagen del post" class="${state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in"}"/>`;
+                        newImageDiv.innerHTML = `<img src="${DOMPurify.sanitize(newPostData.image)}" alt="Imagen del post" class="${state.viewingThreadId ? "max-w-full h-auto object-contain cursor-zoom-in" : "max-w-full h-auto w-full object-cover cursor-zoom-in"}"/>`;
                         postElement.insertBefore(newImageDiv, postElement.querySelector('.post-actions'));
                         img = newImageDiv.querySelector('img');
                     }
                     if (img) {
-                        img.onclick = () => openImageViewerModal(post.id);
+                        img.onclick = () => openImageViewerModal(newPostData.id);
                     }
                 } else if (imageContainer) {
                     console.log(`Removing image container for post ${newPostData.id}.`);
@@ -2671,8 +2673,8 @@
                 
                 const titleHtml = post.title ? 
                     `<h4 class="post-title"><a href="#board=${post.board}&post=${post.id}" class="post-title-link">${DOMPurify.sanitize(post.title)}</a></h4>` : '';
-                const textContent = typeof post.text === 'string' ? post.text : '';
-                let sanitizedText = DOMPurify.sanitize(textContent).replace(/\n/g,'<br>');
+                const postTextContent = typeof post.text === 'string' ? post.text : ''; // Corrected: Define postTextContent
+                let sanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
                 
                 sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
@@ -3849,24 +3851,29 @@
                 });
 
                 // Ensure reaction buttons in modal have correct listeners
-                const heartButton = reactionsContainer.querySelector('.heart-reaction-button');
-                const funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
-                const angryButton = reactionsContainer.querySelector('.angry-reaction-button');
+                // Get current references
+                let heartButton = reactionsContainer.querySelector('.heart-reaction-button');
+                let funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
+                let angryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
-                // Remove previous listeners to prevent duplicates
-                heartButton.replaceWith(heartButton.cloneNode(true));
-                funnyButton.replaceWith(funnyButton.cloneNode(true));
-                angryButton.replaceWith(angryButton.cloneNode(true));
+                // Clone and replace to remove old listeners
+                const clonedHeartButton = heartButton.cloneNode(true);
+                const clonedFunnyButton = funnyButton.cloneNode(true);
+                const clonedAngryButton = angryButton.cloneNode(true);
+
+                heartButton.replaceWith(clonedHeartButton);
+                funnyButton.replaceWith(clonedFunnyButton);
+                angryButton.replaceWith(clonedAngryButton);
 
                 // Get new references after cloning
-                const newHeartButton = reactionsContainer.querySelector('.heart-reaction-button');
-                const newFunnyButton = reactionsContainer.querySelector('.funny-reaction-button');
-                const newAngryButton = reactionsContainer.querySelector('.angry-reaction-button');
+                heartButton = reactionsContainer.querySelector('.heart-reaction-button');
+                funnyButton = reactionsContainer.querySelector('.funny-reaction-button');
+                angryButton = reactionsContainer.querySelector('.angry-reaction-button');
 
                 // Add new listeners
-                newHeartButton.addEventListener('click', () => reaccionarCorazon(postId));
-                newFunnyButton.addEventListener('click', () => reaccionarMeDiverte(postId));
-                newAngryButton.addEventListener('click', () => reaccionarMeEnoja(postId));
+                heartButton.addEventListener('click', () => reaccionarCorazon(postId));
+                funnyButton.addEventListener('click', () => reaccionarMeDiverte(postId));
+                angryButton.addEventListener('click', () => reaccionarMeEnoja(postId));
 
                 modal.classList.add('flex');
                 document.body.classList.add('modal-open'); // Prevent background scrolling
