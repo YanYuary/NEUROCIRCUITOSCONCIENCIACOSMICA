@@ -457,11 +457,12 @@
             font-weight: 600;
             color: var(--text-primary-color);
             font-size: 0.95rem;
-            text-decoration: none; /* Asegura que no haya subrayado por defecto */
         }
-        .post-username:hover {
-            text-decoration: underline; /* Subrayado al pasar el ratón */
-            opacity: 0.8;
+        .post-id-ref {
+            font-weight: normal;
+            margin-left: 0.25rem;
+            color: var(--text-tertiary-color);
+            font-size: 0.8rem;
         }
         .post-timestamp {
             font-size: 0.8rem;
@@ -473,14 +474,6 @@
             font-weight: 600;
             color: var(--primary-accent-color);
             margin-bottom: 0.5rem;
-        }
-        .post-title-link {
-            text-decoration: none;
-            color: inherit;
-        }
-        .post-title-link:hover {
-            opacity: 0.8;
-            text-decoration: underline; /* Subrayado al pasar el ratón */
         }
 
         .post-content { 
@@ -1314,7 +1307,7 @@
             }
         }
     
-    /* v1.2 minimal indentation for nested comments */
+    /* v2.0 minimal indentation for nested comments */
     .comment-header{margin-left:0.25rem}
     .comment-body{margin-left:1.5rem}
 
@@ -2120,10 +2113,6 @@
                 else if (target.closest('.post-image-container img')) {
                     openImageViewerModal(postId);
                 } 
-                else if (target.closest('.post-title-link')) {
-                    event.preventDefault(); 
-                    viewThread(postId);
-                } 
                 else if (target.closest('.reply-link')) {
                     event.preventDefault();
                     const referencedPostId = target.closest('.reply-link').dataset.postId;
@@ -2135,10 +2124,6 @@
                     } else {
                         showGenericModal("Post no encontrado", "El post al que se hace referencia no pudo ser localizado.", [{ text: 'OK', action: closeGenericModal }]);
                     }
-                }
-                else if (target.closest('.post-username')) {
-                    event.preventDefault();
-                    viewThread(postId);
                 }
             }
 
@@ -2595,8 +2580,11 @@
                 }
 
                 const usernameElement = postElement.querySelector('.post-username');
-                if (usernameElement && usernameElement.textContent !== DOMPurify.sanitize(newPostData.name)) {
-                    usernameElement.textContent = DOMPurify.sanitize(newPostData.name);
+                if (usernameElement) {
+                    const newUsernameHtml = `${DOMPurify.sanitize(newPostData.name)} <span class="post-id-ref">${newPostData.id.slice(-4)}</span>`;
+                    if (usernameElement.innerHTML !== newUsernameHtml) {
+                        usernameElement.innerHTML = newUsernameHtml;
+                    }
                 }
 
                 const timestampElement = postElement.querySelector('.post-timestamp');
@@ -2611,15 +2599,14 @@
 
                 const titleElement = postElement.querySelector('.post-title');
                 if (newPostData.title) {
-                    let titleLink = postElement.querySelector('.post-title-link');
-                    if (titleLink) {
-                        if (titleLink.textContent !== DOMPurify.sanitize(newPostData.title)) {
-                            titleLink.textContent = DOMPurify.sanitize(newPostData.title);
+                    if (titleElement) {
+                        if (titleElement.textContent !== DOMPurify.sanitize(newPostData.title)) {
+                            titleElement.textContent = DOMPurify.sanitize(newPostData.title);
                         }
                     } else {
                         const newTitleEl = document.createElement('h4');
                         newTitleEl.className = 'post-title';
-                        newTitleEl.innerHTML = `<a href="#board=${newPostData.board}&post=${newPostData.id}" class="post-title-link">${DOMPurify.sanitize(newPostData.title)}</a>`;
+                        newTitleEl.textContent = DOMPurify.sanitize(newPostData.title);
                         postElement.insertBefore(newTitleEl, postElement.querySelector('.post-content') || postElement.querySelector('.post-image-container') || postElement.querySelector('.post-actions'));
                     }
                 } else if (titleElement) {
@@ -2635,7 +2622,8 @@
                     const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
                     const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard;
                     const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
-                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
+                    const refName = fullReferencedPost ? DOMPurify.sanitize(fullReferencedPost.name) : 'Post';
+                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${refName} (${targetPostId.slice(-4)})</a>`;
                 });
 
                 if (contentTextElement) {
@@ -2719,7 +2707,7 @@
                     const repliesContainerForThisPost = postElement.querySelector(`.replies-container[data-parent-id="${newPostData.id}"]`);
                     const isRepliesVisible = repliesContainerForThisPost ? repliesContainerForThisPost.style.display !== 'none' : false;
 
-                    if (newReplyCount > 0 && currentPostDepth < 3) {
+                    if (newReplyCount > 0 && currentPostDepth < 2) {
                         commentsButton.style.display = 'inline-flex'; 
                         const commentsButtonCountSpan = commentsButton.querySelector('.count');
                         if (commentsButtonCountSpan) commentsButtonCountSpan.textContent = newReplyCount;
@@ -2752,7 +2740,7 @@
             }
 
             async function loadNestedReplies(parentPostId, parentElement, depth) {
-                if (depth > 3) return; 
+                if (depth > 2) return;
 
                 let repliesContainer = parentElement.querySelector(`.replies-container[data-parent-id="${parentPostId}"]`);
                 if (!repliesContainer) {
@@ -2838,17 +2826,18 @@
 
                 const formattedTimestamp = formatPostTimestamp(post.timestamp);
                 
-                const titleHtml = post.title ? 
-                    `<h4 class="post-title"><a href="#board=${post.board}&post=${post.id}" class="post-title-link">${DOMPurify.sanitize(post.title)}</a></h4>` : '';
+                const titleHtml = post.title ?
+                    `<h4 class="post-title">${DOMPurify.sanitize(post.title)}</h4>` : '';
                 const postTextContent = typeof post.text === 'string' ? post.text : '';
                 let sanitizedText = DOMPurify.sanitize(postTextContent).replace(/\n/g,'<br>');
                 
                 sanitizedText = sanitizedText.replace(/&gt;&gt;(\w+)/g, (match, referencedPostIdSuffix) => {
                     const fullReferencedPost = Object.values(state.allPostsData).find(p => p.id.endsWith(referencedPostIdSuffix));
                     const targetPostId = fullReferencedPost ? fullReferencedPost.id : referencedPostIdSuffix;
-                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard; 
+                    const targetBoard = fullReferencedPost ? fullReferencedPost.board : state.currentBoard;
                     const threadLinkTargetId = fullReferencedPost ? (fullReferencedPost.replyTo || fullReferencedPost.id) : targetPostId;
-                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${referencedPostIdSuffix.slice(-4)}</a>`;
+                    const refName = fullReferencedPost ? DOMPurify.sanitize(fullReferencedPost.name) : 'Post';
+                    return `<a href="#board=${targetBoard}&post=${threadLinkTargetId}" class="reply-link" data-post-id="${targetPostId}">>>${refName} (${targetPostId.slice(-4)})</a>`;
                 });
 
                 const contentTextHtml = post.text ? `<div class="post-content text-sm mb-2 mt-1">${sanitizedText}</div>` : '';
@@ -2859,7 +2848,7 @@
                 const canShowEditButton = state.isAdmin || (post.passwordHash && post.authorUID === auth.currentUser?.uid);
                 
                 let replyButtonHtml = '';
-                if (currentPostDepth <= 3) {
+                if (currentPostDepth <= 2) {
                     replyButtonHtml = `
                         <button class="reply-button reaction-button" aria-label="Responder a este post">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
@@ -2870,7 +2859,7 @@
 
                 let commentsButtonHtml = '';
                 const newReplyCount = state.directChildrenCounts[post.id] || 0;
-                if (newReplyCount > 0 && currentPostDepth < 3) { 
+                if (newReplyCount > 0 && currentPostDepth < 2) {
                     commentsButtonHtml = `
                         <button class="comments-button reaction-button" aria-label="Ver comentarios">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.973-1.444L2 17l1.62-2.16a8.841 8.841 0 01-1.62-6.836c0-3.866 3.582-7 8-7s8 3.134 8 7z" clip-rule="evenodd" /></svg>
@@ -2917,7 +2906,7 @@
                     <div class="post-header">
                         <div class="post-avatar">${post.avatar}</div>
                         <div class="post-userinfo">
-                            <a href="#board=${post.board}&post=${post.id}" class="post-username">${DOMPurify.sanitize(post.name)}</a>
+                            <span class="post-username">${DOMPurify.sanitize(post.name)} <span class="post-id-ref">${post.id.slice(-4)}</span></span>
                             <span class="post-timestamp">${formattedTimestamp} ${post.authorUID === auth.currentUser?.uid ? '<span style="color: var(--success-color);">(Tú)</span>' : ''}</span>
                         </div>
                     </div>
@@ -2965,7 +2954,7 @@
                 const submitReplyButton = replyFormContainer.querySelector('.submit-reply');
                 const replyAvatar = replyFormContainer.querySelector('.reply-avatar'); 
 
-                if (currentPostDepth > 3) {
+                if (currentPostDepth > 2) {
                     replyFormContainer.style.display = 'none';
                     return;
                 }
@@ -3019,6 +3008,7 @@
 
                 const newReplyPasswordToggle = replyPasswordToggle.cloneNode(true);
                 replyPasswordToggle.parentNode.replaceChild(newReplyPasswordToggle, replyPasswordToggle);
+                newReplyPasswordToggle.addEventListener('mousedown', () => { ignoreBlurForFileUpload = true; });
                 newReplyPasswordToggle.addEventListener('click', () => openPostPasswordModal(true, parentPostId));
 
                 const newSubmitReplyButton = submitReplyButton.cloneNode(true);
@@ -3044,13 +3034,14 @@
                     let targetReplyTo = parentPostId;
                     let initialReplyText = DOMPurify.sanitize(content);
 
-                    if (currentPostDepth === 3) {
+                    if (currentPostDepth >= 2) {
                         const parentOfCurrentPost = state.allPostsData[parentPostId];
                         if (parentOfCurrentPost && parentOfCurrentPost.replyTo) {
-                            targetReplyTo = parentOfCurrentPost.replyTo; 
-                            initialReplyText = `>>${parentPostId.slice(-4)} ${initialReplyText}`; 
+                            targetReplyTo = parentOfCurrentPost.replyTo;
+                            const refName = parentOfCurrentPost.name || 'Anónimo';
+                            initialReplyText = `>>${refName} (${parentPostId.slice(-4)}) ${initialReplyText}`;
                         } else {
-                            targetReplyTo = parentPostId; 
+                            targetReplyTo = parentPostId;
                         }
                     }
 
@@ -4311,7 +4302,7 @@
 
         })(); 
     
-    // v1.2 click anywhere in post container to open thread (except image and specific buttons)
+    // v2.0 click anywhere in post container to open thread (except image and specific buttons)
     document.addEventListener('click', e => {
         const postArticle = e.target.closest('.post'); // Busca el elemento .post más cercano
         if (postArticle && 
